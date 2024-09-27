@@ -1,17 +1,23 @@
-import { UnauthenticatedError } from '../errors/customErrors.js';
+import { UnauthenticatedError, UnauthorizedError } from '../errors/customErrors.js';
 import { verifyJwt } from '../utils/tokenUtils.js';
 
-export const authenticateToken = (req, res, next) => {
-  // TODO make sure user is authenticated for the specific jukebox roundtable
+export const authenticateUser = (req, res, next) => {
   const { token } = req.cookies;
   if (!token) {
-    throw new UnauthenticatedError('invalid token');
+    throw new UnauthenticatedError('no token');
   }
   try {
-    const { name } = verifyJwt(token);
-    req.jukebox = { name };
+    const urlName = req.originalUrl.split('/').pop();
+    const { name: tokenName } = verifyJwt(token);
+    if (urlName != tokenName) {
+      throw new UnauthorizedError('sign in to join jukebox');
+    }
+    req.jukebox = { name: tokenName };
     next();
   } catch (error) {
-    throw new UnauthenticatedError('authentication invalid');
+    if (error instanceof UnauthenticatedError || error instanceof UnauthorizedError) {
+      throw error;
+    }
+    throw new UnauthenticatedError('authentication failed');
   }
 };

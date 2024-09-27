@@ -7,7 +7,7 @@ import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
 import mongoose from 'mongoose';
 import jukeboxRouter from './routes/jukeboxRouter.js';
 import authRouter from './routes/authRouter.js';
-import { authenticateToken } from './middleware/authMiddleware.js';
+import { authenticateUser } from './middleware/authMiddleware.js';
 import { apiVersionBaseUrl, serverPort } from './global/api.js';
 
 dotenv.config();
@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(`${apiVersionBaseUrl}auth`, authRouter);
-app.use(`${apiVersionBaseUrl}jukebox`, authenticateToken, jukeboxRouter);
+app.use(`${apiVersionBaseUrl}jukebox`, authenticateUser, jukeboxRouter);
 
 // catch controller routing error
 app.use('*', (req, res) => {

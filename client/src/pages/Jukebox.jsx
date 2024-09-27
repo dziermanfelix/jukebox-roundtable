@@ -1,19 +1,23 @@
 import { HomeLogoLink } from '../components';
-import { basePath } from '../utils/paths';
+import { joinPath } from '../utils/paths';
 import { toast } from 'react-toastify';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, redirect } from 'react-router-dom';
+import customFetch from '../utils/customFetch';
+import { jukeboxPath } from '../utils/paths';
 
 export const loader = async ({ params }) => {
   try {
-    return params.id;
+    const { data } = await customFetch.get(`${jukeboxPath}${params.id}`, { data: { name: params.id } });
+    return data;
   } catch (error) {
     toast.error(error?.response?.data?.msg);
-    return redirect(basePath);
+    return redirect(`${joinPath}${params.id}`);
   }
 };
 
 const Jukebox = () => {
-  const name = useLoaderData();
+  const { jukebox } = useLoaderData();
+  const { name } = jukebox;
   return (
     <div>
       <h1>Jukebox {name}</h1>

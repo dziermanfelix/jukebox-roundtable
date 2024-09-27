@@ -24,7 +24,6 @@ export const action = async ({ request }) => {
     await customFetch.post(loginPath, data);
     return redirect(`${jukeboxPath}${name}`);
   } catch (error) {
-    console.log(error);
     toast.error(error?.response?.data?.msg);
     return error;
   }

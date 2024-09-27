@@ -1,14 +1,43 @@
-import { Link, Form } from 'react-router-dom';
+import { Link, Form, useLoaderData, redirect } from 'react-router-dom';
 import { FormRow, HomeLogoLink, SubmitButton } from '../components';
-import { startPath } from '../utils/paths';
+import { startPath, loginPath, jukeboxPath } from '../utils/paths';
+import { toast } from 'react-toastify';
+import customFetch from '../utils/customFetch';
+
+export const loader = async ({ params }) => {
+  try {
+    if (!params.id) {
+      return null;
+    }
+    return params.id;
+  } catch (error) {
+    toast.error(error?.response?.data?.msg);
+    return redirect(basePath);
+  }
+};
+
+export const action = async ({ request }) => {
+  const formData = await request.formData();
+  const data = Object.fromEntries(formData);
+  const name = data.name;
+  try {
+    await customFetch.post(loginPath, data);
+    return redirect(`${jukeboxPath}${name}`);
+  } catch (error) {
+    console.log(error);
+    toast.error(error?.response?.data?.msg);
+    return error;
+  }
+};
 
 const Join = () => {
+  const name = useLoaderData();
   return (
     <div>
       <h1>Join Jukebox Roundtable</h1>
       <Form method='post'>
-        <FormRow type='text' name='name' defaultValue='dust' isRequired />
-        <FormRow type='text' name='code' defaultValue='dust' isRequired />
+        <FormRow type='text' name='name' defaultValue={name && name} isRequired />
+        <FormRow type='text' name='code' isRequired />
         <SubmitButton />
       </Form>
       <p>

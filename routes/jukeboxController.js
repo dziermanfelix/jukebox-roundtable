@@ -10,7 +10,7 @@ export const createJukebox = async (req, res) => {
   if (await jukeboxExists(name)) {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: `Jukebox Roundtable name: ${name} is being used. Try again.` });
+      .json({ msg: `Jukebox Roundtable name ${name} is being used. Try again.` });
   }
   const jukebox = await Jukebox.create(req.body);
   return res.status(StatusCodes.CREATED).json({ jukebox });
@@ -27,6 +27,11 @@ export const getJukebox = async (req, res) => {
     return res.status(404).json({ msg: `no jukebox with name ${name}` });
   }
   return res.status(StatusCodes.OK).json({ jukebox });
+};
+
+export const getJukeboxes = async (req, res) => {
+  const jukeboxes = await Jukebox.find();
+  return res.status(StatusCodes.OK).json({ jukeboxes });
 };
 
 export const updateJukebox = async (req, res) => {};

@@ -1,6 +1,9 @@
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Jukebox, Landing, Start, Error, Join, HomeLayout } from './pages';
+import { action as startAction } from './pages/Start';
+import { loader as jukeboxLoader } from './pages/jukebox';
+import { loader as joinLoader, action as joinAction } from './pages/Join';
 
 const router = createBrowserRouter([
   {
@@ -12,14 +15,24 @@ const router = createBrowserRouter([
       {
         path: '/start',
         element: <Start />,
+        action: startAction,
       },
       {
         path: '/join',
         element: <Join />,
+        loader: joinLoader,
+        action: joinAction,
+      },
+      {
+        path: '/join/:id',
+        element: <Join />,
+        loader: joinLoader,
+        action: joinAction,
       },
       {
         path: '/jukebox/:id',
         element: <Jukebox />,
+        loader: jukeboxLoader,
       },
     ],
   },

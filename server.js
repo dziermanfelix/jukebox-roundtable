@@ -2,11 +2,12 @@ import 'express-async-errors';
 import express from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
 import mongoose from 'mongoose';
 import jukeboxRouter from './routes/jukeboxRouter.js';
 import authRouter from './routes/authRouter.js';
+import spotifyRouter from './routes/spotifyRouter.js';
 import { authenticateUser } from './middleware/authMiddleware.js';
 import { apiVersionBaseUrl, serverPort } from './global/api.js';
 
@@ -21,6 +22,7 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(`${apiVersionBaseUrl}auth`, authRouter);
 app.use(`${apiVersionBaseUrl}jukebox`, authenticateUser, jukeboxRouter);
+app.use(`${apiVersionBaseUrl}spotify`, spotifyRouter);
 
 // catch controller routing error
 app.use('*', (req, res) => {

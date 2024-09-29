@@ -1,4 +1,4 @@
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 import axios from 'axios';
 
 dotenv.config();
@@ -10,7 +10,7 @@ const spotifySearchUrl = 'https://api.spotify.com/v1/search';
 const spotifyArtistUrl = 'https://api.spotify.com/v1/artists';
 const spotifyAlbumUrl = 'https://api.spotify.com/v1/albums';
 
-async function getAccessToken(params) {
+async function getAccessToken() {
   var data = {
     grant_type: 'client_credentials',
     client_id: spotifyClientId,

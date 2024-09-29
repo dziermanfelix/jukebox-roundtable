@@ -1,8 +1,7 @@
 import { Form, Link, redirect } from 'react-router-dom';
 import { FormRow, HomeLogoLink, SubmitButton } from '../components';
-import { joinPath } from '../utils/paths';
+import { joinPath, loginPath, createPath, jukeboxPath } from '../utils/paths';
 import customFetch from '../utils/customFetch';
-import { authPath, jukeboxPath } from '../utils/paths';
 import { toast } from 'react-toastify';
 
 export const action = async ({ request }) => {
@@ -10,7 +9,8 @@ export const action = async ({ request }) => {
   const data = Object.fromEntries(formData);
   const name = data.name;
   try {
-    await customFetch.post(authPath, data);
+    await customFetch.post(createPath, data);
+    await customFetch.post(loginPath, data);
     return redirect(`${jukeboxPath}${name}`);
   } catch (error) {
     toast.error(error?.response?.data?.msg);
@@ -23,8 +23,8 @@ const Start = () => {
     <div>
       <h1>Start Jukebox Roundtable</h1>
       <Form method='post'>
-        <FormRow type='text' name='name' defaultValue='dust' isRequired />
-        <FormRow type='text' name='code' defaultValue='dust' isRequired />
+        <FormRow type='text' name='name' isRequired />
+        <FormRow type='text' name='code' isRequired />
         <SubmitButton />
       </Form>
       <p>

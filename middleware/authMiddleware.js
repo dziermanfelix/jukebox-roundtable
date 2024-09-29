@@ -10,7 +10,7 @@ export const authenticateUser = (req, res, next) => {
     const urlName = req.originalUrl.split('/').pop();
     const { name: tokenName } = verifyJwt(token);
     if (urlName != tokenName) {
-      throw new UnauthorizedError('sign in to join jukebox');
+      throw new UnauthorizedError(`sign in to join jukebox roundtable ${urlName}`);
     }
     req.jukebox = { name: tokenName };
     next();

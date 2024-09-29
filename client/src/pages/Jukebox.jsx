@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { useLoaderData, redirect } from 'react-router-dom';
 import customFetch from '../utils/customFetch';
 import { jukeboxPath } from '../utils/paths';
+import Search from '../components/Search';
 
 export const loader = async ({ params }) => {
   try {
@@ -21,7 +22,12 @@ const Jukebox = () => {
   return (
     <div>
       <h1>Jukebox {name}</h1>
-      <HomeLogoLink />
+      <div>
+        <Search />
+      </div>
+      <div>
+        <HomeLogoLink />
+      </div>
     </div>
   );
 };

@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { searchPath } from '../utils/paths';
 import customFetch from '../utils/customFetch';
 import { toast } from 'react-toastify';
-import { PayloadType } from '../components';
+import { PayloadGeneric } from '../components';
+import Wrapper from '../wrappers/Search';
 
 const Search = () => {
   const [value, setValue] = useState('');
@@ -42,13 +43,13 @@ const Search = () => {
   };
 
   return (
-    <div>
+    <Wrapper>
       <label htmlFor='search'> search </label>
       <input type='text' value={value} onChange={handleChange} />
-      {tracks.length > 0 && <PayloadType items={tracks} setter={setTracks} />}
-      {artists.length > 0 && <PayloadType items={artists} setter={setArtists} />}
-      {albums.length > 0 && <PayloadType items={albums} setter={setAlbums} />}
-    </div>
+      {tracks.length > 0 && <PayloadGeneric items={tracks} setter={setTracks} />}
+      {artists.length > 0 && <PayloadGeneric items={artists} setter={setArtists} />}
+      {albums.length > 0 && <PayloadGeneric items={albums} setter={setAlbums} />}
+    </Wrapper>
   );
 };
 export default Search;

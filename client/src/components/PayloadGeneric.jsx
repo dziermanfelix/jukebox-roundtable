@@ -1,6 +1,6 @@
-import { Artists, Albums, Tracks } from '../components';
+import { Artists, Albums, Tracks } from '.';
 
-const PayloadType = ({ items, setter }) => {
+const PayloadGeneric = ({ items, setter }) => {
   const type = items[0].type;
   if (type == 'track') {
     return <Tracks tracks={items} />;
@@ -9,6 +9,6 @@ const PayloadType = ({ items, setter }) => {
   } else if (type === 'album') {
     return <Albums albums={items} setter={setter} />;
   }
-  return <div>PayloadType</div>;
+  return <div>Payload Type Generic Error</div>;
 };
-export default PayloadType;
+export default PayloadGeneric;

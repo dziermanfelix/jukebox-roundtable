@@ -1,9 +1,18 @@
 import { Payload } from '.';
 import Wrapper from '../wrappers/Payload';
+import { useQueueContext } from '../pages/jukebox';
 
 const Tracks = ({ tracks }) => {
+  const { queue, updateQueue } = useQueueContext();
+
   const addToQueue = (track) => {
-    console.log(`adding track ${track.name} to queue`);
+    const trackName = track.name;
+    if (!queue.includes(trackName)) {
+      console.log(`adding track ${trackName} to queue`);
+      updateQueue(trackName);
+    } else {
+      console.log(`track ${trackName} exists in queue!!!!`);
+    }
   };
 
   return (

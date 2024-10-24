@@ -6,13 +6,11 @@ const Tracks = ({ tracks }) => {
   const { queue, updateQueue } = useQueueContext();
 
   const addToQueue = (track) => {
-    const trackName = track.name;
-    if (!queue.includes(trackName)) {
-      console.log(`adding track ${trackName} to queue`);
-      updateQueue(trackName);
-    } else {
-      console.log(`track ${trackName} exists in queue!!!!`);
+    // TODO this still lets some duplicates in
+    if (!queue.includes(track)) {
+      updateQueue(track);
     }
+    // TODO add feedback that track is already in queue
   };
 
   return (

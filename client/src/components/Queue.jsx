@@ -7,11 +7,12 @@ const Queue = () => {
   return (
     <Wrapper>
       <h3>Your Next Song</h3>
-      {queue.map((q, index) => (
-        <div key={index}>
-          <ul>{q}</ul>
-        </div>
-      ))}
+      {queue &&
+        queue.map((track, index) => (
+          <div key={index}>
+            <ul>{track.name}</ul>
+          </div>
+        ))}
     </Wrapper>
   );
 };

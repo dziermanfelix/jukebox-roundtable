@@ -1,12 +1,13 @@
-import { Payload } from '.';
 import { albumPath } from '../utils/paths';
 import Wrapper from '../wrappers/Payload';
 import customFetch from '../utils/customFetch';
+import { SEARCH_TYPE } from '../utils/constants';
 
-const Albums = ({ albums, setter }) => {
+const Albums = ({ albums, setPayloadType, setPayload }) => {
   const openAlbum = async (album) => {
     const response = await customFetch.post(albumPath, { id: album?.id });
-    setter(response.data.data.items);
+    setPayloadType(SEARCH_TYPE.ALBUM);
+    setPayload(response.data.data.items);
   };
 
   return (
@@ -14,16 +15,15 @@ const Albums = ({ albums, setter }) => {
       <div className='image-container'>
         {albums.map((album, index) => (
           <div key={index}>
-            <Payload
-              onClick={() => openAlbum(album)}
-              line1={album?.name}
-              line2={album?.artists[0]?.name}
-              imageUrl={album?.images[2]?.url}
-            />
+            <button className='track' onClick={() => openAlbum(album)}>
+              <img src={album?.images[2]?.url} alt='' />
+              <p className='info'>{album?.name}</p>
+            </button>
           </div>
         ))}
       </div>
     </Wrapper>
   );
 };
+
 export default Albums;

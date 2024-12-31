@@ -6,7 +6,7 @@ const Queue = () => {
 
   return (
     <Wrapper>
-      <h3>Your Next Song</h3>
+      <h3>Queue</h3>
       {queue &&
         queue.map((track, index) => (
           <div key={index}>

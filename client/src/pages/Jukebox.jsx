@@ -1,4 +1,4 @@
-import { HomeLogoLink, Player } from '../components';
+import { Player } from '../components';
 import { joinPath, getQueuePath, setQueuePath, jukeboxPath } from '../utils/paths';
 import { toast } from 'react-toastify';
 import { useLoaderData, redirect } from 'react-router-dom';
@@ -49,10 +49,10 @@ const Jukebox = () => {
       <QueueContext.Provider value={{ queue, updateQueue }}>
         <div className='data'>
           <Search />
-          <div className='queue'>
-            <Queue />
-            <Player />
-          </div>
+        </div>
+        <div className='queue'>
+          <Queue />
+          <Player />
         </div>
       </QueueContext.Provider>
     </Wrapper>

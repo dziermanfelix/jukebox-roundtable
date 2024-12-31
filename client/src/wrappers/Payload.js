@@ -1,32 +1,30 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.section`
-  .image-container {
-    vertical-align: middle;
+  .payload {
+    font-size: 0.75rem;
     display: flex;
-    white-space: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
     flex-direction: row;
-    justify-content: space-around;
-    padding: 1rem;
-    min-height: 105px;
+  }
+  .payload-btn {
+    flex-grow: 1;
+  }
+  .payload-btn:hover {
+    background: silver;
+    color: black;
   }
   .image {
-    text-align: center;
-    padding: 3px;
-    font-size: 10px;
-    background: white;
     display: inline-block;
     overflow-x: hidden;
     overflow-y: hidden;
-    min-height: 105px;
-    min-width: 105px;
+    height: 50px;
+    width: 50px;
   }
-  .track {
-    border-style: solid;
-    border-color: red;
-    border-width: 4px;
+  .image:hover {
+    height: 80px;
+    width: 80px;
+    /* border-style: solid;
+    border-color: silver; */
   }
 `;
 

@@ -47,10 +47,10 @@ const Jukebox = () => {
   return (
     <Wrapper>
       <QueueContext.Provider value={{ queue, updateQueue }}>
-        <div className='data'>
+        <div className='search'>
           <Search />
         </div>
-        <div className='queue'>
+        <div className='queue-and-player'>
           <Queue />
           <Player />
         </div>

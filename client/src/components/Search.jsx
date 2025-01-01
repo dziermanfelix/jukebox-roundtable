@@ -62,8 +62,9 @@ const Search = () => {
     <Wrapper>
       <label htmlFor='search'> search </label>
       <input type='text' value={searchValue} onChange={handleChange} onKeyDown={handleKeyPress} />
+      <button onClick={searchRequest}>refresh</button>
       {isSearching && <div>searching...</div>}
-      {displayPayload()}
+      <div className='search-results'>{displayPayload()}</div>
     </Wrapper>
   );
 };

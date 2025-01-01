@@ -1,23 +1,22 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.section`
-  width: 98vw;
-  height: 97vh;
-  overflow-x: hidden;
-  overflow-y: hidden;
   display: flex;
-  .data {
+  width: 90vw;
+  height: 90vh;
+  justify-content: center;
+  overflow: hidden;
+  .search {
     display: flex;
     flex-direction: row;
     width: 60%;
-    height: 100%;
-    padding: 0.1rem;
+    height: 95%;
   }
-  .queue {
-    width: 40%;
-    height: 100%;
+  .queue-and-player {
     display: flex;
     flex-direction: column;
+    width: 40%;
+    height: 100%;
   }
 `;
 

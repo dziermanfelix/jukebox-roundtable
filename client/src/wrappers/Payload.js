@@ -6,10 +6,13 @@ const Wrapper = styled.section`
     display: flex;
     flex-direction: row;
   }
-  .payload-btn {
+  .info {
     flex-grow: 1;
   }
-  .payload-btn:hover {
+  .add-to-queue {
+    font-size: .8rem;
+  }
+  .add-to-queue:hover {
     background: silver;
     color: black;
   }
@@ -23,8 +26,6 @@ const Wrapper = styled.section`
   .image:hover {
     height: 80px;
     width: 80px;
-    /* border-style: solid;
-    border-color: silver; */
   }
 `;
 

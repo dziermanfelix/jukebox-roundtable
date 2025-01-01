@@ -37,10 +37,14 @@ const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
           {!albumDisplay && (
             <img className='image' onClick={() => openAlbum(track)} src={track?.album?.images[2]?.url} alt='' />
           )}
-          <button className='payload-btn' onClick={() => addToQueue(track)}>
+          <div className='info'>
             <p>
-              {track?.name} | <Link onClick={() => openArtist(track)}>{track?.artists[0]?.name}</Link>
+              {albumDisplay && `${index + 1}.`} {track?.name} |{' '}
+              <Link onClick={() => openArtist(track)}>{track?.artists[0]?.name}</Link>
             </p>
+          </div>
+          <button className='add-to-queue' onClick={() => addToQueue(track)}>
+            add
           </button>
         </div>
       ))}

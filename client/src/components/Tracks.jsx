@@ -35,7 +35,9 @@ const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
       {tracks.map((track, index) => (
         <div key={index} className='payload'>
           {!albumDisplay && (
-            <img className='image' onClick={() => openAlbum(track)} src={track?.album?.images[2]?.url} alt='' />
+            <button className='album-btn'>
+              <img className='album-img' onClick={() => openAlbum(track)} src={track?.album?.images[2]?.url} alt='' />
+            </button>
           )}
           <div className='info'>
             <p>

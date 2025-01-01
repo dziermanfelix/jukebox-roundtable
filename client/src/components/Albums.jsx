@@ -12,16 +12,14 @@ const Albums = ({ albums, setPayloadType, setPayload }) => {
 
   return (
     <Wrapper>
-      <div className='image-container'>
-        {albums.map((album, index) => (
-          <div key={index} className='payload'>
-            <button className='payload-btn' onClick={() => openAlbum(album)}>
-              <img src={album?.images[2]?.url} alt='' />
-              <p>{album?.name}</p>
-            </button>
-          </div>
-        ))}
-      </div>
+      {albums.map((album, index) => (
+        <div key={index} className='payload'>
+          <button className='album-btn' onClick={() => openAlbum(album)}>
+            <img src={album?.images[2]?.url} alt='' />
+            <p>{album?.name}</p>
+          </button>
+        </div>
+      ))}
     </Wrapper>
   );
 };

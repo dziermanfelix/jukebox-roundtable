@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.section`
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
   .payload {
     font-size: 0.75rem;
     display: flex;
@@ -9,23 +12,27 @@ const Wrapper = styled.section`
   .info {
     flex-grow: 1;
   }
+  .info:hover {
+    background: silver;
+    color: black;
+  }
   .add-to-queue {
-    font-size: .8rem;
+    font-size: 0.8rem;
   }
   .add-to-queue:hover {
     background: silver;
     color: black;
   }
-  .image {
-    display: inline-block;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    height: 50px;
-    width: 50px;
+  .album-btn {
+    overflow: hidden;
+    display: grid;
   }
-  .image:hover {
-    height: 80px;
-    width: 80px;
+  .album-btn:hover {
+    border-color: silver;
+    border-style: solid;
+  }
+  .album-img {
+    overflow: hidden;
   }
 `;
 

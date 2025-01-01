@@ -1,4 +1,3 @@
-import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Jukebox, Landing, Start, Error, Join, HomeLayout } from './pages';
 import { action as startAction } from './pages/Start';

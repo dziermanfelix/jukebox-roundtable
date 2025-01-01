@@ -4,9 +4,8 @@ const Landing = () => {
   return (
     <div>
       <h1>Welcome to Jukebox Roundtable</h1>
-      <p>We make playing your favorite songs at the party a lot easier</p>
-      <p>Start or join a Jukebox Roundtable now</p>
-      <Link to='/start'>start</Link>
+      <p>Make listening to music at the party easy.</p>
+      <p>Join a Jukebox Roundtable now.</p>
       <Link to='/join'>join</Link>
     </div>
   );

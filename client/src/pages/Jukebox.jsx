@@ -25,8 +25,18 @@ const Jukebox = () => {
 
   const [queue, setQueue] = useState([]);
 
-  const updateQueue = async (newItem) => {
+  const addToQueue = async (newItem) => {
     const tracks = [...queue, newItem];
+    await customFetch.post(`${setQueuePath}dust`, { username: 'specialmink', tracks: tracks });
+    setQueue(tracks);
+  };
+
+  const removeFromQueue = async (item) => {
+    const tracks = [...queue];
+    const index = tracks.indexOf(item);
+    if (index > -1) {
+      tracks.splice(index, 1);
+    }
     await customFetch.post(`${setQueuePath}dust`, { username: 'specialmink', tracks: tracks });
     setQueue(tracks);
   };
@@ -46,7 +56,7 @@ const Jukebox = () => {
 
   return (
     <Wrapper>
-      <QueueContext.Provider value={{ queue, updateQueue }}>
+      <QueueContext.Provider value={{ queue, addToQueue, removeFromQueue }}>
         <div className='search'>
           <Search />
         </div>

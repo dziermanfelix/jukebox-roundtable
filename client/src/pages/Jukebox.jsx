@@ -56,7 +56,7 @@ const Jukebox = () => {
 
   return (
     <Wrapper>
-      <QueueContext.Provider value={{ queue, addToQueue, removeFromQueue }}>
+      <QueueContext.Provider value={{ queue, setQueue, addToQueue, removeFromQueue }}>
         <div className='search'>
           <Search />
         </div>

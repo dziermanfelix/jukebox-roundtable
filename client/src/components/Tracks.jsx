@@ -6,15 +6,15 @@ import { Link } from 'react-router-dom';
 import { SEARCH_TYPE } from '../utils/constants';
 
 const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
-  const { queue, addToQueue } = useQueueContext();
+  const { queue, updateQueue } = useQueueContext();
 
-  const addUniqueToQueue = (track) => {
+  const addToQueue = (track) => {
     const exists = queue.find((existing) => track.id == existing.id);
     if (!exists) {
-      addToQueue(track);
+      updateQueue([...queue, track]);
     } else {
-      // TODO add feedback that track is already in queue
-      console.log('this track already exists in queue, not adding');
+      // TODO
+      console.log('warning, this track already exists in queue');
     }
   };
 
@@ -45,7 +45,7 @@ const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
               <Link onClick={() => openArtist(track)}>{track?.artists[0]?.name}</Link>
             </p>
           </div>
-          <button className='add-to-queue' onClick={() => addUniqueToQueue(track)}>
+          <button className='add-to-queue' onClick={() => addToQueue(track)}>
             add
           </button>
         </div>

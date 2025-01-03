@@ -1,22 +1,25 @@
 import Wrapper from '../wrappers/Queue';
 import { useQueueContext } from '../pages/jukebox';
-import { Reorder, motion } from 'framer-motion';
-import { useState } from 'react';
+import { Reorder } from 'framer-motion';
 
 const Queue = () => {
-  const { queue, removeFromQueue, setQueue } = useQueueContext();
-  // const [items, setItems] = useState(['rancid', 'nofx', 'bouncing souls']);
+  const { queue, updateQueue } = useQueueContext();
 
-  const setItems = (items) => {
-    setQueue(items);
+  const removeFromQueue = (track) => {
+    const tracks = [...queue];
+    const index = tracks.indexOf(track);
+    if (index > -1) {
+      tracks.splice(index, 1);
+    }
+    updateQueue(tracks);
   };
 
   return (
     <Wrapper>
       <div>
         <h3>Queue</h3>
-        <Reorder.Group axis='y' values={queue} onReorder={setItems}>
-          {queue.map((track, index) => (
+        <Reorder.Group axis='y' values={queue} onReorder={updateQueue}>
+          {queue.map((track) => (
             <Reorder.Item key={track.id} value={track} className='list-item'>
               {track?.name}
               <button className='remove-btn' onClick={() => removeFromQueue(track)}>

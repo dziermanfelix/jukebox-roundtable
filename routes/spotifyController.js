@@ -1,8 +1,8 @@
 import { StatusCodes } from 'http-status-codes';
 import axios from 'axios';
+import { setAccessToken, getAccessToken } from './configController.js';
 import dotenv from 'dotenv';
 dotenv.config();
-import { writeAccessToken, readAccessToken } from '../utils/file.cjs';
 
 const spotifyClientId = process.env.SPOTIFY_CLIENT_ID;
 const spotifyClientSecret = process.env.SPOTIFY_CLIENT_SECRET;
@@ -11,10 +11,8 @@ const spotifySearchUrl = 'https://api.spotify.com/v1/search';
 const spotifyAlbumUrl = 'https://api.spotify.com/v1/albums';
 const spotifyArtistUrl = 'https://api.spotify.com/v1/artists';
 
-// TODO figure out how to know when to refresh the token
-// TODo figure out how to refresh the token, I think I just comment out that refresh_token part
-export const getAccessToken = async () => {
-  let accessToken = await readAccessToken();
+export const latestAccessToken = async () => {
+  let accessToken = await getAccessToken();
   if (accessToken === '') {
     accessToken = await refreshAccessToken();
   }
@@ -30,12 +28,12 @@ export const refreshAccessToken = async () => {
   var options = { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } };
   const response = await axios.post(spotifyTokenUrl, data, options);
   const accessToken = response.data.access_token;
-  writeAccessToken(accessToken);
+  setAccessToken(accessToken);
   return accessToken;
 };
 
 export const searchSpotify = async (req, res) => {
-  let accessToken = await getAccessToken();
+  let accessToken = await latestAccessToken();
   const searchString = req.body.search;
   let results = {};
   try {
@@ -63,7 +61,7 @@ const getSearchResults = async (searchString, accessToken) => {
 };
 
 export const getAlbum = async (req, res) => {
-  let accessToken = await getAccessToken();
+  let accessToken = await latestAccessToken();
   const results = await axios.get(`${spotifyAlbumUrl}/${req.body.id}/tracks`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
@@ -72,7 +70,7 @@ export const getAlbum = async (req, res) => {
 };
 
 export const getArtist = async (req, res) => {
-  let accessToken = await getAccessToken();
+  let accessToken = await latestAccessToken();
   var results = await axios.get(`${spotifyArtistUrl}/${req.body.id}/albums`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });

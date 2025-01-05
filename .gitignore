@@ -145,4 +145,3 @@ dist-ssr
 *.sw?
 
 client/node_modules
-utils/access_token

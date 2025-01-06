@@ -1,10 +1,8 @@
-import { Player } from '../components';
+import { Player, Search, Queue } from '../components';
 import { joinPath, getQueuePath, setQueuePath, jukeboxPath } from '../utils/paths';
 import { toast } from 'react-toastify';
 import { useLoaderData, redirect } from 'react-router-dom';
 import customFetch from '../utils/customFetch';
-import Search from '../components/Search';
-import Queue from '../components/Queue';
 import Wrapper from '../wrappers/Jukebox';
 import { useState, useContext, createContext, useEffect } from 'react';
 
@@ -51,7 +49,7 @@ const Jukebox = () => {
         </div>
         <div className='queue-and-player'>
           <Queue />
-          <Player />
+          {/* <Player /> */}
         </div>
       </QueueContext.Provider>
     </Wrapper>

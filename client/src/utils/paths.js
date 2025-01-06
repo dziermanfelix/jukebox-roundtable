@@ -12,6 +12,7 @@ export const loginPath = `${authPath}login/`;
 export const logoutPath = `${authPath}logout/`;
 export const getQueuePath = `${jukeboxPath}get-queue/`;
 export const setQueuePath = `${jukeboxPath}set-queue/`;
+export const accessTokenPath = `${basePath}access-token/`;
 
 // spotify
 export const spotifyPath = `${basePath}spotify/`;

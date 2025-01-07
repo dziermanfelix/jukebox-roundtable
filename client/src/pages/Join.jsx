@@ -36,7 +36,7 @@ const Join = () => {
       <h1>Join Jukebox Roundtable</h1>
       <Form method='post'>
         <FormRow type='text' name='name' defaultValue={name && name} isRequired />
-        <FormRow type='text' name='code' isRequired />
+        <FormRow type='password' name='code' isRequired />
         <SubmitButton />
       </Form>
       <p>

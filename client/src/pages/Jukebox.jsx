@@ -24,14 +24,14 @@ const Jukebox = () => {
   const [queue, setQueue] = useState([]);
 
   const updateQueue = async (tracks) => {
-    await customFetch.post(`${setQueuePath}dust`, { username: 'specialmink', tracks: tracks });
+    await customFetch.post(`${setQueuePath}${name}`, { username: 'specialmink', tracks: tracks });
     setQueue(tracks);
   };
 
   useEffect(() => {
     const fetch = async () => {
       try {
-        const { data } = await customFetch.post(`${getQueuePath}dust`, { username: 'specialmink' });
+        const { data } = await customFetch.post(`${getQueuePath}${name}`, { username: 'specialmink' });
         setQueue(data.queue.tracks);
       } catch (error) {
         console.log(error);

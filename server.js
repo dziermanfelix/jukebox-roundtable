@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
 import mongoose from 'mongoose';
 import jukeboxRouter from './routes/jukeboxRouter.js';
+import queueRouter from './routes/queueRouter.js';
 import authRouter from './routes/authRouter.js';
 import spotifyRouter from './routes/spotifyRouter.js';
 import accessTokenRouter from './routes/accessTokenRouter.js';
@@ -23,6 +24,7 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(`${apiVersionBaseUrl}auth`, authRouter);
 app.use(`${apiVersionBaseUrl}jukebox`, authenticateUser, jukeboxRouter);
+app.use(`${apiVersionBaseUrl}queue`, queueRouter);
 app.use(`${apiVersionBaseUrl}spotify`, spotifyRouter);
 app.use(`${apiVersionBaseUrl}access-token`, accessTokenRouter);
 

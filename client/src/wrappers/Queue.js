@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.section`
-  height: 40%;
+  height: 80%;
   overflow-x: hidden;
   overflow-y: scroll;
   font-size: 1rem;

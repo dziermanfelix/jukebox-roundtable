@@ -24,7 +24,7 @@ const Start = () => {
       <h1>Start Jukebox Roundtable</h1>
       <Form method='post'>
         <FormRow type='text' name='name' isRequired />
-        <FormRow type='text' name='code' isRequired />
+        <FormRow type='password' name='code' isRequired />
         <SubmitButton />
       </Form>
       <p>

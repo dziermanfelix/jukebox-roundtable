@@ -14,6 +14,8 @@ export const searchSpotify = async (req, res) => {
     results = await getSearchResults(searchString, accessToken);
   } catch (error) {
     if (error.status === 401) {
+      // TODO might be able to remove this
+      // this was here becasue before we could detect a token being expired, we would detect it by a 401 error
       console.log(
         '!! 401 Error in spotifyController.searchSpotify(req, res) ... so we do need to address this case...'
       );

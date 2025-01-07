@@ -9,13 +9,11 @@ const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
   const { queue, updateQueue } = useQueueContext();
 
   const addToQueue = (track) => {
-    const exists = queue.find((existing) => track.id == existing.id);
-    if (!exists) {
-      updateQueue([...queue, track]);
-    } else {
-      // TODO
-      console.log('warning, this track already exists in queue');
-    }
+    updateQueue([...queue, track]);
+  };
+
+  const existsInQueue = (track) => {
+    return queue.find((existing) => track.id == existing.id);
   };
 
   const openAlbum = async (track) => {
@@ -45,9 +43,11 @@ const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
               <Link onClick={() => openArtist(track)}>{track?.artists[0]?.name}</Link>
             </p>
           </div>
-          <button className='add-to-queue' onClick={() => addToQueue(track)}>
-            add
-          </button>
+          {!existsInQueue(track) && (
+            <button className='add-to-queue' onClick={() => addToQueue(track)}>
+              add
+            </button>
+          )}
         </div>
       ))}
     </Wrapper>

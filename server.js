@@ -2,7 +2,6 @@ import 'express-async-errors';
 import express from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
-import dotenv from 'dotenv';
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
 import mongoose from 'mongoose';
 import jukeboxRouter from './routes/jukeboxRouter.js';
@@ -11,14 +10,14 @@ import authRouter from './routes/authRouter.js';
 import spotifyRouter from './routes/spotifyRouter.js';
 import accessTokenRouter from './routes/accessTokenRouter.js';
 import { authenticateUser } from './middleware/authMiddleware.js';
-import { apiVersionBaseUrl, serverPort } from './global/api.js';
+import { apiVersionBaseUrl, globalServerPort } from './global/api.js';
+import { nodeEnv, serverPort, mongoUrl } from './utils/environmentVariables.js';
 
-dotenv.config();
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
-if (process.env.NODE_ENV === 'development') {
+if (nodeEnv === 'development') {
   app.use(morgan('dev'));
 }
 
@@ -36,9 +35,9 @@ app.use('*', (req, res) => {
 // internal server error
 app.use(errorHandlerMiddleware);
 
-const port = process.env.SERVER_PORT || serverPort;
+const port = serverPort || globalServerPort;
 try {
-  await mongoose.connect(process.env.MONGO_URL);
+  await mongoose.connect(mongoUrl);
   app.listen(port, () => {
     console.log(`server running on port ${port}...`);
   });

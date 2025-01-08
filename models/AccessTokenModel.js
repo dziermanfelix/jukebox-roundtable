@@ -4,6 +4,7 @@ import { currentTimeSeconds } from '../utils/time.js';
 const AccessTokenSchema = new mongoose.Schema(
   {
     key: String,
+    jukebox: String,
     access_token: String,
     token_type: String,
     expires_in: Number,

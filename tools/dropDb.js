@@ -1,10 +1,9 @@
 import Jukebox from '../models/JukeboxModel.js';
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-dotenv.config({ path: '../.env' });
+import { mongoUrl } from '../utils/environmentVariables.js';
 
 try {
-  await mongoose.connect(process.env.MONGO_URL);
+  await mongoose.connect(mongoUrl);
   Jukebox.collection
     .drop()
     .then(() => {

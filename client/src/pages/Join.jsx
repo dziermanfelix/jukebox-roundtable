@@ -1,6 +1,6 @@
 import { Link, Form, useLoaderData, redirect } from 'react-router-dom';
 import { FormRow, HomeLogoLink, SubmitButton } from '../components';
-import { startPath, loginPath, jukeboxPath } from '../utils/paths';
+import { startPath, jukeboxLoginPath, jukeboxPath } from '../utils/paths';
 import { toast } from 'react-toastify';
 import customFetch from '../utils/customFetch';
 
@@ -21,7 +21,7 @@ export const action = async ({ request }) => {
   const data = Object.fromEntries(formData);
   const name = data.name;
   try {
-    await customFetch.post(loginPath, data);
+    await customFetch.post(jukeboxLoginPath, data);
     return redirect(`${jukeboxPath}${name}`);
   } catch (error) {
     toast.error(error?.response?.data?.msg);
@@ -46,4 +46,5 @@ const Join = () => {
     </div>
   );
 };
+
 export default Join;

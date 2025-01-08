@@ -1,24 +1,26 @@
 import { StatusCodes } from 'http-status-codes';
 import { getAccessToken } from './accessTokenController.js';
 import axios from 'axios';
+import { spotifyAlbumUrl, spotifyArtistUrl, spotifySearchUrl } from '../utils/spotifyEndpoints.js';
+import { spotifyRedirectUri, spotifyClientId } from '../utils/environmentVariables.js';
+import { spotifyAuthorizeUrl } from '../utils/spotifyEndpoints.js';
 
-const spotifySearchUrl = 'https://api.spotify.com/v1/search';
-const spotifyAlbumUrl = 'https://api.spotify.com/v1/albums';
-const spotifyArtistUrl = 'https://api.spotify.com/v1/artists';
+export const getSpotifyLoginUrl = (req, res) => {
+  const scope =
+    'streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state user-library-read user-library-modify';
+  const url = `${spotifyAuthorizeUrl}?client_id=${spotifyClientId}&response_type=code&redirect_uri=${spotifyRedirectUri}&scope=${scope}`;
+  return res.status(StatusCodes.OK).json({ url: url });
+};
 
 export const searchSpotify = async (req, res) => {
-  let accessToken = await getAccessToken();
+  let accessToken = await getAccessToken(req.body.jukebox);
   const searchString = req.body.search;
   let results = {};
   try {
     results = await getSearchResults(searchString, accessToken);
   } catch (error) {
     if (error.status === 401) {
-      // TODO might be able to remove this
-      // this was here becasue before we could detect a token being expired, we would detect it by a 401 error
-      console.log(
-        '!! 401 Error in spotifyController.searchSpotify(req, res) ... so we do need to address this case...'
-      );
+      console.log(`401 error: ${JSON.stringify(error.response.data)}`);
     }
   }
   const data = results.data;

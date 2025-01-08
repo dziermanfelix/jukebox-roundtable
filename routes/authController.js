@@ -3,6 +3,7 @@ import { comparePassword } from '../utils/passwordUtils.js';
 import { UnauthenticatedError } from '../errors/customErrors.js';
 import { StatusCodes } from 'http-status-codes';
 import { createJwt } from '../utils/tokenUtils.js';
+import { nodeEnv } from '../utils/environmentVariables.js';
 
 export const login = async (req, res) => {
   const jukebox = await Jukebox.findOne({ name: req.body.name });
@@ -13,7 +14,7 @@ export const login = async (req, res) => {
   res.cookie('token', token, {
     httpOnly: true,
     expires: new Date(Date.now() + oneDay),
-    secure: process.env.NODE_ENV === 'production',
+    secure: nodeEnv === 'production',
   });
   return res.status(StatusCodes.OK).json({ msg: `user logged into jukebox ${jukebox.name}` });
 };

@@ -1,7 +1,7 @@
-const FormRow = ({ type, name, labelText, defaultValue, isRequired }) => {
+const FormRow = ({ type, name, labelText, defaultValue, isRequired, hide }) => {
   return (
     <div>
-      <label htmlFor={name}>{labelText || name}</label>
+      {!hide && <label htmlFor={name}>{labelText || name}</label>}
       <input type={type} id={name} name={name} defaultValue={defaultValue || ''} required={isRequired && true} />
     </div>
   );

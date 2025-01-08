@@ -1,5 +1,5 @@
 import Wrapper from '../wrappers/Queue';
-import { useQueueContext } from '../pages/jukebox';
+import { useQueueContext } from '../pages/Jukebox';
 import { Reorder } from 'framer-motion';
 
 const Queue = () => {

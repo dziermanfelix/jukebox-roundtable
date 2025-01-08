@@ -1,5 +1,5 @@
 import Wrapper from '../wrappers/Payload';
-import { useQueueContext } from '../pages/jukebox';
+import { useQueueContext } from '../pages/Jukebox';
 import customFetch from '../utils/customFetch';
 import { albumPath, artistPath } from '../utils/paths';
 import { Link } from 'react-router-dom';

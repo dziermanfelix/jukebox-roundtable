@@ -4,7 +4,6 @@ import { HomeLogoLink } from '../components';
 const Error = () => {
   const error = useRouteError();
   console.log(`Printing error in Error.jsx: ${JSON.stringify(error)}`);
-  console.log(error);
   if (error.status === 404) {
     return (
       <div>

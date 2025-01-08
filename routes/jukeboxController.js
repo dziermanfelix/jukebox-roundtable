@@ -1,6 +1,7 @@
 import Jukebox from '../models/JukeboxModel.js';
 import { StatusCodes } from 'http-status-codes';
 import bcrypt from 'bcryptjs';
+import { initAccessToken } from './accessTokenController.js';
 
 export const createJukebox = async (req, res) => {
   const name = req.body.name;
@@ -13,6 +14,7 @@ export const createJukebox = async (req, res) => {
       .json({ msg: `Jukebox Roundtable name ${name} is being used. Try again.` });
   }
   const jukebox = await Jukebox.create(req.body);
+  initAccessToken(name, req.body.spotifyCode);
   return res.status(StatusCodes.CREATED).json({ jukebox });
 };
 

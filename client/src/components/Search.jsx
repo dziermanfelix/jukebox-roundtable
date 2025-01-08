@@ -5,8 +5,10 @@ import { toast } from 'react-toastify';
 import { SEARCH_TYPE } from '../utils/constants';
 import Wrapper from '../wrappers/Search';
 import { Tracks, Albums } from '../components';
+import { useQueueContext } from '../pages/Jukebox';
 
 const Search = () => {
+  const { name } = useQueueContext();
   const [searchValue, setSearchValue] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [payload, setPayload] = useState([]);
@@ -34,7 +36,7 @@ const Search = () => {
     setIsSearching(true);
     if (searchValue != '') {
       try {
-        const response = await customFetch.post(searchPath, { search: searchValue });
+        const response = await customFetch.post(searchPath, { jukebox: name, search: searchValue });
         setPayloadType(SEARCH_TYPE.TRACKS);
         setPayload(response.data.tracks.items);
       } catch (error) {

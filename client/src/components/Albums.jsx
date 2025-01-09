@@ -2,10 +2,13 @@ import { albumPath } from '../utils/paths';
 import Wrapper from '../wrappers/Payload';
 import customFetch from '../utils/customFetch';
 import { SEARCH_TYPE } from '../utils/constants';
+import { useJukeboxContext } from '../pages/Jukebox';
 
 const Albums = ({ albums, setPayloadType, setPayload }) => {
+  const { name } = useJukeboxContext();
+
   const openAlbum = async (album) => {
-    const response = await customFetch.post(albumPath, { id: album?.id });
+    const response = await customFetch.post(albumPath, { jukebox: name, id: album?.id });
     setPayloadType(SEARCH_TYPE.ALBUM);
     setPayload(response.data.data.items);
   };

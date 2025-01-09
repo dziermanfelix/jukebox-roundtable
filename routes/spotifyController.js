@@ -20,7 +20,8 @@ export const searchSpotify = async (req, res) => {
     results = await getSearchResults(searchString, accessToken);
   } catch (error) {
     if (error.status === 401) {
-      console.log(`401 error: ${JSON.stringify(error.response.data)}`);
+      const message = error.response.data.error.message;
+      return res.status(StatusCodes.BAD_REQUEST).json({ msg: message });
     }
   }
   const data = results.data;
@@ -40,7 +41,7 @@ const getSearchResults = async (searchString, accessToken) => {
 };
 
 export const getAlbum = async (req, res) => {
-  let accessToken = await getAccessToken();
+  let accessToken = await getAccessToken(req.body.jukebox);
   const results = await axios.get(`${spotifyAlbumUrl}/${req.body.id}/tracks`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
@@ -49,7 +50,7 @@ export const getAlbum = async (req, res) => {
 };
 
 export const getArtist = async (req, res) => {
-  let accessToken = await getAccessToken();
+  let accessToken = await getAccessToken(req.body.jukebox);
   var results = await axios.get(`${spotifyArtistUrl}/${req.body.id}/albums`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });

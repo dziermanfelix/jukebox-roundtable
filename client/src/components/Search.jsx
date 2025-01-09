@@ -5,10 +5,10 @@ import { toast } from 'react-toastify';
 import { SEARCH_TYPE } from '../utils/constants';
 import Wrapper from '../wrappers/Search';
 import { Tracks, Albums } from '../components';
-import { useQueueContext } from '../pages/Jukebox';
+import { useJukeboxContext } from '../pages/Jukebox';
 
 const Search = () => {
-  const { name } = useQueueContext();
+  const { name } = useJukeboxContext();
   const [searchValue, setSearchValue] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [payload, setPayload] = useState([]);

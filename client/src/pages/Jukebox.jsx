@@ -16,7 +16,7 @@ export const loader = async ({ params }) => {
   }
 };
 
-const QueueContext = createContext();
+const JukeboxContext = createContext();
 const Jukebox = () => {
   const { jukebox } = useLoaderData();
   const { name } = jukebox;
@@ -43,17 +43,17 @@ const Jukebox = () => {
 
   return (
     <Wrapper>
-      <QueueContext.Provider value={{ name, queue, updateQueue }}>
+      <JukeboxContext.Provider value={{ name, queue, updateQueue }}>
         <div className='search'>
           <Search />
         </div>
         <div className='queue-and-player'>
           <Queue />
-          <Player />
+          {/* <Player /> */}
         </div>
-      </QueueContext.Provider>
+      </JukeboxContext.Provider>
     </Wrapper>
   );
 };
-export const useQueueContext = () => useContext(QueueContext);
+export const useJukeboxContext = () => useContext(JukeboxContext);
 export default Jukebox;

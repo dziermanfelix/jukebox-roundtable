@@ -1,12 +1,12 @@
 import Wrapper from '../wrappers/Payload';
-import { useQueueContext } from '../pages/Jukebox';
+import { useJukeboxContext } from '../pages/Jukebox';
 import customFetch from '../utils/customFetch';
 import { albumPath, artistPath } from '../utils/paths';
 import { Link } from 'react-router-dom';
 import { SEARCH_TYPE } from '../utils/constants';
 
 const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
-  const { queue, updateQueue } = useQueueContext();
+  const { name, queue, updateQueue } = useJukeboxContext();
 
   const addToQueue = (track) => {
     updateQueue([...queue, track]);
@@ -17,13 +17,13 @@ const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
   };
 
   const openAlbum = async (track) => {
-    const response = await customFetch.post(albumPath, { id: track?.album?.id });
+    const response = await customFetch.post(albumPath, { jukebox: name, id: track?.album?.id });
     setPayloadType(SEARCH_TYPE.ALBUM);
     setPayload(response.data.data.items);
   };
 
   const openArtist = async (track) => {
-    const response = await customFetch.post(artistPath, { id: track?.artists[0]?.id });
+    const response = await customFetch.post(artistPath, { jukebox: name, id: track?.artists[0]?.id });
     setPayloadType(SEARCH_TYPE.ARTIST);
     setPayload(response.data.data.items);
   };

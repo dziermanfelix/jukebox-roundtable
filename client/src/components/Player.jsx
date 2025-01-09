@@ -27,8 +27,6 @@ const Player = () => {
     setTrackUri('spotify:track:0sINnE3mBBeHrnzQweyOG');
   };
 
-  console.log(`track uri=${trackUri}`);
-
   return (
     <Wrapper>
       <div>

@@ -6,7 +6,7 @@ import { spotifyClientId, spotifyClientSecret, spotifyRedirectUri } from '../uti
 import axios from 'axios';
 
 export const getAccessTokenHttp = async (req, res) => {
-  const accessToken = await getAccessToken();
+  const accessToken = await getAccessToken(req.body.jukebox);
   return res.status(StatusCodes.OK).json({ accessToken });
 };
 

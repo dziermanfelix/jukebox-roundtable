@@ -14,6 +14,7 @@ export const jukeboxLogoutPath = `${jukeboxAuthPath}logout/`;
 export const queuePath = `${basePath}queue/`;
 export const getQueuePath = `${queuePath}get-queue/`;
 export const setQueuePath = `${queuePath}set-queue/`;
+export const nextTrackPath = `${queuePath}get-next-track/`;
 export const accessTokenPath = `${basePath}access-token/`;
 
 // spotify

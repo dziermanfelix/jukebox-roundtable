@@ -17,6 +17,7 @@ export const loader = async ({ params }) => {
 };
 
 const JukeboxContext = createContext();
+
 const Jukebox = () => {
   const { jukebox } = useLoaderData();
   const { name } = jukebox;
@@ -49,11 +50,13 @@ const Jukebox = () => {
         </div>
         <div className='queue-and-player'>
           <Queue />
-          {/* <Player /> */}
+          <Player />
         </div>
       </JukeboxContext.Provider>
     </Wrapper>
   );
 };
+
 export const useJukeboxContext = () => useContext(JukeboxContext);
+
 export default Jukebox;

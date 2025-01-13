@@ -12,8 +12,20 @@ import accessTokenRouter from './routes/accessTokenRouter.js';
 import { authenticateUser } from './middleware/authMiddleware.js';
 import { apiVersionBaseUrl, globalServerPort } from './global/api.js';
 import { nodeEnv, serverPort, mongoUrl } from './utils/environmentVariables.js';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 
 const app = express();
+const server = createServer(app);
+export const serverSocket = new Server(server, {
+  cors: {
+    origin: '*',
+  },
+});
+
+serverSocket.on('connection', (socket) => {
+  socket.on('disconnect', () => {});
+});
 
 app.use(express.json());
 app.use(cookieParser());
@@ -38,7 +50,7 @@ app.use(errorHandlerMiddleware);
 const port = serverPort || globalServerPort;
 try {
   await mongoose.connect(mongoUrl);
-  app.listen(port, () => {
+  server.listen(port, () => {
     console.log(`server running on port ${port}...`);
   });
 } catch (error) {

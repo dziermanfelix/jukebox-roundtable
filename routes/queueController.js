@@ -1,5 +1,7 @@
 import Queue from '../models/QueueModel.js';
 import { StatusCodes } from 'http-status-codes';
+import { serverSocket } from '../server.js';
+import { updateQueueEvent } from '../utils/socketEvents.js';
 
 export const setQueue = async (req, res) => {
   const queue = await setQueueDb(req.params.id, req.body.username, req.body);
@@ -23,6 +25,7 @@ export const getNextTrack = async (req, res) => {
   const track = tracks.shift();
   queue.tracks = tracks;
   await setQueueDb(req.params.id, req.body.username, queue);
+  serverSocket.emit(updateQueueEvent, queue.tracks);
   return res.status(StatusCodes.OK).json({ track });
 };
 

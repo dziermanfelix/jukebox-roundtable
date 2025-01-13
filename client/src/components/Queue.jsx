@@ -1,9 +1,14 @@
 import Wrapper from '../wrappers/Queue';
 import { useJukeboxContext } from '../pages/Jukebox';
 import { Reorder } from 'framer-motion';
+import { updateQueueEvent } from '../../../utils/socketEvents';
 
 const Queue = () => {
-  const { queue, updateQueue } = useJukeboxContext();
+  const { queue, updateQueue, socket } = useJukeboxContext();
+
+  socket.on(updateQueueEvent, (queue) => {
+    updateQueue(queue);
+  });
 
   const removeFromQueue = (track) => {
     const tracks = [...queue];

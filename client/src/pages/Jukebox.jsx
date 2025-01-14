@@ -5,7 +5,7 @@ import { useLoaderData, redirect } from 'react-router-dom';
 import customFetch from '../utils/customFetch';
 import Wrapper from '../wrappers/Jukebox';
 import { useState, useContext, createContext, useEffect } from 'react';
-import io from 'socket.io-client';
+import socket from '../utils/socket';
 
 export const loader = async ({ params }) => {
   try {
@@ -23,25 +23,8 @@ const Jukebox = () => {
   const { jukebox } = useLoaderData();
   const { name } = jukebox;
   const [queue, setQueue] = useState([]);
-  const [isSocketConnected, setIsSocketConnected] = useState(false);
-  const socket = io('http://localhost:8144');
-
-  const updateQueue = async (tracks) => {
-    await customFetch.post(`${setQueuePath}${name}`, { username: 'specialmink', tracks: tracks });
-    setQueue(tracks);
-  };
 
   useEffect(() => {
-    if (!isSocketConnected) {
-      socket.on('connect_error', (err) => {
-        console.log(`connect error: ${err}`);
-      });
-      socket.on('connect', (data) => {});
-      socket.on('disconnect', (data) => {});
-      socket.connect();
-      setIsSocketConnected(true);
-    }
-
     const fetch = async () => {
       try {
         const { data } = await customFetch.post(`${getQueuePath}${name}`, { username: 'specialmink' });
@@ -52,14 +35,28 @@ const Jukebox = () => {
       }
     };
     fetch();
+  }, []);
 
+  useEffect(() => {
+    socket.on('connect_error', (err) => {
+      console.log(`connect error: ${err}`);
+    });
+    socket.on('connect', (data) => {
+      console.log('socket connected');
+    });
+    socket.on('disconnect', (data) => {
+      console.log('socket disconnected');
+    });
+    socket.connect();
     return () => {
-      if (isSocketConnected) {
-        socket.disconnect();
-        setIsSocketConnected(false);
-      }
+      socket.disconnect();
     };
   }, []);
+
+  const updateQueue = async (tracks) => {
+    await customFetch.post(`${setQueuePath}${name}`, { username: 'specialmink', tracks: tracks });
+    setQueue(tracks);
+  };
 
   return (
     <Wrapper>

@@ -36,7 +36,7 @@ const Jukebox = () => {
       socket.on('connect_error', (err) => {
         console.log(`connect error: ${err}`);
       });
-      socket.on('connection', (data) => {});
+      socket.on('connect', (data) => {});
       socket.on('disconnect', (data) => {});
       socket.connect();
       setIsSocketConnected(true);

@@ -9,13 +9,13 @@ const Wrapper = styled.section`
   .search {
     display: flex;
     flex-direction: row;
-    width: 60%;
+    width: 50%;
     height: 95%;
   }
   .queue-and-player {
     display: flex;
     flex-direction: column;
-    width: 40%;
+    width: 50%;
     height: 100%;
   }
 `;

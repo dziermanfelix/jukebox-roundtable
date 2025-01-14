@@ -10,6 +10,7 @@ const QueueSchema = new mongoose.Schema({
       name: String,
       album: { images: [] },
       artists: [],
+      duration_ms: Number,
     },
   ],
 });

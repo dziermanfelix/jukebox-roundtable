@@ -14,6 +14,8 @@ import { apiVersionBaseUrl, globalServerPort } from './global/api.js';
 import { nodeEnv, serverPort, mongoUrl } from './utils/environmentVariables.js';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import { startJukeboxEvent } from './utils/socketEvents.js';
+import { startJukebox } from './routes/playerController.js';
 
 const app = express();
 const server = createServer(app);
@@ -24,6 +26,11 @@ export const serverSocket = new Server(server, {
 });
 
 serverSocket.on('connection', (socket) => {
+  // TODO figure out why so many clients are connecting
+  console.log(`${serverSocket.engine.clientsCount} clients connected`);
+  socket.on(startJukeboxEvent, ({ jukebox, deviceId }) => {
+    startJukebox(jukebox, deviceId);
+  });
   socket.on('disconnect', () => {});
 });
 

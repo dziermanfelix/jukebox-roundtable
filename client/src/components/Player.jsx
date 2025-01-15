@@ -1,5 +1,5 @@
 import Wrapper from '../wrappers/Player';
-import { accessTokenPath } from '../utils/paths';
+import { accessTokenPath, startJukeboxPath } from '../utils/paths';
 import { useEffect, useState } from 'react';
 import customFetch from '../utils/customFetch';
 import { toast } from 'react-toastify';
@@ -46,7 +46,13 @@ const Player = () => {
         });
 
         player.addListener('ready', ({ device_id }) => {
-          socket.emit(startJukeboxEvent, { jukebox: name, deviceId: device_id });
+          // socket.emit(startJukeboxEvent, { jukebox: name, deviceId: device_id });
+          try {
+            customFetch.post(`${startJukeboxPath}${name}`, { deviceId: device_id });
+          } catch (error) {
+            console.log(error);
+            toast.error(error?.response?.data?.msg);
+          }
           setStarted(true);
         });
 

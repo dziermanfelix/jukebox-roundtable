@@ -11,6 +11,7 @@ export const jukeboxAuthPath = `${basePath}auth/`;
 export const jukeboxCreatePath = `${jukeboxAuthPath}create/`;
 export const jukeboxLoginPath = `${jukeboxAuthPath}login/`;
 export const jukeboxLogoutPath = `${jukeboxAuthPath}logout/`;
+export const startJukeboxPath = `${jukeboxPath}start/`;
 export const queuePath = `${basePath}queue/`;
 export const getQueuePath = `${queuePath}get-queue/`;
 export const setQueuePath = `${queuePath}set-queue/`;

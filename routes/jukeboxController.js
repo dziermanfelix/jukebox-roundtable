@@ -24,12 +24,16 @@ const jukeboxExists = async (name) => {
 
 export const getJukebox = async (req, res) => {
   const name = req.params.id;
-  const jukebox = await Jukebox.findOne({ name: name });
+  const jukebox = await getJukeboxDb(name);
   if (!jukebox) {
     return res.status(404).json({ msg: `no jukebox with name ${name}` });
   }
   return res.status(StatusCodes.OK).json({ jukebox });
 };
+
+export async function getJukeboxDb(name) {
+  return await Jukebox.findOne({ name: name });
+}
 
 export const getJukeboxes = async (req, res) => {
   const jukeboxes = await Jukebox.find();

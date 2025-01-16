@@ -4,10 +4,10 @@ import { Reorder } from 'framer-motion';
 import { updateQueueEvent } from '../../../utils/socketEvents';
 
 const Queue = () => {
-  const { queue, updateQueue, socket } = useJukeboxContext();
+  const { username, queue, updateQueue, reorderQueue, socket } = useJukeboxContext();
 
-  socket.on(updateQueueEvent, (queue) => {
-    updateQueue(queue);
+  socket.on(updateQueueEvent, (tracks) => {
+    updateQueue(username, tracks);
   });
 
   const removeFromQueue = (track) => {
@@ -16,14 +16,14 @@ const Queue = () => {
     if (index > -1) {
       tracks.splice(index, 1);
     }
-    updateQueue(tracks);
+    updateQueue(username, tracks);
   };
 
   return (
     <Wrapper>
       <div>
         <h3>Queue</h3>
-        <Reorder.Group axis='y' values={queue} onReorder={updateQueue}>
+        <Reorder.Group axis='y' values={queue} onReorder={reorderQueue}>
           {queue.map((track) => (
             <Reorder.Item key={track.id} value={track} className='list-item'>
               {track?.name}

@@ -12,7 +12,3 @@ export const verifyJwt = (token) => {
   const decoded = jwt.verify(token, jwtSecret);
   return decoded;
 };
-
-export const createUsername = () => {
-  return 'specialmink';
-};

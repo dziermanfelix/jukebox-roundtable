@@ -6,11 +6,11 @@ import { getQueueDb, setQueueDb } from './queueController.js';
 import { getJukeboxDb } from './jukeboxController.js';
 
 export const startJukeboxRequest = async (req, res) => {
-  startJukebox(req.params.id, req.body.deviceId, req.cookies.username);
+  startJukebox(req.params.id, req.body.deviceId, req.cookies.token);
 };
 
-export async function startJukebox(jukebox, deviceId, username) {
-  let track = await playNextTrack(jukebox, deviceId, username);
+export async function startJukebox(jukebox, deviceId, sessionId) {
+  let track = await playNextTrack(jukebox, deviceId, sessionId);
   while ((await getJukeboxDb(jukebox)) && track) {
     let total = track.duration_ms;
     let midpoint = Math.floor(total / 2);
@@ -37,7 +37,7 @@ export async function startJukebox(jukebox, deviceId, username) {
     });
     const queueNextTimeout = new Promise((resolve) => {
       setTimeout(async () => {
-        nextTrack = await addNextTrackToPlayerQueue(jukebox, deviceId, username);
+        nextTrack = await addNextTrackToPlayerQueue(jukebox, deviceId, sessionId);
         resolve();
       }, queueNext);
     });
@@ -54,8 +54,8 @@ export async function startJukebox(jukebox, deviceId, username) {
   }
 }
 
-async function addNextTrackToPlayerQueue(jukebox, deviceId, username) {
-  const track = await getNextTrack(jukebox, username);
+async function addNextTrackToPlayerQueue(jukebox, deviceId, sessionId) {
+  const track = await getNextTrack(jukebox, sessionId);
   const token = await getAccessToken(jukebox);
   try {
     var options = {
@@ -69,8 +69,8 @@ async function addNextTrackToPlayerQueue(jukebox, deviceId, username) {
   }
 }
 
-async function playNextTrack(jukebox, deviceId, username) {
-  const track = await getNextTrack(jukebox, username);
+async function playNextTrack(jukebox, deviceId, sessionId) {
+  const track = await getNextTrack(jukebox, sessionId);
   const token = await getAccessToken(jukebox);
   try {
     var data = {
@@ -88,12 +88,12 @@ async function playNextTrack(jukebox, deviceId, username) {
   }
 }
 
-export const getNextTrack = async (jukebox, username) => {
-  const queue = await getQueueDb(jukebox, username);
+export const getNextTrack = async (jukebox, sessionId) => {
+  const queue = await getQueueDb(jukebox, sessionId);
   const tracks = queue.tracks;
   const track = tracks.shift();
   queue.tracks = tracks;
-  await setQueueDb(jukebox, username, queue);
+  await setQueueDb(jukebox, sessionId, queue);
   serverSocket.emit(updateQueueEvent, queue.tracks);
   return track;
 };

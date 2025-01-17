@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const QueueSchema = new mongoose.Schema({
   jukebox: String,
-  username: String,
+  sessionId: String,
   tracks: [
     {
       id: String,

@@ -6,10 +6,10 @@ import { Link } from 'react-router-dom';
 import { SEARCH_TYPE } from '../utils/constants';
 
 const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
-  const { name, username, queue, updateQueue } = useJukeboxContext();
+  const { name, sessionId, queue, updateQueue } = useJukeboxContext();
 
   const addToQueue = (track) => {
-    updateQueue(username, [...queue, track]);
+    updateQueue(sessionId, [...queue, track]);
   };
 
   const existsInQueue = (track) => {

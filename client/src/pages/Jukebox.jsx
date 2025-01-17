@@ -9,12 +9,8 @@ import socket from '../utils/socket';
 
 export const loader = async ({ params }) => {
   try {
-    // const { data } = await customFetch.get(`${jukeboxPath}${params.id}`);
     const response = await customFetch.get(`${jukeboxPath}${params.id}`);
-    // console.log(response);
-    // const { data } = response;
-    // const {username} = response;
-    return { jukebox: response.data.jukebox, username: response.data.username };
+    return { jukebox: response.data.jukebox, sessionId: response.data.sessionId };
   } catch (error) {
     toast.error(error?.response?.data?.msg);
     return redirect(`${joinPath}${params.id}`);
@@ -24,14 +20,14 @@ export const loader = async ({ params }) => {
 const JukeboxContext = createContext();
 
 const Jukebox = () => {
-  const { jukebox, username } = useLoaderData();
+  const { jukebox, sessionId } = useLoaderData();
   const { name } = jukebox;
   const [queue, setQueue] = useState([]);
 
   useEffect(() => {
     const fetch = async () => {
       try {
-        const { data } = await customFetch.post(`${getQueuePath}${name}`, { username: username });
+        const { data } = await customFetch.post(`${getQueuePath}${name}`, { sessionId: sessionId });
         setQueue(data.queue.tracks);
       } catch (error) {
         console.log(error);
@@ -58,22 +54,22 @@ const Jukebox = () => {
   }, []);
 
   const reorderQueue = async (tracks) => {
-    updateQueue(username, tracks);
+    updateQueue(sessionId, tracks);
   };
 
-  const updateQueue = async (username, tracks) => {
-    await customFetch.post(`${setQueuePath}${name}`, { username: username, tracks: tracks });
+  const updateQueue = async (sessionId, tracks) => {
+    await customFetch.post(`${setQueuePath}${name}`, { sessionId: sessionId, tracks: tracks });
     setQueue(tracks);
   };
 
   return (
     <Wrapper>
-      <JukeboxContext.Provider value={{ name, username, queue, reorderQueue, updateQueue, socket }}>
+      <JukeboxContext.Provider value={{ name, sessionId, queue, reorderQueue, updateQueue, socket }}>
         <div className='search'>
           <Search />
         </div>
         <div className='queue-and-player'>
-          <h4>{username}</h4>
+          <h4>{sessionId}</h4>
           <Queue />
           <Player />
         </div>

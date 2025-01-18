@@ -1,4 +1,4 @@
-import { Player, Search, Queue } from '../components';
+import { Player, Search, Queue, DebouncingText } from '../components';
 import { joinPath, getQueuePath, setQueuePath, jukeboxPath, sessionPath } from '../utils/paths';
 import { toast } from 'react-toastify';
 import { useLoaderData, redirect } from 'react-router-dom';
@@ -44,14 +44,10 @@ const Jukebox = () => {
 
   useEffect(() => {
     socket.on('connect_error', (err) => {
-      console.log(`connect error: ${err}`);
+      console.log(`socket connect error: ${err}`);
     });
-    socket.on('connect', (data) => {
-      console.log('socket connected');
-    });
-    socket.on('disconnect', (data) => {
-      console.log('socket disconnected');
-    });
+    socket.on('connect', (data) => {});
+    socket.on('disconnect', (data) => {});
     socket.connect();
     return () => {
       socket.disconnect();
@@ -67,6 +63,17 @@ const Jukebox = () => {
     setQueue(tracks);
   };
 
+  const displayNameUpdate = async (displayName) => {
+    session.displayName = displayName;
+    try {
+      await customFetch.patch(sessionPath, session);
+      return;
+    } catch (error) {
+      toast.error(error.response.data.msg);
+      return error;
+    }
+  };
+
   return (
     <Wrapper>
       <JukeboxContext.Provider value={{ name, session, queue, reorderQueue, updateQueue, socket }}>
@@ -74,7 +81,7 @@ const Jukebox = () => {
           <Search />
         </div>
         <div className='queue-and-player'>
-          <h4>{session.displayName}</h4>
+          <DebouncingText initialValue={session.displayName} updater={displayNameUpdate} />
           <Queue />
           <Player />
         </div>

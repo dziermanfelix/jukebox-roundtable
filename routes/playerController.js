@@ -6,7 +6,7 @@ import { getQueueDb, setQueueDb } from './queueController.js';
 import { getJukeboxDb } from './jukeboxController.js';
 
 export const startJukeboxRequest = async (req, res) => {
-  startJukebox(req.params.id, req.body.deviceId, req.cookies.webToken);
+  startJukebox(req.params.id, req.body.deviceId, req.body.sessionId);
 };
 
 export async function startJukebox(jukebox, deviceId, sessionId) {
@@ -89,6 +89,7 @@ async function playNextTrack(jukebox, deviceId, sessionId) {
 }
 
 export const getNextTrack = async (jukebox, sessionId) => {
+  console.log(`get queue for ${jukebox} ${sessionId}`);
   const queue = await getQueueDb(jukebox, sessionId);
   const tracks = queue.tracks;
   const track = tracks.shift();

@@ -37,4 +37,5 @@ const Queue = () => {
     </Wrapper>
   );
 };
+
 export default Queue;

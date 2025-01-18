@@ -6,6 +6,7 @@ import { SEARCH_TYPE } from '../utils/constants';
 import Wrapper from '../wrappers/Search';
 import { Tracks, Albums } from '../components';
 import { useJukeboxContext } from '../pages/Jukebox';
+import { DebouncingText } from '../components';
 
 const Search = () => {
   const { name } = useJukeboxContext();
@@ -20,17 +21,6 @@ const Search = () => {
     }, 750);
     return () => clearTimeout(timeoutId);
   }, [searchValue]);
-
-  const handleChange = (event) => {
-    setSearchValue(event.target.value);
-  };
-
-  const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      setSearchValue(event.target.value);
-      searchRequest(searchValue);
-    }
-  };
 
   const searchRequest = async () => {
     setIsSearching(true);
@@ -60,10 +50,15 @@ const Search = () => {
     }
   };
 
+  const testUpdater = (value) => {
+    setSearchValue(value);
+  };
+
   return (
     <Wrapper>
       <label htmlFor='search'> search </label>
-      <input type='text' value={searchValue} onChange={handleChange} onKeyDown={handleKeyPress} />
+      {/* <input type='text' value={searchValue} onChange={handleChange} onKeyDown={handleKeyPress} /> */}
+      <DebouncingText initialValue={searchValue} updater={testUpdater} />
       <button onClick={searchRequest}>refresh</button>
       {isSearching && <div>searching...</div>}
       <div className='search-results'>{displayPayload()}</div>

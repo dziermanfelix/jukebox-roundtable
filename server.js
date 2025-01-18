@@ -25,11 +25,7 @@ export const serverSocket = new Server(server, {
 });
 
 serverSocket.on('connection', (socket) => {
-  // TODO make client socket a singleton
   console.log(`${serverSocket.engine.clientsCount} clients connected`);
-  // socket.on(startJukeboxEvent, ({ jukebox, deviceId }) => {
-  //   startJukebox(jukebox, deviceId);
-  // });
   socket.on('disconnect', () => {});
 });
 

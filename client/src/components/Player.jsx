@@ -7,7 +7,7 @@ import { useJukeboxContext } from '../pages/Jukebox';
 import { updateTrackEvent } from '../../../utils/socketEvents';
 
 const Player = () => {
-  const { name, socket } = useJukeboxContext();
+  const { name, session, socket } = useJukeboxContext();
   const [token, setToken] = useState(undefined);
   const [player, setPlayer] = useState(undefined);
   const [isStarted, setStarted] = useState(false);
@@ -46,9 +46,8 @@ const Player = () => {
         });
 
         player.addListener('ready', ({ device_id }) => {
-          // socket.emit(startJukeboxEvent, { jukebox: name, deviceId: device_id });
           try {
-            customFetch.post(`${startJukeboxPath}${name}`, { deviceId: device_id });
+            customFetch.post(`${startJukeboxPath}${name}`, { sessionId: session._id, deviceId: device_id });
           } catch (error) {
             console.log(error);
             toast.error(error?.response?.data?.msg);

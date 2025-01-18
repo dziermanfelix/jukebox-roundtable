@@ -15,7 +15,6 @@ export const getQueue = async (req, res) => {
 };
 
 export async function getQueueDb(jukebox, sessionId) {
-  console.log(`looking for jukebox ${jukebox}, sessionId ${sessionId}`)
   return await Queue.findOne({ jukebox: jukebox, sessionId: sessionId });
 }
 

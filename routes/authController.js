@@ -9,14 +9,14 @@ export const login = async (req, res) => {
   const jukebox = await Jukebox.findOne({ name: req.body.name });
   const isValidUser = jukebox && (await comparePassword(req.body.code, jukebox.code));
   if (!isValidUser) throw new UnauthenticatedError('invalid credentials');
-  const token = createJwt({ name: jukebox.name });
+  const webToken = createJwt({ name: jukebox.name });
   const oneDay = 1000 * 60 * 60 * 24; // in milliseconds
-  var cookieOptions = {
+  const cookieOptions = {
     httpOnly: true,
     expires: new Date(Date.now() + oneDay),
     secure: nodeEnv === 'production',
   };
-  res.cookie('token', token, cookieOptions);
+  res.cookie('webToken', webToken, cookieOptions);
   return res.status(StatusCodes.OK).json({ msg: `user logged into jukebox ${jukebox.name}` });
 };
 

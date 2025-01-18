@@ -9,13 +9,12 @@ import queueRouter from './routes/queueRouter.js';
 import authRouter from './routes/authRouter.js';
 import spotifyRouter from './routes/spotifyRouter.js';
 import accessTokenRouter from './routes/accessTokenRouter.js';
+import sessionRouter from './routes/sessionRouter.js';
 import { authenticateUser } from './middleware/authMiddleware.js';
 import { apiVersionBaseUrl, globalServerPort } from './global/api.js';
 import { nodeEnv, serverPort, mongoUrl } from './utils/environmentVariables.js';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import { startJukeboxEvent } from './utils/socketEvents.js';
-import { startJukebox } from './routes/playerController.js';
 
 const app = express();
 const server = createServer(app);
@@ -41,6 +40,7 @@ if (nodeEnv === 'development') {
 }
 
 app.use(`${apiVersionBaseUrl}auth`, authRouter);
+app.use(`${apiVersionBaseUrl}session`, sessionRouter);
 app.use(`${apiVersionBaseUrl}jukebox`, authenticateUser, jukeboxRouter);
 app.use(`${apiVersionBaseUrl}queue`, queueRouter);
 app.use(`${apiVersionBaseUrl}spotify`, spotifyRouter);

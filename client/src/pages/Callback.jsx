@@ -1,10 +1,10 @@
 import { redirect } from 'react-router-dom';
-import { startAuthenticatedPath } from '../utils/paths';
+import { startPath } from '../utils/paths';
 
 export const loader = async ({ request }) => {
   const params = Object.fromEntries([...new URL(request.url).searchParams.entries()]);
   const spotifyCode = params.code;
-  return redirect(`${startAuthenticatedPath}?code=${spotifyCode}`);
+  return redirect(`${startPath}?code=${spotifyCode}`);
 };
 
 const Callback = () => {

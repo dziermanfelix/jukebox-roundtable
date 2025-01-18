@@ -28,7 +28,7 @@ export const getJukebox = async (req, res) => {
   if (!jukebox) {
     return res.status(404).json({ msg: `no jukebox with name ${name}` });
   }
-  return res.status(StatusCodes.OK).json({ jukebox: jukebox, sessionId: req.cookies.token });
+  return res.status(StatusCodes.OK).json({ jukebox: jukebox, sessionId: req.cookies.webToken });
 };
 
 export async function getJukeboxDb(name) {

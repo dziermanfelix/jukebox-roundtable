@@ -6,7 +6,7 @@ import { getQueueDb, setQueueDb } from './queueController.js';
 import { getJukeboxDb } from './jukeboxController.js';
 
 export const startJukeboxRequest = async (req, res) => {
-  startJukebox(req.params.id, req.body.deviceId, req.cookies.token);
+  startJukebox(req.params.id, req.body.deviceId, req.cookies.webToken);
 };
 
 export async function startJukebox(jukebox, deviceId, sessionId) {

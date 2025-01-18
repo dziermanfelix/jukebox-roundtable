@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import customFetch from '../utils/customFetch';
 import { toast } from 'react-toastify';
 import { useJukeboxContext } from '../pages/Jukebox';
-import { startJukeboxEvent, updateTrackEvent } from '../../../utils/socketEvents';
+import { updateTrackEvent } from '../../../utils/socketEvents';
 
 const Player = () => {
   const { name, socket } = useJukeboxContext();

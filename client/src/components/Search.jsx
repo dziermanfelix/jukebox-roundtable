@@ -16,10 +16,7 @@ const Search = () => {
   const [payloadType, setPayloadType] = useState(SEARCH_TYPE.NONE);
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      searchRequest(searchValue);
-    }, 750);
-    return () => clearTimeout(timeoutId);
+    searchRequest(searchValue);
   }, [searchValue]);
 
   const searchRequest = async () => {
@@ -50,14 +47,10 @@ const Search = () => {
     }
   };
 
-  const testUpdater = (value) => {
-    setSearchValue(value);
-  };
-
   return (
     <Wrapper>
       <label htmlFor='search'> search </label>
-      <DebouncingText initialValue={searchValue} updater={testUpdater} keepEditing />
+      <DebouncingText initialValue={searchValue} updater={setSearchValue} keepEditing />
       <button onClick={searchRequest}>refresh</button>
       {isSearching && <div>searching...</div>}
       <div className='search-results'>{displayPayload()}</div>

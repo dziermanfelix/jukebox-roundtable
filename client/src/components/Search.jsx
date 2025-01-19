@@ -57,8 +57,7 @@ const Search = () => {
   return (
     <Wrapper>
       <label htmlFor='search'> search </label>
-      {/* <input type='text' value={searchValue} onChange={handleChange} onKeyDown={handleKeyPress} /> */}
-      <DebouncingText initialValue={searchValue} updater={testUpdater} />
+      <DebouncingText initialValue={searchValue} updater={testUpdater} keepEditing />
       <button onClick={searchRequest}>refresh</button>
       {isSearching && <div>searching...</div>}
       <div className='search-results'>{displayPayload()}</div>

@@ -25,9 +25,10 @@ export const loader = async ({ params }) => {
 const JukeboxContext = createContext();
 
 const Jukebox = () => {
-  const { jukebox, session } = useLoaderData();
+  const { jukebox, session: initialSesion } = useLoaderData();
   const { name } = jukebox;
   const [queue, setQueue] = useState([]);
+  const [session, setSession] = useState(initialSesion);
 
   useEffect(() => {
     const fetch = async () => {
@@ -64,14 +65,15 @@ const Jukebox = () => {
   };
 
   const displayNameUpdate = async (displayName) => {
-    session.displayName = displayName;
-    try {
-      await customFetch.patch(sessionPath, session);
-      return;
-    } catch (error) {
-      toast.error(error.response.data.msg);
-      return error;
+    // TODO known issue that the debouncing text component won't rerender when an empty display name is adjusted
+    if (displayName === '') {
+      displayName = 'player1';
     }
+    session.displayName = displayName;
+    const {
+      data: { session: udpatedSession },
+    } = await customFetch.patch(sessionPath, session);
+    setSession(udpatedSession);
   };
 
   return (

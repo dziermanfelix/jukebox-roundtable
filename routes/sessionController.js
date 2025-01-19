@@ -36,7 +36,7 @@ export const getSession = async (req, res) => {
 
 export const updateSession = async (req, res) => {
   const newSession = { ...req.body };
-  const updatedSession = await Session.findByIdAndUpdate(req.body._id, newSession);
+  const updatedSession = await Session.findByIdAndUpdate(req.body._id, newSession, { new: true });
   return res.status(StatusCodes.OK).json({ msg: 'session updated', session: updatedSession });
 };
 

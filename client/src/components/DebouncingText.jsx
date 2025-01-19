@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Wrapper from '../wrappers/DebouncingText';
 
 const DebouncingText = ({ initialValue, updater, keepEditing }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(initialValue);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -16,10 +17,16 @@ const DebouncingText = ({ initialValue, updater, keepEditing }) => {
     setValue(e.target.value);
   };
 
-  const handleKeyPress = (e) => {
+  const onKeyDown = (e) => {
     if (e.key === 'Enter') {
       updateValue(e.target.value);
     }
+  };
+
+  const clearValue = () => {
+    setValue('');
+    updateValue('');
+    inputRef.current.focus();
   };
 
   const updateValue = (value) => {
@@ -28,18 +35,19 @@ const DebouncingText = ({ initialValue, updater, keepEditing }) => {
   };
 
   const getRender = () => {
-    if (isEditing) {
-      return <input type='text' value={value} onChange={onChange} onKeyDown={handleKeyPress} />;
+    if (isEditing || keepEditing) {
+      return (
+        <div>
+          <input ref={inputRef} type='text' value={value} onChange={onChange} onKeyDown={onKeyDown} />
+          <button onClick={clearValue}>&times;</button>
+        </div>
+      );
     } else {
-      if (keepEditing) {
-        return <input type='text' value={value} onChange={onChange} onKeyDown={handleKeyPress} />;
-      } else {
-        return <span onClick={() => setIsEditing(true)}>{value} </span>;
-      }
+      return <span onClick={() => setIsEditing(true)}>{value} </span>;
     }
   };
 
-  return <Wrapper>{<div>{getRender()}</div>}</Wrapper>;
+  return <Wrapper>{getRender()}</Wrapper>;
 };
 
 export default DebouncingText;

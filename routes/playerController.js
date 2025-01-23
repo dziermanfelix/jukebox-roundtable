@@ -4,53 +4,44 @@ import { getAccessToken } from './accessTokenController.js';
 import axios from 'axios';
 import { getQueueDb, setQueueDb } from './queueController.js';
 import { getJukeboxDb } from './jukeboxController.js';
+import { delay } from '../utils/time.js';
 
 export const startJukeboxRequest = async (req, res) => {
   startJukebox(req.params.id, req.body.deviceId, req.body.sessionId);
 };
 
 export async function startJukebox(jukebox, deviceId, sessionId) {
-  let track = await playNextTrack(jukebox, deviceId, sessionId);
-  while ((await getJukeboxDb(jukebox)) && track) {
-    let total = track.duration_ms;
-    let midpoint = Math.floor(total / 2);
-    let warning = total - 30000;
-    let queueNext = total - 10000;
-    let nextTrack = undefined;
-    const tenSecondsTimeout = new Promise((resolve) => {
-      setTimeout(() => {
-        console.log(`10 seconds ${track.name}`);
-        resolve();
-      }, 10000);
-    });
-    const midpointTimeout = new Promise((resolve) => {
-      setTimeout(() => {
-        console.log(`midpoint ${track.name}`);
-        resolve();
-      }, midpoint);
-    });
-    const warningTimeout = new Promise((resolve) => {
-      setTimeout(() => {
-        console.log(`warning ${track.name}`);
-        resolve();
-      }, warning);
-    });
-    const queueNextTimeout = new Promise((resolve) => {
-      setTimeout(async () => {
-        nextTrack = await addNextTrackToPlayerQueue(jukebox, deviceId, sessionId);
-        resolve();
-      }, queueNext);
-    });
-    const totalTimeout = new Promise((resolve) => {
-      setTimeout(() => {
-        if (nextTrack) {
-          serverSocket.emit(updateTrackEvent, nextTrack);
-          track = nextTrack;
-        }
-        resolve();
-      }, total);
-    });
-    await Promise.all([tenSecondsTimeout, midpointTimeout, warningTimeout, queueNextTimeout, totalTimeout]);
+  let { id: queuedTrackId } = await playNextTrack(jukebox, deviceId, sessionId);
+  let readyToQueueTrack = true;
+  while (await getJukeboxDb(jukebox)) {
+    let current = await getCurrentPlaying(jukebox);
+    if (current !== '' && current.is_playing) {
+      if (current.item.id === queuedTrackId) {
+        readyToQueueTrack = true;
+      }
+      const remaining = current.item.duration_ms - current.progress_ms;
+      const midpoint = Math.floor(remaining / 2);
+      if (remaining <= 30000 && readyToQueueTrack) {
+        const nextTrack = await addNextTrackToPlayerQueue(jukebox, deviceId, sessionId);
+        queuedTrackId = nextTrack.id;
+        readyToQueueTrack = false;
+      }
+      await delay(midpoint);
+    }
+  }
+}
+
+async function getCurrentPlaying(jukebox) {
+  const token = await getAccessToken(jukebox);
+  try {
+    var options = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    const response = await axios.get('https://api.spotify.com/v1/me/player/currently-playing', options);
+    return response.data;
+  } catch (error) {
+    console.log('error getting current playing');
+    console.log(error);
   }
 }
 
@@ -64,7 +55,7 @@ async function addNextTrackToPlayerQueue(jukebox, deviceId, sessionId) {
     axios.post(`https://api.spotify.com/v1/me/player/queue?uri=${track.uri}`, null, options);
     return track;
   } catch (error) {
-    console.log('error adding next track:');
+    console.log('error adding next track');
     console.log(error.status);
   }
 }
@@ -83,13 +74,12 @@ async function playNextTrack(jukebox, deviceId, sessionId) {
     serverSocket.emit(updateTrackEvent, track);
     return track;
   } catch (error) {
-    console.log('error playing next track:');
+    console.log('error playing next track');
     console.log(error);
   }
 }
 
 export const getNextTrack = async (jukebox, sessionId) => {
-  console.log(`get queue for ${jukebox} ${sessionId}`);
   const queue = await getQueueDb(jukebox, sessionId);
   const tracks = queue.tracks;
   const track = tracks.shift();

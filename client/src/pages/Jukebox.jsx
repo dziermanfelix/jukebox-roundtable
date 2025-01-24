@@ -1,4 +1,4 @@
-import { Player, Search, Queue, DebouncingText } from '../components';
+import { Player, Search, Queue, DebouncingText, Sessions } from '../components';
 import { joinPath, getQueuePath, setQueuePath, jukeboxPath, sessionPath } from '../utils/paths';
 import { toast } from 'react-toastify';
 import { useLoaderData, redirect } from 'react-router-dom';
@@ -78,14 +78,17 @@ const Jukebox = () => {
 
   return (
     <Wrapper>
-      <JukeboxContext.Provider value={{ name, session, queue, reorderQueue, updateQueue, socket }}>
-        <div className='search'>
-          <Search />
-        </div>
-        <div className='queue-and-player'>
-          <DebouncingText initialValue={session.displayName} updater={displayNameUpdate} />
-          <Queue />
-          <Player />
+      <JukeboxContext.Provider value={{ name, session, queue, reorderQueue, updateQueue, socket }} >
+        <div className='jukebox'>
+          <div className='left-panel'>
+            <Search />
+            {/* <Sessions /> */}
+          </div>
+          <div className='right-panel'>
+            <DebouncingText initialValue={session.displayName} updater={displayNameUpdate} />
+            <Queue />
+            <Player />
+          </div>
         </div>
       </JukeboxContext.Provider>
     </Wrapper>

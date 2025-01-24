@@ -7,3 +7,4 @@ export { default as Player } from './Player';
 export { default as Queue } from './Queue';
 export { default as Search } from './Search';
 export { default as DebouncingText } from './DebouncingText';
+export { default as Sessions } from './Sessions';

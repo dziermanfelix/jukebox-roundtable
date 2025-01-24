@@ -1,11 +1,13 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.section`
-  height: 100%;
-  width: 100%;
+  overflow: scroll;
+  display: block;
   .search-results {
-    height: 100%;
+    margin: .1em;
+    overflow: scroll;
     width: 100%;
+    height: 50%;
   }
 `;
 

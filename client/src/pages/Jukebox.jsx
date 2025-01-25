@@ -1,7 +1,7 @@
 import { Player, Search, Queue, DebouncingText, Sessions } from '../components';
-import { joinPath, getQueuePath, setQueuePath, jukeboxPath, sessionPath } from '../utils/paths';
+import { joinPath, getQueuePath, setQueuePath, jukeboxPath, sessionPath, jukeboxLogoutPath } from '../utils/paths';
 import { toast } from 'react-toastify';
-import { useLoaderData, redirect } from 'react-router-dom';
+import { useLoaderData, redirect, useNavigate } from 'react-router-dom';
 import customFetch from '../utils/customFetch';
 import Wrapper from '../wrappers/Jukebox';
 import { useState, useContext, createContext, useEffect } from 'react';
@@ -29,6 +29,7 @@ const Jukebox = () => {
   const { name } = jukebox;
   const [queue, setQueue] = useState([]);
   const [session, setSession] = useState(initialSesion);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetch = async () => {
@@ -76,15 +77,21 @@ const Jukebox = () => {
     setSession(udpatedSession);
   };
 
+  async function logout() {
+    await customFetch.post(jukeboxLogoutPath, { name: name, sessionId: session._id });
+    navigate(joinPath);
+  }
+
   return (
     <Wrapper>
-      <JukeboxContext.Provider value={{ name, session, queue, reorderQueue, updateQueue, socket }} >
+      <JukeboxContext.Provider value={{ name, session, queue, reorderQueue, updateQueue, socket }}>
         <div className='jukebox'>
           <div className='left-panel'>
             <Search />
             {/* <Sessions /> */}
           </div>
           <div className='right-panel'>
+            <button onClick={() => logout()}>logout</button>
             <DebouncingText initialValue={session.displayName} updater={displayNameUpdate} />
             <Queue />
             <Player />

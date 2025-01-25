@@ -6,7 +6,6 @@ const SessionSchema = new mongoose.Schema({
     type: String,
     default: 'player1',
   },
-  sessionId: String,
   role: {
     type: String,
     enum: [Role.ADMIN, Role.SCRUB],

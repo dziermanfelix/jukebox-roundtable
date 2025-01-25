@@ -24,3 +24,7 @@ export async function setQueueDb(jukebox, sessionId, queue) {
     upsert: true,
   });
 }
+
+export async function deleteQueueFromSessionId(sessionId) {
+  return await Queue.findOneAndDelete({ sessionId: sessionId });
+}

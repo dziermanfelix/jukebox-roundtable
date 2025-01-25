@@ -3,6 +3,7 @@ import { FormRow, HomeLogoLink, SubmitButton } from '../components';
 import { prestartPath, jukeboxLoginPath, jukeboxPath, joinerSessionPath } from '../utils/paths';
 import { toast } from 'react-toastify';
 import customFetch from '../utils/customFetch';
+import { Role } from '../../../utils/roles';
 
 export const loader = async ({ params }) => {
   try {
@@ -20,9 +21,9 @@ export const action = async ({ request }) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
   const name = data.name;
+  data.role = Role.JOINER;
   try {
     await customFetch.post(jukeboxLoginPath, data);
-    await customFetch.post(joinerSessionPath, data);
     return redirect(`${jukeboxPath}${name}`);
   } catch (error) {
     toast.error(error?.response?.data?.msg);

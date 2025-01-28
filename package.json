@@ -50,10 +50,5 @@
       ]
     ],
     "plugins": []
-  },
-  "jest": {
-    "setupFiles": [
-      "<rootDir>/test/testEnv"
-    ]
   }
 }

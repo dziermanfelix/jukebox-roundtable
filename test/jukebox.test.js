@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import { app } from '../app';
 import request from 'supertest';
 import { mongoUrl } from '../utils/environmentVariables';
-import expressListRoutes from 'express-list-routes';
+import listRoutes from 'express-list-routes';
 
 describe('jukebox', () => {
   async function truncateDb() {
@@ -15,7 +15,8 @@ describe('jukebox', () => {
   }
 
   beforeAll(async () => {
-    // expressListRoutes(app);
+    const routes = listRoutes(app);
+    console.log(routes);
     await mongoose.connect(mongoUrl);
     await truncateDb();
   });

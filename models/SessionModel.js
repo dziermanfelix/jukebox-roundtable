@@ -11,8 +11,8 @@ const SessionSchema = new mongoose.Schema({
     enum: [Role.ADMIN, Role.SCRUB],
     required: true,
   },
-  jukebox: String,
   webToken: String,
+  jukebox: String,
 });
 
 export default mongoose.model('Session', SessionSchema);

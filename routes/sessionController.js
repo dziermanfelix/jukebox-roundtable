@@ -18,9 +18,7 @@ export const getSession = async (req, res) => {
 };
 
 export async function getSessionFromWebToken(webToken) {
-  console.log(`looking for session with webToken=${webToken}`);
   const session = await Session.findOne({ webToken: webToken });
-  console.log(`found session ${JSON.stringify(session)}`);
   return session;
 }
 

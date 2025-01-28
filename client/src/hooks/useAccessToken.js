@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { accessTokenPath } from '../utils/paths';
+import { accessTokenPath } from '../../../common/paths';
 
 const useAccessToken = (jukeboxName) => {
   const [token, setToken] = useState(null);

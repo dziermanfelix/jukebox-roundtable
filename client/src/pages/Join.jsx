@@ -1,8 +1,8 @@
 import { Link, Form, useLoaderData, redirect } from 'react-router-dom';
 import { FormRow, HomeLogoLink, SubmitButton } from '../components';
-import { prestartPath, jukeboxLoginPath, jukeboxPath, joinerSessionPath } from '../utils/paths';
+import { prestartPath, jukeboxLoginPath, jukeboxPath } from '../../../common/paths';
 import { toast } from 'react-toastify';
-import customFetch from '../utils/customFetch';
+import customFetch from '../../../common/customFetch';
 import { Role } from '../../../utils/roles';
 
 export const loader = async ({ params }) => {

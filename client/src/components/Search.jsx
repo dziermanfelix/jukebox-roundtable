@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { searchPath } from '../utils/paths';
-import customFetch from '../utils/customFetch';
+import { searchPath } from '../../../common/paths';
+import customFetch from '../../../common/customFetch';
 import { toast } from 'react-toastify';
 import { SEARCH_TYPE } from '../utils/constants';
 import Wrapper from '../wrappers/Search';

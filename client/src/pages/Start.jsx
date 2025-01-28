@@ -1,7 +1,7 @@
 import { Form, Link, redirect, useLoaderData } from 'react-router-dom';
 import { FormRow, HomeLogoLink, SubmitButton } from '../components';
-import { joinPath, jukeboxLoginPath, jukeboxCreatePath, jukeboxPath, starterSessionPath } from '../utils/paths';
-import customFetch from '../utils/customFetch';
+import { joinPath, jukeboxLoginPath, jukeboxCreatePath, jukeboxPath } from '../../../common/paths';
+import customFetch from '../../../common/customFetch';
 import { toast } from 'react-toastify';
 import { Role } from '../../../utils/roles';
 

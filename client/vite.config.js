@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { globalServerPort } from '../global/api';
+import { globalServerPort } from '../common/api';
 
 // https://vitejs.dev/config/
 export default defineConfig({

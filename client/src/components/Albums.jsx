@@ -1,6 +1,6 @@
-import { albumPath } from '../utils/paths';
+import { albumPath } from '../../../common/paths';
 import Wrapper from '../wrappers/Payload';
-import customFetch from '../utils/customFetch';
+import customFetch from '../../../common/customFetch';
 import { SEARCH_TYPE } from '../utils/constants';
 import { useJukeboxContext } from '../pages/Jukebox';
 

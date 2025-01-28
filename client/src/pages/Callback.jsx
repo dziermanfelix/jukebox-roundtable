@@ -1,5 +1,5 @@
 import { redirect } from 'react-router-dom';
-import { startPath } from '../utils/paths';
+import { startPath } from '../../../common/paths';
 
 export const loader = async ({ request }) => {
   const params = Object.fromEntries([...new URL(request.url).searchParams.entries()]);

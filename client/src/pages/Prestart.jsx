@@ -1,6 +1,6 @@
 import { redirect, useLoaderData } from 'react-router-dom';
-import { spotifyLoginUrlPath, basePath } from '../utils/paths';
-import customFetch from '../utils/customFetch';
+import { spotifyLoginUrlPath, basePath } from '../../../common/paths';
+import customFetch from '../../../common/customFetch';
 import { toast } from 'react-toastify';
 
 export const loader = async () => {

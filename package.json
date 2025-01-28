@@ -21,13 +21,39 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon server",
+    "server": "nodemon main.js",
     "client": "cd client && npm run dev",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "setup-project": "npm i && cd client && npm i"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.26.7",
+    "@babel/preset-env": "^7.26.7",
+    "babel-jest": "^29.7.0",
+    "express-list-routes": "^1.2.4",
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ],
+    "plugins": []
+  },
+  "jest": {
+    "setupFiles": [
+      "<rootDir>/test/testEnv"
+    ]
+  }
 }

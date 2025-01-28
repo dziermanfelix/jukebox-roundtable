@@ -1,8 +1,6 @@
 import mongoose from 'mongoose';
 
 const QueueSchema = new mongoose.Schema({
-  jukebox: String,
-  sessionId: String,
   tracks: [
     {
       id: String,
@@ -13,6 +11,8 @@ const QueueSchema = new mongoose.Schema({
       duration_ms: Number,
     },
   ],
+  jukebox: String,
+  sessionId: String,
 });
 
 export default mongoose.model('Queue', QueueSchema);

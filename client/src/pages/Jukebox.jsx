@@ -1,8 +1,15 @@
-import { Player, Search, Queue, DebouncingText, Sessions } from '../components';
-import { joinPath, getQueuePath, setQueuePath, jukeboxPath, sessionPath, jukeboxLogoutPath } from '../utils/paths';
+import { Player, Search, Queue, DebouncingText } from '../components';
+import {
+  joinPath,
+  getQueuePath,
+  setQueuePath,
+  jukeboxPath,
+  sessionPath,
+  jukeboxLogoutPath,
+} from '../../../common/paths';
 import { toast } from 'react-toastify';
 import { useLoaderData, redirect, useNavigate } from 'react-router-dom';
-import customFetch from '../utils/customFetch';
+import customFetch from '../../../common/customFetch';
 import Wrapper from '../wrappers/Jukebox';
 import { useState, useContext, createContext, useEffect } from 'react';
 import socket from '../utils/socket';

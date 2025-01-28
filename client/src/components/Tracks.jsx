@@ -1,7 +1,7 @@
 import Wrapper from '../wrappers/Payload';
 import { useJukeboxContext } from '../pages/Jukebox';
-import customFetch from '../utils/customFetch';
-import { albumPath, artistPath } from '../utils/paths';
+import customFetch from '../../../common/customFetch';
+import { albumPath, artistPath } from '../../../common/paths';
 import { Link } from 'react-router-dom';
 import { SEARCH_TYPE } from '../utils/constants';
 

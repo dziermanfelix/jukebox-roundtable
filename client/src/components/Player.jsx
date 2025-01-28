@@ -1,7 +1,7 @@
 import Wrapper from '../wrappers/Player';
-import { accessTokenPath, startJukeboxPath } from '../utils/paths';
+import { accessTokenPath, startJukeboxPath } from '../../../common/paths';
 import { useEffect, useState } from 'react';
-import customFetch from '../utils/customFetch';
+import customFetch from '../../../common/customFetch';
 import { toast } from 'react-toastify';
 import { useJukeboxContext } from '../pages/Jukebox';
 import { updateTrackEvent } from '../../../utils/socketEvents';

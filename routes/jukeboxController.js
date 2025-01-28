@@ -9,9 +9,7 @@ export const createJukebox = async (req, res) => {
   const hashedCode = await bcrypt.hash(req.body.code, salt);
   req.body.code = hashedCode;
   if (await jukeboxExists(name)) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: `Jukebox Roundtable name ${name} is being used. Try again.` });
+    return res.status(StatusCodes.BAD_REQUEST).json({ msg: `jukebox ${name} is being used` });
   }
   const jukebox = await Jukebox.create(req.body);
   await initAccessToken(name, req.body.spotifyCode);

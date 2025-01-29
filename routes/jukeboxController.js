@@ -15,9 +15,9 @@ export const createJukebox = async (req, res) => {
   return res.status(StatusCodes.CREATED).json({ jukebox });
 };
 
-const jukeboxExists = async (name) => {
+async function jukeboxExists(name) {
   return await Jukebox.exists({ name: name });
-};
+}
 
 export const getJukebox = async (req, res) => {
   const name = req.params.id;

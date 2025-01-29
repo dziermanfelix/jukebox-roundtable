@@ -11,10 +11,11 @@ import {
   cleanupSessionFromId,
   cleanupSessionFromWebToken,
 } from './sessionController.js';
+import { jukeboxDoesNotExistError } from '../errors/errorMessages.js';
 
 export const login = async (req, res) => {
   const jukebox = await Jukebox.findOne({ name: req.body.name });
-  if (!jukebox) throw new UnauthenticatedError(`jukebox ${req.body.name} does not exist`);
+  if (!jukebox) return res.status(StatusCodes.NOT_FOUND).json(jukeboxDoesNotExistError(req.body.name));
   const userAuthenticated = jukebox && (await comparePassword(req.body.code, jukebox.code));
   if (!userAuthenticated) throw new UnauthenticatedError('invalid credentials');
   let webToken = req.cookies.webToken;

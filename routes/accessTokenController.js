@@ -10,8 +10,9 @@ export const getAccessTokenHttp = async (req, res) => {
   return res.status(StatusCodes.OK).json({ accessToken });
 };
 
-export const initAccessToken = async (jukebox, spotifyCode) => {
-  await requestAccessToken(jukebox, spotifyCode);
+export const initAccessToken = async (req, res) => {
+  await requestAccessToken(req.body.name, req.body.spotifyCode);
+  return res.status(StatusCodes.OK).json({ msg: 'access token initialized' });
 };
 
 export const getAccessToken = async (jukebox) => {

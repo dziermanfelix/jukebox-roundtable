@@ -11,6 +11,7 @@ export const jukeboxPath = `${basePath}jukebox/`;
 // jukebox
 export const jukeboxAuthPath = `${basePath}auth/`;
 export const jukeboxCreatePath = `${jukeboxAuthPath}create/`;
+export const initAccessTokenPath = `${jukeboxAuthPath}init-access-token/`;
 export const jukeboxLoginPath = `${jukeboxAuthPath}login/`;
 export const jukeboxLogoutPath = `${jukeboxAuthPath}logout/`;
 export const startJukeboxPath = `${jukeboxPath}start/`;

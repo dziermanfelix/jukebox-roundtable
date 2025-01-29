@@ -4,7 +4,6 @@ import mongoose from 'mongoose';
 import { app } from '../app';
 import request from 'supertest';
 import { mongoUrl } from '../utils/environmentVariables';
-import listRoutes from 'express-list-routes';
 
 describe('jukebox', () => {
   async function truncateDb() {
@@ -15,9 +14,10 @@ describe('jukebox', () => {
   }
 
   beforeAll(async () => {
-    const routes = listRoutes(app);
-    console.log(routes);
     await mongoose.connect(mongoUrl);
+  });
+
+  beforeEach(async () => {
     await truncateDb();
   });
 
@@ -26,8 +26,24 @@ describe('jukebox', () => {
     await mongoose.connection.close();
   });
 
-  it('create duplicate jukebox error', async () => {
-    let testJukebox = { name: 'dust', code: 'dust', spotifyCode: 'pizza', role: 'starter' };
+  async function makeMockJukebox() {
+    const name = 'dust';
+    const code = 'dust';
+    const spotifyCode = '';
+    const role = 'starter';
+    return { name: name, code: code, spotifyCode: spotifyCode, role: role };
+  }
+
+  it('create jukebox', async () => {
+    const testJukebox = await makeMockJukebox();
+    const response = await request(app).post(`${apiVersionBaseUrl}${jukeboxCreatePath}`).send(testJukebox);
+    expect(response.status).toBe(201);
+    expect(response.statusCode).toBe(201);
+    expect(response.body).toMatchObject({ jukebox: { name: testJukebox.name } });
+  });
+
+  it('create jukebox error duplicate', async () => {
+    const testJukebox = await makeMockJukebox();
     await request(app).post(`${apiVersionBaseUrl}${jukeboxCreatePath}`).send(testJukebox);
     const response = await request(app).post(`${apiVersionBaseUrl}${jukeboxCreatePath}`).send(testJukebox);
     expect(response.status).toBe(400);

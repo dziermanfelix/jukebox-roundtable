@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import { app } from '../app';
 import request from 'supertest';
 import { mongoUrl } from '../utils/environmentVariables';
+import { jukeboxExistsError } from '../errors/errorMessages';
 
 describe('jukebox', () => {
   async function truncateDb() {
@@ -26,7 +27,7 @@ describe('jukebox', () => {
     await mongoose.connection.close();
   });
 
-  async function makeMockJukebox() {
+  function makeMockJukebox() {
     const name = 'dust';
     const code = 'dust';
     const spotifyCode = '';
@@ -35,7 +36,7 @@ describe('jukebox', () => {
   }
 
   it('create jukebox', async () => {
-    const testJukebox = await makeMockJukebox();
+    const testJukebox = makeMockJukebox();
     const response = await request(app).post(`${apiVersionBaseUrl}${jukeboxCreatePath}`).send(testJukebox);
     expect(response.status).toBe(201);
     expect(response.statusCode).toBe(201);
@@ -43,11 +44,11 @@ describe('jukebox', () => {
   });
 
   it('create jukebox error duplicate', async () => {
-    const testJukebox = await makeMockJukebox();
+    const testJukebox = makeMockJukebox();
     await request(app).post(`${apiVersionBaseUrl}${jukeboxCreatePath}`).send(testJukebox);
     const response = await request(app).post(`${apiVersionBaseUrl}${jukeboxCreatePath}`).send(testJukebox);
     expect(response.status).toBe(400);
     expect(response.statusCode).toBe(400);
-    expect(response.error.text).toBe(JSON.stringify({ msg: 'jukebox dust is being used' }));
+    expect(response.error.text).toBe(JSON.stringify(jukeboxExistsError(testJukebox.name)));
   });
 });

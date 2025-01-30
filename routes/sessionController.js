@@ -2,7 +2,7 @@ import Session from '../models/SessionModel.js';
 import { StatusCodes } from 'http-status-codes';
 import { deleteQueueFromSessionId } from './queueController.js';
 
-export const createSession = async (req, res, webToken) => {
+export const createSession = async (req, webToken) => {
   req.body.jukebox = req.body.name;
   req.body.webToken = webToken;
   return await Session.create(req.body);
@@ -52,8 +52,11 @@ export async function deleteSessionFromId(sessionId) {
 }
 
 export async function webTokenMatchesJukebox(webToken, jukebox) {
-  const session = getSessionFromWebToken(webToken);
-  return session.jukebox === jukebox;
+  const session = await getSessionFromWebToken(webToken);
+  if (session) {
+    return session.jukebox === jukebox;
+  }
+  return false;
 }
 
 export async function cleanupSessionFromWebToken(webToken) {

@@ -97,7 +97,7 @@ describe('jukebox', () => {
     expect(response.body).toEqual(jukeboxSuccessfulLogin(testJukebox.name));
   });
 
-  it('jukebox two different logins, two different web tokens', async () => {
+  it('jukebox login to two different jukeboxes, receive two different web tokens, no cookies', async () => {
     const jukebox1 = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
     const jukebox2 = { name: 'dered', code: 'dered', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox1);
@@ -115,6 +115,43 @@ describe('jukebox', () => {
     expect(webToken1).not.toEqual(webToken2);
   });
 
-  // add test for when user already has webtoken
-  
+  it('jukebox login, same jukebox, cookies', async () => {
+    const jukebox1 = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
+    await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox1);
+    const response1 = await request(app).post(makeUrl(jukeboxLoginPath)).send(jukebox1);
+    expect(response1.status).toBe(StatusCodes.OK);
+    expect(response1.statusCode).toBe(StatusCodes.OK);
+    expect(response1.body).toEqual(jukeboxSuccessfulLogin(jukebox1.name));
+    const webToken1 = getWebTokenCookie(response1);
+    const response2 = await request(app)
+      .post(makeUrl(jukeboxLoginPath))
+      .set('Cookie', `webToken=${webToken1}`)
+      .send(jukebox1);
+    expect(response2.status).toBe(StatusCodes.OK);
+    expect(response2.statusCode).toBe(StatusCodes.OK);
+    expect(response2.body).toEqual(jukeboxSuccessfulLogin(jukebox1.name));
+    const webToken2 = getWebTokenCookie(response2);
+    expect(webToken1).toEqual(webToken2);
+  });
+
+  it('jukebox login, different jukebox, cookies', async () => {
+    const jukebox1 = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
+    const jukebox2 = { name: 'dered', code: 'dered', spotifyCode: '', role: 'starter' };
+    await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox1);
+    await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox2);
+    const response1 = await request(app).post(makeUrl(jukeboxLoginPath)).send(jukebox1);
+    expect(response1.status).toBe(StatusCodes.OK);
+    expect(response1.statusCode).toBe(StatusCodes.OK);
+    expect(response1.body).toEqual(jukeboxSuccessfulLogin(jukebox1.name));
+    const webToken1 = getWebTokenCookie(response1);
+    const response2 = await request(app)
+      .post(makeUrl(jukeboxLoginPath))
+      .set('Cookie', `webToken=${webToken1}`)
+      .send(jukebox2);
+    expect(response2.status).toBe(StatusCodes.OK);
+    expect(response2.statusCode).toBe(StatusCodes.OK);
+    expect(response2.body).toEqual(jukeboxSuccessfulLogin(jukebox2.name));
+    const webToken2 = getWebTokenCookie(response2);
+    expect(webToken1).not.toEqual(webToken2);
+  });
 });

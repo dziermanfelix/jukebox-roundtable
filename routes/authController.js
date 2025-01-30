@@ -1,9 +1,7 @@
 import Jukebox from '../models/JukeboxModel.js';
 import { comparePassword } from '../utils/passwordUtils.js';
-import { UnauthenticatedError } from '../errors/customErrors.js';
 import { StatusCodes } from 'http-status-codes';
-import { createJwt } from '../utils/tokenUtils.js';
-import { nodeEnv } from '../utils/environmentVariables.js';
+import { createJwt, getCookieOptions as cookieOptions } from '../utils/tokenUtils.js';
 import {
   createSession,
   getSessionFromWebTokenAndJukebox,
@@ -11,7 +9,11 @@ import {
   cleanupSessionFromId,
   cleanupSessionFromWebToken,
 } from './sessionController.js';
-import { jukeboxBadCredentialsError, jukeboxDoesNotExistError, jukeboxSuccessfulLogin } from '../common/responseMessages.js';
+import {
+  jukeboxBadCredentialsError,
+  jukeboxDoesNotExistError,
+  jukeboxSuccessfulLogin,
+} from '../common/responseMessages.js';
 
 export const login = async (req, res) => {
   const jukebox = await Jukebox.findOne({ name: req.body.name });
@@ -19,25 +21,26 @@ export const login = async (req, res) => {
   const userAuthenticated = jukebox && (await comparePassword(req.body.code, jukebox.code));
   if (!userAuthenticated) return res.status(StatusCodes.UNAUTHORIZED).json(jukeboxBadCredentialsError(req.body.name));
   let webToken = req.cookies.webToken;
-  if ((webToken && !webTokenMatchesJukebox(webToken, jukebox.name)) || !webToken) {
-    // cleanup old session
-    if (webToken) {
+  if (webToken) {
+    const webTokenMatches = await webTokenMatchesJukebox(webToken, jukebox.name);
+    if (!webTokenMatches) {
       if (await getSessionFromWebTokenAndJukebox(webToken, jukebox.name)) {
         await cleanupSessionFromWebToken(webToken);
       }
+      webToken = await newSessionAndWebToken(req, jukebox);
     }
-    webToken = createJwt({ name: jukebox.name });
-    const oneDay = 1000 * 60 * 60 * 24; // in milliseconds
-    const cookieOptions = {
-      httpOnly: true,
-      expires: new Date(Date.now() + oneDay),
-      secure: nodeEnv === 'production',
-    };
-    res.cookie('webToken', webToken, cookieOptions);
-    await createSession(req, res, webToken);
+  } else {
+    webToken = await newSessionAndWebToken(req, jukebox);
   }
+  res.cookie('webToken', webToken, cookieOptions());
   return res.status(StatusCodes.OK).json(jukeboxSuccessfulLogin(jukebox.name));
 };
+
+async function newSessionAndWebToken(req, jukebox) {
+  const webToken = createJwt({ name: jukebox.name });
+  await createSession(req, webToken);
+  return webToken;
+}
 
 export const logout = async (req, res) => {
   if (req.cookies.webToken) {

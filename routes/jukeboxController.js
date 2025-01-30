@@ -1,7 +1,7 @@
 import Jukebox from '../models/JukeboxModel.js';
 import { StatusCodes } from 'http-status-codes';
 import bcrypt from 'bcryptjs';
-import { jukeboxDoesNotExistError, jukeboxExistsError } from '../errors/errorMessages.js';
+import { jukeboxDoesNotExistError, jukeboxExistsError } from '../common/responseMessages.js';
 
 export const createJukebox = async (req, res) => {
   const name = req.body.name;

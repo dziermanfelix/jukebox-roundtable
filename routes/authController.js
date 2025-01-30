@@ -11,13 +11,13 @@ import {
   cleanupSessionFromId,
   cleanupSessionFromWebToken,
 } from './sessionController.js';
-import { jukeboxDoesNotExistError } from '../errors/errorMessages.js';
+import { jukeboxBadCredentialsError, jukeboxDoesNotExistError, jukeboxSuccessfulLogin } from '../common/responseMessages.js';
 
 export const login = async (req, res) => {
   const jukebox = await Jukebox.findOne({ name: req.body.name });
   if (!jukebox) return res.status(StatusCodes.NOT_FOUND).json(jukeboxDoesNotExistError(req.body.name));
   const userAuthenticated = jukebox && (await comparePassword(req.body.code, jukebox.code));
-  if (!userAuthenticated) throw new UnauthenticatedError('invalid credentials');
+  if (!userAuthenticated) return res.status(StatusCodes.UNAUTHORIZED).json(jukeboxBadCredentialsError(req.body.name));
   let webToken = req.cookies.webToken;
   if ((webToken && !webTokenMatchesJukebox(webToken, jukebox.name)) || !webToken) {
     // cleanup old session
@@ -36,7 +36,7 @@ export const login = async (req, res) => {
     res.cookie('webToken', webToken, cookieOptions);
     await createSession(req, res, webToken);
   }
-  return res.status(StatusCodes.OK).json({ msg: `user logged into jukebox ${jukebox.name}` });
+  return res.status(StatusCodes.OK).json(jukeboxSuccessfulLogin(jukebox.name));
 };
 
 export const logout = async (req, res) => {

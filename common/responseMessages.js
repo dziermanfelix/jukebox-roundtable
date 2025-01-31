@@ -13,3 +13,7 @@ export const jukeboxBadCredentialsError = (jukebox) => {
 export const jukeboxSuccessfulLogin = (jukebox) => {
   return { msg: `user logged into jukebox ${jukebox}` };
 };
+
+export const jukeboxSuccessfulLogout = (jukebox, sessionId) => {
+  return { msg: `user logged out of jukebox ${jukebox} with session id ${sessionId}` };
+};

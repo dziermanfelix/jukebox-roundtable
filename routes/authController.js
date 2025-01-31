@@ -13,6 +13,7 @@ import {
   jukeboxBadCredentialsError,
   jukeboxDoesNotExistError,
   jukeboxSuccessfulLogin,
+  jukeboxSuccessfulLogout,
 } from '../common/responseMessages.js';
 
 export const login = async (req, res) => {
@@ -47,5 +48,5 @@ export const logout = async (req, res) => {
     res.clearCookie('webToken');
   }
   await cleanupSessionFromId(req.body.sessionId);
-  return res.status(StatusCodes.OK).json({ msg: `user logged out from session ${req.body.sessionId}` });
+  return res.status(StatusCodes.OK).json(jukeboxSuccessfulLogout(req.body.name, req.body.sessionId));
 };

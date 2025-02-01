@@ -1,10 +1,12 @@
+import { StatusCodes } from 'http-status-codes';
 import { UnauthenticatedError, UnauthorizedError } from '../errors/customErrors.js';
 import { verifyJwt } from '../utils/tokenUtils.js';
+import { noToken } from '../common/responseMessages.js';
 
 export const authenticateUser = (req, res, next) => {
   const { webToken } = req.cookies;
   if (!webToken) {
-    throw new UnauthenticatedError('no token');
+    return res.status(StatusCodes.FORBIDDEN).json(noToken());
   }
   try {
     const urlName = req.originalUrl.split('/').pop();

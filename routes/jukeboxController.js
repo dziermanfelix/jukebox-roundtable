@@ -23,7 +23,7 @@ export const getJukebox = async (req, res) => {
   const name = req.params.id;
   const jukebox = await getJukeboxDb(name);
   if (!jukebox) {
-    return res.status(404).json(jukeboxDoesNotExistError(name));
+    return res.status(StatusCodes.NOT_FOUND).json(jukeboxDoesNotExistError(name));
   }
   return res.status(StatusCodes.OK).json({ jukebox: jukebox, sessionId: req.cookies.webToken });
 };

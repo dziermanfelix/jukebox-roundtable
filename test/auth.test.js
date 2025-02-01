@@ -11,8 +11,8 @@ import {
   jukeboxSuccessfulLogout,
 } from '../common/responseMessages';
 import { StatusCodes } from 'http-status-codes';
-import { parse } from 'set-cookie-parser';
 import { getSessionFromWebToken } from '../routes/sessionController';
+import { getWebTokenFromResponse } from '../utils/tokenUtils';
 
 describe('jukebox', () => {
   async function truncateDb() {
@@ -47,12 +47,6 @@ describe('jukebox', () => {
     return `${apiVersionBaseUrl}${url}`;
   }
 
-  function getWebTokenCookie(response) {
-    const cookies = parse(response);
-    const webToken = cookies.find((cookie) => cookie.name === 'webToken');
-    return webToken.value;
-  }
-
   it('jukebox login error jukebox does not exist', async () => {
     const nonexistentJukebox = { name: 'nothing', code: 'nothing' };
     const response = await request(app).post(makeUrl(jukeboxLoginPath)).send(nonexistentJukebox);
@@ -78,30 +72,31 @@ describe('jukebox', () => {
     expect(response.status).toBe(StatusCodes.OK);
     expect(response.statusCode).toBe(StatusCodes.OK);
     expect(response.body).toEqual(jukeboxSuccessfulLogin(testJukebox.name));
-    const webToken = getWebTokenCookie(response);
+    const webToken = getWebTokenFromResponse(response);
     expect(webToken).not.toEqual(undefined);
   });
 
-  it('jukebox login nothing', async () => {
+  it('jukebox login with no existing web token', async () => {
     const jukebox1 = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox1);
     const response1 = await request(app).post(makeUrl(jukeboxLoginPath)).send(jukebox1);
     expect(response1.status).toBe(StatusCodes.OK);
     expect(response1.statusCode).toBe(StatusCodes.OK);
     expect(response1.body).toEqual(jukeboxSuccessfulLogin(jukebox1.name));
-    const webToken = getWebTokenCookie(response1);
+    const webToken = getWebTokenFromResponse(response1);
+    expect(webToken).not.toEqual(undefined);
     const session = await getSessionFromWebToken(webToken);
     expect(session).not.toBe(null);
   });
 
-  it('jukebox login matching web token', async () => {
+  it('jukebox login valid web token', async () => {
     const jukebox1 = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox1);
     const response1 = await request(app).post(makeUrl(jukeboxLoginPath)).send(jukebox1);
     expect(response1.status).toBe(StatusCodes.OK);
     expect(response1.statusCode).toBe(StatusCodes.OK);
     expect(response1.body).toEqual(jukeboxSuccessfulLogin(jukebox1.name));
-    const webToken1 = getWebTokenCookie(response1);
+    const webToken1 = getWebTokenFromResponse(response1);
     expect(webToken1).not.toEqual(undefined);
     const session1 = await getSessionFromWebToken(webToken1);
     expect(session1).not.toBe(null);
@@ -112,7 +107,7 @@ describe('jukebox', () => {
     expect(response2.status).toBe(StatusCodes.OK);
     expect(response2.statusCode).toBe(StatusCodes.OK);
     expect(response2.body).toEqual(jukeboxSuccessfulLogin(jukebox1.name));
-    const webToken2 = getWebTokenCookie(response2);
+    const webToken2 = getWebTokenFromResponse(response2);
     expect(webToken2).not.toEqual(undefined);
     expect(webToken1).toEqual(webToken2);
     const session2 = await getSessionFromWebToken(webToken2);
@@ -120,7 +115,7 @@ describe('jukebox', () => {
     expect(session1).toEqual(session2);
   });
 
-  it('jukebox login nonmatching web token', async () => {
+  it('jukebox login invalid web token', async () => {
     const jukebox1 = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
     const jukebox2 = { name: 'dered', code: 'dered', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox1);
@@ -129,7 +124,7 @@ describe('jukebox', () => {
     expect(response1.status).toBe(StatusCodes.OK);
     expect(response1.statusCode).toBe(StatusCodes.OK);
     expect(response1.body).toEqual(jukeboxSuccessfulLogin(jukebox1.name));
-    const webToken1 = getWebTokenCookie(response1);
+    const webToken1 = getWebTokenFromResponse(response1);
     expect(webToken1).not.toEqual(undefined);
     const session1 = await getSessionFromWebToken(webToken1);
     expect(session1).not.toBe(null);
@@ -140,7 +135,7 @@ describe('jukebox', () => {
     expect(response2.status).toBe(StatusCodes.OK);
     expect(response2.statusCode).toBe(StatusCodes.OK);
     expect(response2.body).toEqual(jukeboxSuccessfulLogin(jukebox2.name));
-    const webToken2 = getWebTokenCookie(response2);
+    const webToken2 = getWebTokenFromResponse(response2);
     expect(webToken2).not.toEqual(undefined);
     expect(webToken1).not.toEqual(webToken2);
     const session2 = await getSessionFromWebToken(webToken2);
@@ -155,7 +150,7 @@ describe('jukebox', () => {
     expect(loginResponse.status).toBe(StatusCodes.OK);
     expect(loginResponse.statusCode).toBe(StatusCodes.OK);
     expect(loginResponse.body).toEqual(jukeboxSuccessfulLogin(testJukebox.name));
-    const webTokenOriginal = getWebTokenCookie(loginResponse);
+    const webTokenOriginal = getWebTokenFromResponse(loginResponse);
     expect(webTokenOriginal).not.toEqual(undefined);
     const session = await getSessionFromWebToken(webTokenOriginal);
     expect(session).not.toBe(null);
@@ -166,7 +161,7 @@ describe('jukebox', () => {
     expect(logoutResponse.status).toBe(StatusCodes.OK);
     expect(logoutResponse.statusCode).toBe(StatusCodes.OK);
     expect(logoutResponse.body).toEqual(jukeboxSuccessfulLogout(testJukebox.name, session._id));
-    const webTokenAfterLogout = getWebTokenCookie(logoutResponse);
+    const webTokenAfterLogout = getWebTokenFromResponse(logoutResponse);
     expect(webTokenAfterLogout).toBe('');
     const sessionAfterLogout = await getSessionFromWebToken(webTokenOriginal);
     expect(sessionAfterLogout).toBe(null);

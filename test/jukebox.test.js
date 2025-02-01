@@ -1,11 +1,13 @@
-import { jukeboxCreatePath } from '../common/paths';
+import { jukeboxCreatePath, jukeboxLoginPath, jukeboxPath } from '../common/paths';
 import { apiVersionBaseUrl } from '../common/api';
 import mongoose from 'mongoose';
 import { app } from '../app';
 import request from 'supertest';
 import { mongoUrl } from '../utils/environmentVariables';
-import { jukeboxExistsError } from '../common/responseMessages';
+import { jukeboxExistsError, jukeboxSuccessfulLogin, noToken } from '../common/responseMessages';
 import { StatusCodes } from 'http-status-codes';
+import { getWebTokenFromResponse } from '../utils/tokenUtils';
+import { getSessionFromWebToken } from '../routes/sessionController';
 
 describe('jukebox', () => {
   async function truncateDb() {
@@ -55,5 +57,41 @@ describe('jukebox', () => {
     expect(response.status).toBe(StatusCodes.BAD_REQUEST);
     expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
     expect(response.error.text).toBe(JSON.stringify(jukeboxExistsError(testJukebox.name)));
+  });
+
+  it('jukebox get success', async () => {
+    const jukebox1 = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
+    await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox1);
+    const loginResponse = await request(app).post(makeUrl(jukeboxLoginPath)).send(jukebox1);
+    expect(loginResponse.status).toBe(StatusCodes.OK);
+    expect(loginResponse.statusCode).toBe(StatusCodes.OK);
+    expect(loginResponse.body).toEqual(jukeboxSuccessfulLogin(jukebox1.name));
+    const webToken = getWebTokenFromResponse(loginResponse);
+    expect(webToken).not.toEqual(undefined);
+    const session = await getSessionFromWebToken(webToken);
+    expect(session).not.toBe(null);
+    const jukeboxResponse = await request(app)
+      .get(`${makeUrl(jukeboxPath)}/${jukebox1.name}`)
+      .set('Cookie', `webToken=${webToken}`);
+    expect(jukeboxResponse.status).toBe(StatusCodes.OK);
+    expect(jukeboxResponse.statusCode).toBe(StatusCodes.OK);
+    expect(jukeboxResponse.body).toMatchObject({ jukebox: { name: jukebox1.name }, sessionId: webToken });
+  });
+
+  it('jukebox get error no web token', async () => {
+    const jukebox1 = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
+    await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox1);
+    const loginResponse = await request(app).post(makeUrl(jukeboxLoginPath)).send(jukebox1);
+    expect(loginResponse.status).toBe(StatusCodes.OK);
+    expect(loginResponse.statusCode).toBe(StatusCodes.OK);
+    expect(loginResponse.body).toEqual(jukeboxSuccessfulLogin(jukebox1.name));
+    const webToken = getWebTokenFromResponse(loginResponse);
+    expect(webToken).not.toEqual(undefined);
+    const session = await getSessionFromWebToken(webToken);
+    expect(session).not.toBe(null);
+    const jukeboxResponse = await request(app).get(`${makeUrl(jukeboxPath)}/${jukebox1.name}`);
+    expect(jukeboxResponse.status).toBe(StatusCodes.FORBIDDEN);
+    expect(jukeboxResponse.statusCode).toBe(StatusCodes.FORBIDDEN);
+    expect(jukeboxResponse.error.text).toBe(JSON.stringify(noToken()));
   });
 });

@@ -4,7 +4,12 @@ import mongoose from 'mongoose';
 import { app } from '../app';
 import request from 'supertest';
 import { mongoUrl } from '../utils/environmentVariables';
-import { jukeboxExistsError, jukeboxSuccessfulLogin, noToken } from '../common/responseMessages';
+import {
+  jukeboxExistsError,
+  jukeboxSuccessfulLogin,
+  notAuthorizedToJoinJukebox,
+  noToken,
+} from '../common/responseMessages';
 import { StatusCodes } from 'http-status-codes';
 import { getWebTokenFromResponse } from '../utils/tokenUtils';
 import { getSessionFromWebToken } from '../routes/sessionController';
@@ -94,4 +99,33 @@ describe('jukebox', () => {
     expect(jukeboxResponse.statusCode).toBe(StatusCodes.FORBIDDEN);
     expect(jukeboxResponse.error.text).toBe(JSON.stringify(noToken()));
   });
+
+  it('jukebox get error wrong web token', async () => {
+    const jukebox1 = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
+    const jukebox2 = { name: 'dered', code: 'dered', spotifyCode: '', role: 'starter' };
+    await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox1);
+    await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox2);
+    const loginResponse = await request(app).post(makeUrl(jukeboxLoginPath)).send(jukebox1);
+    expect(loginResponse.status).toBe(StatusCodes.OK);
+    expect(loginResponse.statusCode).toBe(StatusCodes.OK);
+    expect(loginResponse.body).toEqual(jukeboxSuccessfulLogin(jukebox1.name));
+    const webToken = getWebTokenFromResponse(loginResponse);
+    expect(webToken).not.toEqual(undefined);
+    const session = await getSessionFromWebToken(webToken);
+    expect(session).not.toBe(null);
+    const jukeboxResponse1 = await request(app)
+      .get(`${makeUrl(jukeboxPath)}/${jukebox1.name}`)
+      .set('Cookie', `webToken=${webToken}`);
+    expect(jukeboxResponse1.status).toBe(StatusCodes.OK);
+    expect(jukeboxResponse1.statusCode).toBe(StatusCodes.OK);
+    expect(jukeboxResponse1.body).toMatchObject({ jukebox: { name: jukebox1.name }, sessionId: webToken });
+    const jukeboxResponse2 = await request(app)
+      .get(`${makeUrl(jukeboxPath)}/${jukebox2.name}`)
+      .set('Cookie', `webToken=${webToken}`);
+    expect(jukeboxResponse2.status).toBe(StatusCodes.FORBIDDEN);
+    expect(jukeboxResponse2.statusCode).toBe(StatusCodes.FORBIDDEN);
+    expect(jukeboxResponse2.error.text).toBe(JSON.stringify(notAuthorizedToJoinJukebox(jukebox2.name)));
+  });
+
+  // add delete jukebox test with side effects
 });

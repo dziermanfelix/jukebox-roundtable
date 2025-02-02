@@ -9,14 +9,22 @@ export const createJukebox = async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const hashedCode = await bcrypt.hash(req.body.code, salt);
   req.body.code = hashedCode;
-  if (await jukeboxExists(name)) {
+  if (await jukeboxExistsDb(name)) {
     return res.status(StatusCodes.BAD_REQUEST).json(jukeboxExistsError(name));
   }
   const jukebox = await Jukebox.create(req.body);
   return res.status(StatusCodes.CREATED).json({ jukebox });
 };
 
-async function jukeboxExists(name) {
+export const jukeboxExists = async (req, res) => {
+  const name = req.params.id;
+  if (await jukeboxExistsDb(name)) {
+    return res.status(StatusCodes.OK).json({ jukebox: { name: name } });
+  }
+  return res.status(StatusCodes.OK).json({});
+};
+
+async function jukeboxExistsDb(name) {
   return await Jukebox.exists({ name: name });
 }
 

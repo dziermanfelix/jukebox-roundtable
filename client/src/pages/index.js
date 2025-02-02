@@ -1,5 +1,4 @@
-export { default as Landing } from './Landing';
-export { default as Prestart } from './Prestart';
+export { default as SpotifyLogin } from './SpotifyLogin';
 export { default as Callback } from './Callback';
 export { default as Start } from './Start';
 export { default as Join } from './Join';

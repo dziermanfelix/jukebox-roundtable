@@ -6,6 +6,7 @@ import {
   jukeboxPath,
   sessionPath,
   jukeboxLogoutPath,
+  basePath,
 } from '../../../common/paths';
 import { toast } from 'react-toastify';
 import { useLoaderData, redirect, useNavigate } from 'react-router-dom';
@@ -74,7 +75,7 @@ const Jukebox = () => {
 
   async function logout() {
     await customFetch.post(jukeboxLogoutPath, { name: name, sessionId: session._id });
-    navigate(joinPath);
+    navigate(basePath);
   }
 
   return (
@@ -87,6 +88,7 @@ const Jukebox = () => {
           <div className='right-panel'>
             <button onClick={() => logout()}>logout</button>
             <p>{session.displayName}</p>
+            <p>i am a {session.role}</p>
             <Queue />
             <Player />
           </div>

@@ -2,7 +2,7 @@
 export const basePath = '/';
 
 // frontend
-export const prestartPath = `${basePath}prestart/`;
+export const spotifyLoginPath = `${basePath}spotifylogin/`;
 export const startPath = `${basePath}start/`;
 export const joinPath = `${basePath}join/`;
 export const jukeboxPath = `${basePath}jukebox/`;
@@ -13,6 +13,7 @@ export const playedTracksPath = `${jukeboxPath}played-tracks/`;
 
 // auth
 export const jukeboxAuthPath = `${basePath}auth/`;
+export const jukeboxExistsPath = `${jukeboxAuthPath}jukebox-exists/`;
 export const jukeboxCreatePath = `${jukeboxAuthPath}create/`;
 export const initAccessTokenPath = `${jukeboxAuthPath}init-access-token/`;
 export const jukeboxLoginPath = `${jukeboxAuthPath}login/`;

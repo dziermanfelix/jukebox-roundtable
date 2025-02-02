@@ -71,9 +71,8 @@ async function playNextTrack(jukebox, deviceId, sessionId) {
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     };
     axios.put(`https://api.spotify.com/v1/me/player/play/?device_id=${deviceId}`, data, options);
+    await updateJukeboxPlayedTracks(jukebox, track);
     serverSocket.emit(updateTrackEvent, track);
-    // update jukebox played tracks
-    const updatedJukebox = await updateJukeboxPlayedTracks(jukebox, track);
     return track;
   } catch (error) {
     console.log('error playing next track');
@@ -87,6 +86,7 @@ export const getNextTrack = async (jukebox, sessionId) => {
   const track = tracks.shift();
   queue.tracks = tracks;
   await setQueueDb(jukebox, sessionId, queue);
+  await updateJukeboxPlayedTracks(jukebox, track);
   serverSocket.emit(updateQueueEvent, queue.tracks);
   return track;
 };

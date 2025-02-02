@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { Jukebox, Landing, Prestart, Start, Error, Join, HomeLayout, Callback } from './pages';
-import { loader as prestartLoader } from './pages/Prestart';
+import { Jukebox, SpotifyLogin, Start, Error, Join, HomeLayout, Callback } from './pages';
+import { loader as spotifyLoginLoader } from './pages/SpotifyLogin';
 import { loader as jukeboxLoader } from './pages/Jukebox';
 import { loader as joinLoader, action as joinAction } from './pages/Join';
 import { loader as callbackLoader } from './pages/Callback';
@@ -12,11 +12,11 @@ const router = createBrowserRouter([
     element: <HomeLayout />,
     errorElement: <Error />,
     children: [
-      { index: true, element: <Landing /> },
+      { index: true, element: <Join />, loader: joinLoader, action: joinAction },
       {
-        path: '/prestart',
-        element: <Prestart />,
-        loader: prestartLoader,
+        path: '/spotifylogin/:id',
+        element: <SpotifyLogin />,
+        loader: spotifyLoginLoader,
       },
       {
         path: '/callback',
@@ -28,12 +28,6 @@ const router = createBrowserRouter([
         element: <Start />,
         loader: startLoader,
         action: startAction,
-      },
-      {
-        path: '/join',
-        element: <Join />,
-        loader: joinLoader,
-        action: joinAction,
       },
       {
         path: '/join/:id',

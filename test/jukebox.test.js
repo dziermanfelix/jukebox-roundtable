@@ -1,4 +1,4 @@
-import { deleteJukeboxPath, jukeboxCreatePath, jukeboxLoginPath, jukeboxPath } from '../common/paths';
+import { jukeboxCreatePath, jukeboxLoginPath, jukeboxPath } from '../common/paths';
 import { app } from '../app';
 import request from 'supertest';
 import {
@@ -106,7 +106,7 @@ describe('jukebox', () => {
     const session = await getSessionFromWebToken(webToken);
     expect(session).not.toBe(null);
     const deleteJukeboxResponse = await request(app)
-      .delete(`${makeUrl(deleteJukeboxPath)}/${jukebox.name}`)
+      .delete(`${makeUrl(jukeboxPath)}/${jukebox.name}`)
       .set('Cookie', `webToken=${webToken}`);
     expect(deleteJukeboxResponse.status).toBe(StatusCodes.OK);
     expect(deleteJukeboxResponse.statusCode).toBe(StatusCodes.OK);

@@ -1,19 +1,37 @@
 import Wrapper from '../wrappers/Payload';
 import { useJukeboxContext } from '../pages/Jukebox';
 import customFetch from '../../../common/customFetch';
-import { albumPath, artistPath } from '../../../common/paths';
+import { albumPath, artistPath, playedTracksPath } from '../../../common/paths';
 import { Link } from 'react-router-dom';
 import { SEARCH_TYPE } from '../utils/constants';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
   const { name, session, queue, updateQueue } = useJukeboxContext();
+  const [playedTracks, setPlayedTracks] = useState([]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const { data } = await customFetch.get(`${playedTracksPath}${name}`);
+        setPlayedTracks(data.playedTracks);
+      } catch (error) {
+        console.log(error);
+        toast.error(error?.response?.data?.msg);
+      }
+    };
+    fetch();
+  }, [queue]);
 
   const addToQueue = (track) => {
     updateQueue(session._id, [...queue, track]);
   };
 
-  const existsInQueue = (track) => {
-    return queue.find((existing) => track.id == existing.id);
+  const addButton = (track) => {
+    const trackInQueue = queue.find((item) => track.id == item.id);
+    const trackAlreadyPlayed = playedTracks.find((item) => track.id == item.id);
+    return !trackInQueue && !trackAlreadyPlayed;
   };
 
   const openAlbum = async (track) => {
@@ -43,7 +61,7 @@ const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
               <Link onClick={() => openArtist(track)}>{track?.artists[0]?.name}</Link>
             </p>
           </div>
-          {!existsInQueue(track) && (
+          {addButton(track) && (
             <button className='add-to-queue' onClick={() => addToQueue(track)}>
               add
             </button>

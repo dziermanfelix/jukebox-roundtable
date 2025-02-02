@@ -3,7 +3,7 @@ import { updateQueueEvent, updateTrackEvent } from '../utils/socketEvents.js';
 import { getAccessToken } from './accessTokenController.js';
 import axios from 'axios';
 import { getQueueDb, setQueueDb } from './queueController.js';
-import { getJukeboxDb } from './jukeboxController.js';
+import { getJukeboxDb, updateJukeboxPlayedTracks } from './jukeboxController.js';
 import { delay } from '../utils/time.js';
 
 export const startJukeboxRequest = async (req, res) => {
@@ -72,6 +72,8 @@ async function playNextTrack(jukebox, deviceId, sessionId) {
     };
     axios.put(`https://api.spotify.com/v1/me/player/play/?device_id=${deviceId}`, data, options);
     serverSocket.emit(updateTrackEvent, track);
+    // update jukebox played tracks
+    const updatedJukebox = await updateJukeboxPlayedTracks(jukebox, track);
     return track;
   } catch (error) {
     console.log('error playing next track');

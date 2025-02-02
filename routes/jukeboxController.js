@@ -40,9 +40,20 @@ export const getJukeboxes = async (req, res) => {
 
 export const updateJukebox = async (req, res) => {};
 
+export async function updateJukeboxPlayedTracks(jukebox, track) {
+  const updatedJukebox = Jukebox.findOneAndUpdate({ name: jukebox }, { $push: { playedTracks: track } }, { new: true });
+  return updatedJukebox;
+}
+
 export const deleteJukebox = async (req, res) => {
   const name = req.params.id;
   await Jukebox.findOneAndDelete({ name: name });
   await deleteSessionsFromJukebox(name);
   return res.status(StatusCodes.OK).json(deleteJukeboxSuccess(name));
+};
+
+export const getPlayedTracks = async (req, res) => {
+  const name = req.params.id;
+  const jukebox = await Jukebox.findOne({ name: name });
+  return res.status(StatusCodes.OK).json({ playedTracks: jukebox.playedTracks });
 };

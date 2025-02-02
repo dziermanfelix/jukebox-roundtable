@@ -1,4 +1,4 @@
-import { Player, Search, Queue, DebouncingText } from '../components';
+import { Player, Search, Queue } from '../components';
 import {
   joinPath,
   getQueuePath,
@@ -72,18 +72,6 @@ const Jukebox = () => {
     setQueue(tracks);
   };
 
-  const displayNameUpdate = async (displayName) => {
-    // TODO known issue that the debouncing text component won't rerender when an empty display name is adjusted
-    if (displayName === '') {
-      displayName = 'player1';
-    }
-    session.displayName = displayName;
-    const {
-      data: { session: udpatedSession },
-    } = await customFetch.patch(sessionPath, session);
-    setSession(udpatedSession);
-  };
-
   async function logout() {
     await customFetch.post(jukeboxLogoutPath, { name: name, sessionId: session._id });
     navigate(joinPath);
@@ -95,11 +83,10 @@ const Jukebox = () => {
         <div className='jukebox'>
           <div className='left-panel'>
             <Search />
-            {/* <Sessions /> */}
           </div>
           <div className='right-panel'>
             <button onClick={() => logout()}>logout</button>
-            <DebouncingText initialValue={session.displayName} updater={displayNameUpdate} />
+            <p>{session.displayName}</p>
             <Queue />
             <Player />
           </div>

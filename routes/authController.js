@@ -15,6 +15,7 @@ import {
   jukeboxSuccessfulLogin,
   jukeboxSuccessfulLogout,
 } from '../common/responseMessages.js';
+import { generateRandomString } from '../common/string.js';
 
 export const login = async (req, res) => {
   const jukebox = await Jukebox.findOne({ name: req.body.name });
@@ -38,7 +39,7 @@ export const login = async (req, res) => {
 };
 
 async function newSessionAndWebToken(req, jukebox) {
-  const webToken = createJwt({ name: jukebox.name });
+  const webToken = createJwt({ name: jukebox.name, randomString: generateRandomString(10) });
   await createSession(req, webToken);
   return webToken;
 }

@@ -68,3 +68,11 @@ export async function cleanupSessionFromId(sessionId) {
   await deleteSessionFromId(sessionId);
   await deleteQueueFromSessionId(sessionId);
 }
+
+export async function deleteSessionsFromJukebox(jukebox) {
+  await Session.deleteMany({ jukebox: jukebox });
+}
+
+export async function getSessionsFromJukebox(jukebox) {
+  return await Session.find({ jukebox: jukebox });
+}

@@ -29,3 +29,7 @@ export const notAuthorizedToJoinJukebox = (jukebox) => {
 export const placeHolder = (jukebox) => {
   return { msg: `place holder ${jukebox}` };
 };
+
+export const deleteJukeboxSuccess = (jukebox) => {
+  return { msg: `jukebox ${jukebox} deleted` };
+};

@@ -28,5 +28,6 @@ export const verifyJwt = (token) => {
 export function getWebTokenFromResponse(response) {
   const cookies = parse(response);
   const webToken = cookies.find((cookie) => cookie.name === 'webToken');
-  return webToken.value;
+  if (webToken) return webToken.value;
+  return undefined;
 }

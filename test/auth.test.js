@@ -1,9 +1,6 @@
 import { jukeboxCreatePath, jukeboxLoginPath, jukeboxLogoutPath } from '../common/paths';
-import { apiVersionBaseUrl } from '../common/api';
-import mongoose from 'mongoose';
 import { app } from '../app';
 import request from 'supertest';
-import { mongoUrl } from '../utils/environmentVariables';
 import {
   jukeboxBadCredentialsError,
   jukeboxDoesNotExistError,
@@ -13,40 +10,9 @@ import {
 import { StatusCodes } from 'http-status-codes';
 import { getSessionFromWebToken } from '../routes/sessionController';
 import { getWebTokenFromResponse } from '../utils/tokenUtils';
+import { makeMockJukebox, makeUrl } from './setup';
 
 describe('jukebox', () => {
-  async function truncateDb() {
-    const collections = await mongoose.connection.db.collections();
-    for (let collection of collections) {
-      await collection.deleteMany({});
-    }
-  }
-
-  beforeAll(async () => {
-    await mongoose.connect(mongoUrl);
-  });
-
-  beforeEach(async () => {
-    await truncateDb();
-  });
-
-  afterAll(async () => {
-    await truncateDb();
-    await mongoose.connection.close();
-  });
-
-  function makeMockJukebox() {
-    const name = 'dust';
-    const code = 'dust';
-    const spotifyCode = '';
-    const role = 'starter';
-    return { name: name, code: code, spotifyCode: spotifyCode, role: role };
-  }
-
-  function makeUrl(url) {
-    return `${apiVersionBaseUrl}${url}`;
-  }
-
   it('jukebox login error jukebox does not exist', async () => {
     const nonexistentJukebox = { name: 'nothing', code: 'nothing' };
     const response = await request(app).post(makeUrl(jukeboxLoginPath)).send(nonexistentJukebox);

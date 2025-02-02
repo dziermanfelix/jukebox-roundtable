@@ -1,7 +1,8 @@
 import Jukebox from '../models/JukeboxModel.js';
 import { StatusCodes } from 'http-status-codes';
 import bcrypt from 'bcryptjs';
-import { jukeboxDoesNotExistError, jukeboxExistsError } from '../common/responseMessages.js';
+import { jukeboxDoesNotExistError, jukeboxExistsError, deleteJukeboxSuccess } from '../common/responseMessages.js';
+import { deleteSessionsFromJukebox } from './sessionController.js';
 
 export const createJukebox = async (req, res) => {
   const name = req.body.name;
@@ -41,9 +42,7 @@ export const updateJukebox = async (req, res) => {};
 
 export const deleteJukebox = async (req, res) => {
   const name = req.params.id;
-  const jukebox = await Jukebox.findOneAndDelete({ name: name });
-  if (!jukebox) {
-    return res.status(404).json(jukeboxDoesNotExistError(name));
-  }
-  return res.status(StatusCodes.OK).json({ msg: 'jukebox deleted', jukebox: jukebox });
+  await Jukebox.findOneAndDelete({ name: name });
+  await deleteSessionsFromJukebox(name);
+  return res.status(StatusCodes.OK).json(deleteJukeboxSuccess(name));
 };

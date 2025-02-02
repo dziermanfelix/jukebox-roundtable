@@ -1,10 +1,8 @@
-import { jukeboxCreatePath, jukeboxLoginPath, jukeboxPath } from '../common/paths';
-import { apiVersionBaseUrl } from '../common/api';
-import mongoose from 'mongoose';
+import { deleteJukeboxPath, jukeboxCreatePath, jukeboxLoginPath, jukeboxPath } from '../common/paths';
 import { app } from '../app';
 import request from 'supertest';
-import { mongoUrl } from '../utils/environmentVariables';
 import {
+  deleteJukeboxSuccess,
   jukeboxExistsError,
   jukeboxSuccessfulLogin,
   notAuthorizedToJoinJukebox,
@@ -13,40 +11,9 @@ import {
 import { StatusCodes } from 'http-status-codes';
 import { getWebTokenFromResponse } from '../utils/tokenUtils';
 import { getSessionFromWebToken } from '../routes/sessionController';
+import { makeMockJukebox, makeUrl } from './setup';
 
 describe('jukebox', () => {
-  async function truncateDb() {
-    const collections = await mongoose.connection.db.collections();
-    for (let collection of collections) {
-      await collection.deleteMany({});
-    }
-  }
-
-  beforeAll(async () => {
-    await mongoose.connect(mongoUrl);
-  });
-
-  beforeEach(async () => {
-    await truncateDb();
-  });
-
-  afterAll(async () => {
-    await truncateDb();
-    await mongoose.connection.close();
-  });
-
-  function makeMockJukebox() {
-    const name = 'dust';
-    const code = 'dust';
-    const spotifyCode = '';
-    const role = 'starter';
-    return { name: name, code: code, spotifyCode: spotifyCode, role: role };
-  }
-
-  function makeUrl(url) {
-    return `${apiVersionBaseUrl}${url}`;
-  }
-
   it('jukebox create', async () => {
     const testJukebox = makeMockJukebox();
     const response = await request(app).post(makeUrl(jukeboxCreatePath)).send(testJukebox);
@@ -127,5 +94,55 @@ describe('jukebox', () => {
     expect(jukeboxResponse2.error.text).toBe(JSON.stringify(notAuthorizedToJoinJukebox(jukebox2.name)));
   });
 
-  // add delete jukebox test with side effects
+  it('jukebox delete success', async () => {
+    const jukebox = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
+    await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox);
+    const loginResponse = await request(app).post(makeUrl(jukeboxLoginPath)).send(jukebox);
+    expect(loginResponse.status).toBe(StatusCodes.OK);
+    expect(loginResponse.statusCode).toBe(StatusCodes.OK);
+    expect(loginResponse.body).toEqual(jukeboxSuccessfulLogin(jukebox.name));
+    const webToken = getWebTokenFromResponse(loginResponse);
+    expect(webToken).not.toEqual(undefined);
+    const session = await getSessionFromWebToken(webToken);
+    expect(session).not.toBe(null);
+    const deleteJukeboxResponse = await request(app)
+      .delete(`${makeUrl(deleteJukeboxPath)}/${jukebox.name}`)
+      .set('Cookie', `webToken=${webToken}`);
+    expect(deleteJukeboxResponse.status).toBe(StatusCodes.OK);
+    expect(deleteJukeboxResponse.statusCode).toBe(StatusCodes.OK);
+    expect(JSON.stringify(deleteJukeboxResponse.body)).toBe(JSON.stringify(deleteJukeboxSuccess(jukebox.name)));
+    const webTokenAfterDelete = getWebTokenFromResponse(deleteJukeboxResponse);
+    expect(webTokenAfterDelete).toEqual(undefined);
+    const sessionAfterDelete = await getSessionFromWebToken(webToken);
+    expect(sessionAfterDelete).toBe(null);
+  });
+
+  it('jukebox get jukebox for many different sessions', async () => {
+    const jukebox = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
+    await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox);
+    const webTokens = [];
+    const sessions = [];
+    for (let count = 0; count < 10; count++) {
+      let loginResponse = await request(app).post(makeUrl(jukeboxLoginPath)).send(jukebox);
+      expect(loginResponse.status).toBe(StatusCodes.OK);
+      expect(loginResponse.statusCode).toBe(StatusCodes.OK);
+      expect(loginResponse.body).toEqual(jukeboxSuccessfulLogin(jukebox.name));
+      let webToken = getWebTokenFromResponse(loginResponse);
+      expect(webToken).not.toEqual(undefined);
+      webTokens.push(webToken);
+      let session = await getSessionFromWebToken(webToken);
+      expect(session).not.toBe(null);
+      sessions.push(session);
+    }
+    for (const webToken of webTokens) {
+      const getJukeboxResponse = await request(app)
+        .get(`${makeUrl(jukeboxPath)}/${jukebox.name}`)
+        .set('Cookie', `webToken=${webToken}`);
+      expect(getJukeboxResponse.status).toBe(StatusCodes.OK);
+      expect(getJukeboxResponse.statusCode).toBe(StatusCodes.OK);
+      expect(getJukeboxResponse.body).toMatchObject({ jukebox: { name: jukebox.name }, sessionId: webToken });
+      const session = await getSessionFromWebToken(webToken);
+      expect(session).not.toBe(null);
+    }
+  });
 });

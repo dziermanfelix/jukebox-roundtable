@@ -42,7 +42,7 @@ const Jukebox = () => {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const { data } = await customFetch.post(`${getQueuePath}${name}`, { sessionId: session._id });
+        const { data } = await customFetch.get(`${getQueuePath}${session._id}`);
         setQueue(data.queue);
       } catch (error) {
         console.log(error);
@@ -69,7 +69,7 @@ const Jukebox = () => {
   };
 
   const updateQueue = async (sessionId, tracks) => {
-    await customFetch.post(`${setQueuePath}${name}`, { sessionId: sessionId, queue: tracks });
+    await customFetch.post(`${setQueuePath}${session._id}`, { queue: tracks });
     setQueue(tracks);
   };
 

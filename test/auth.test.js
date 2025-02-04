@@ -12,7 +12,7 @@ import { getSessionFromWebToken } from '../routes/sessionController';
 import { getWebTokenFromResponse } from '../utils/tokenUtils';
 import { makeMockJukebox, makeUrl } from './setup';
 
-describe('jukebox', () => {
+describe('authentication', () => {
   it('jukebox login error jukebox does not exist', async () => {
     const nonexistentJukebox = { name: 'nothing', code: 'nothing' };
     const response = await request(app).post(makeUrl(loginPath)).send(nonexistentJukebox);

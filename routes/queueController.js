@@ -2,12 +2,12 @@ import Session from '../models/SessionModel.js';
 import { StatusCodes } from 'http-status-codes';
 
 export const setQueue = async (req, res) => {
-  const queue = await setQueueDb(req.body.sessionId, req.body.queue);
+  const queue = await setQueueDb(req.params.id, req.body.queue);
   return res.status(StatusCodes.CREATED).json({ queue });
 };
 
 export const getQueue = async (req, res) => {
-  const queue = await getQueueDb(req.body.sessionId);
+  const queue = await getQueueDb(req.params.id);
   if (queue.length == 0) {
     return res.status(StatusCodes.OK).json({ queue: [] });
   }

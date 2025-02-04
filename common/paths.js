@@ -21,15 +21,12 @@ export const authPath = `${basePath}auth/`;
 export const loginPath = `${authPath}login/`;
 export const logoutPath = `${authPath}logout/`;
 
-// queue
-export const queuePath = `${basePath}queue/`;
-export const getQueuePath = `${queuePath}get-queue/`;
-export const setQueuePath = `${queuePath}set-queue/`;
-
 // session
 export const sessionPath = `${basePath}session/`;
-export const starterSessionPath = `${basePath}session/starter`;
-export const joinerSessionPath = `${basePath}session/joiner`;
+export const starterSessionPath = `${sessionPath}starter/`;
+export const joinerSessionPath = `${sessionPath}joiner/`;
+export const getQueuePath = `${sessionPath}get-queue/`;
+export const setQueuePath = `${sessionPath}set-queue/`;
 
 // spotify
 export const spotifyPath = `${basePath}spotify/`;

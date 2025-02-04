@@ -4,7 +4,6 @@ import cookieParser from 'cookie-parser';
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
 import jukeboxRouter from './routes/jukeboxRouter.js';
 import jukeboxPrivateRouter from './routes/jukeboxPrivateRouter.js';
-import queueRouter from './routes/queueRouter.js';
 import authRouter from './routes/authRouter.js';
 import spotifyRouter from './routes/spotifyRouter.js';
 import sessionRouter from './routes/sessionRouter.js';
@@ -24,7 +23,6 @@ app.use(`${apiVersionBaseUrl}/auth`, authRouter);
 app.use(`${apiVersionBaseUrl}/session`, sessionRouter);
 app.use(`${apiVersionBaseUrl}/jukebox`, jukeboxRouter);
 app.use(`${apiVersionBaseUrl}/jukebox-priv`, authenticateUser, jukeboxPrivateRouter);
-app.use(`${apiVersionBaseUrl}/queue`, queueRouter);
 app.use(`${apiVersionBaseUrl}/spotify`, spotifyRouter);
 
 // catch controller routing error

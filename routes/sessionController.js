@@ -1,6 +1,5 @@
 import Session from '../models/SessionModel.js';
 import { StatusCodes } from 'http-status-codes';
-import { deleteQueueFromSessionId } from './queueController.js';
 
 export const createSession = async (req, webToken) => {
   req.body.jukebox = req.body.name;
@@ -66,7 +65,6 @@ export async function cleanupSessionFromWebToken(webToken) {
 
 export async function cleanupSessionFromId(sessionId) {
   await deleteSessionFromId(sessionId);
-  await deleteQueueFromSessionId(sessionId);
 }
 
 export async function deleteSessionsFromJukebox(jukebox) {

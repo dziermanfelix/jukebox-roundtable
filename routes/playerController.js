@@ -81,12 +81,10 @@ async function playNextTrack(jukebox, deviceId, sessionId) {
 }
 
 export const getNextTrack = async (jukebox, sessionId) => {
-  const queue = await getQueueDb(jukebox, sessionId);
-  const tracks = queue.tracks;
-  const track = tracks.shift();
-  queue.tracks = tracks;
-  await setQueueDb(jukebox, sessionId, queue);
+  const queue = await getQueueDb(sessionId);
+  const track = queue.shift();
+  await setQueueDb(sessionId, queue);
   await updateJukeboxPlayedTracks(jukebox, track);
-  serverSocket.emit(updateQueueEvent, queue.tracks);
+  serverSocket.emit(updateQueueEvent, queue);
   return track;
 };

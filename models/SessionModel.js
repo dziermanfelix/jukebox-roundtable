@@ -13,6 +13,16 @@ const SessionSchema = new mongoose.Schema({
   },
   webToken: String,
   jukebox: String,
+  queue: [
+    {
+      id: String,
+      uri: String,
+      name: String,
+      album: { images: [] },
+      artists: [],
+      duration_ms: Number,
+    },
+  ],
 });
 
 export default mongoose.model('Session', SessionSchema);

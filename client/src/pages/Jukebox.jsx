@@ -43,7 +43,7 @@ const Jukebox = () => {
     const fetch = async () => {
       try {
         const { data } = await customFetch.post(`${getQueuePath}${name}`, { sessionId: session._id });
-        setQueue(data.queue.tracks);
+        setQueue(data.queue);
       } catch (error) {
         console.log(error);
         toast.error(error?.response?.data?.msg);
@@ -69,7 +69,7 @@ const Jukebox = () => {
   };
 
   const updateQueue = async (sessionId, tracks) => {
-    await customFetch.post(`${setQueuePath}${name}`, { sessionId: sessionId, tracks: tracks });
+    await customFetch.post(`${setQueuePath}${name}`, { sessionId: sessionId, queue: tracks });
     setQueue(tracks);
   };
 

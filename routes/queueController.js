@@ -1,30 +1,27 @@
-import Queue from '../models/QueueModel.js';
+import Session from '../models/SessionModel.js';
 import { StatusCodes } from 'http-status-codes';
 
 export const setQueue = async (req, res) => {
-  const queue = await setQueueDb(req.params.id, req.body.sessionId, req.body);
+  const queue = await setQueueDb(req.body.sessionId, req.body.queue);
   return res.status(StatusCodes.CREATED).json({ queue });
 };
 
 export const getQueue = async (req, res) => {
-  const queue = await getQueueDb(req.params.id, req.body.sessionId);
-  if (!queue) {
-    return res.status(StatusCodes.OK).json({ queue: { tracks: [] } });
+  const queue = await getQueueDb(req.body.sessionId);
+  if (queue.length == 0) {
+    return res.status(StatusCodes.OK).json({ queue: [] });
   }
   return res.status(StatusCodes.OK).json({ queue });
 };
 
-export async function getQueueDb(jukebox, sessionId) {
-  return await Queue.findOne({ jukebox: jukebox, sessionId: sessionId });
+export async function getQueueDb(sessionId) {
+  const session = await Session.findOne({ _id: sessionId });
+  return session.queue;
 }
 
-export async function setQueueDb(jukebox, sessionId, queue) {
-  queue.jukebox = jukebox;
-  return await Queue.replaceOne({ jukebox: jukebox, sessionId: sessionId }, queue, {
-    upsert: true,
-  });
-}
-
-export async function deleteQueueFromSessionId(sessionId) {
-  return await Queue.findOneAndDelete({ sessionId: sessionId });
+export async function setQueueDb(sessionId, queue) {
+  const session = await Session.findOne({ _id: sessionId });
+  session.queue = queue;
+  const newSession = await Session.findByIdAndUpdate(sessionId, session, { new: true });
+  return newSession.queue;
 }

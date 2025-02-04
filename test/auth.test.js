@@ -1,4 +1,4 @@
-import { jukeboxCreatePath, jukeboxLoginPath, jukeboxLogoutPath } from '../common/paths';
+import { jukeboxCreatePath, loginPath, logoutPath } from '../common/paths';
 import { app } from '../app';
 import request from 'supertest';
 import {
@@ -15,7 +15,7 @@ import { makeMockJukebox, makeUrl } from './setup';
 describe('jukebox', () => {
   it('jukebox login error jukebox does not exist', async () => {
     const nonexistentJukebox = { name: 'nothing', code: 'nothing' };
-    const response = await request(app).post(makeUrl(jukeboxLoginPath)).send(nonexistentJukebox);
+    const response = await request(app).post(makeUrl(loginPath)).send(nonexistentJukebox);
     expect(response.status).toBe(StatusCodes.NOT_FOUND);
     expect(response.statusCode).toBe(StatusCodes.NOT_FOUND);
     expect(response.error.text).toEqual(JSON.stringify(jukeboxDoesNotExistError(nonexistentJukebox.name)));
@@ -25,7 +25,7 @@ describe('jukebox', () => {
     const testJukebox = makeMockJukebox();
     await request(app).post(makeUrl(jukeboxCreatePath)).send(testJukebox);
     testJukebox.code = 'fakepw';
-    const response = await request(app).post(makeUrl(jukeboxLoginPath)).send(testJukebox);
+    const response = await request(app).post(makeUrl(loginPath)).send(testJukebox);
     expect(response.status).toBe(StatusCodes.UNAUTHORIZED);
     expect(response.statusCode).toBe(StatusCodes.UNAUTHORIZED);
     expect(response.body).toEqual(jukeboxBadCredentialsError(testJukebox.name));
@@ -34,7 +34,7 @@ describe('jukebox', () => {
   it('jukebox login success', async () => {
     const testJukebox = makeMockJukebox();
     await request(app).post(makeUrl(jukeboxCreatePath)).send(testJukebox);
-    const response = await request(app).post(makeUrl(jukeboxLoginPath)).send(testJukebox);
+    const response = await request(app).post(makeUrl(loginPath)).send(testJukebox);
     expect(response.status).toBe(StatusCodes.OK);
     expect(response.statusCode).toBe(StatusCodes.OK);
     expect(response.body).toEqual(jukeboxSuccessfulLogin(testJukebox.name));
@@ -45,7 +45,7 @@ describe('jukebox', () => {
   it('jukebox login with no existing web token', async () => {
     const jukebox1 = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox1);
-    const response1 = await request(app).post(makeUrl(jukeboxLoginPath)).send(jukebox1);
+    const response1 = await request(app).post(makeUrl(loginPath)).send(jukebox1);
     expect(response1.status).toBe(StatusCodes.OK);
     expect(response1.statusCode).toBe(StatusCodes.OK);
     expect(response1.body).toEqual(jukeboxSuccessfulLogin(jukebox1.name));
@@ -58,7 +58,7 @@ describe('jukebox', () => {
   it('jukebox login valid web token', async () => {
     const jukebox1 = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox1);
-    const response1 = await request(app).post(makeUrl(jukeboxLoginPath)).send(jukebox1);
+    const response1 = await request(app).post(makeUrl(loginPath)).send(jukebox1);
     expect(response1.status).toBe(StatusCodes.OK);
     expect(response1.statusCode).toBe(StatusCodes.OK);
     expect(response1.body).toEqual(jukeboxSuccessfulLogin(jukebox1.name));
@@ -67,7 +67,7 @@ describe('jukebox', () => {
     const session1 = await getSessionFromWebToken(webToken1);
     expect(session1).not.toBe(null);
     const response2 = await request(app)
-      .post(makeUrl(jukeboxLoginPath))
+      .post(makeUrl(loginPath))
       .set('Cookie', `webToken=${webToken1}`)
       .send(jukebox1);
     expect(response2.status).toBe(StatusCodes.OK);
@@ -86,7 +86,7 @@ describe('jukebox', () => {
     const jukebox2 = { name: 'dered', code: 'dered', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox1);
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox2);
-    const response1 = await request(app).post(makeUrl(jukeboxLoginPath)).send(jukebox1);
+    const response1 = await request(app).post(makeUrl(loginPath)).send(jukebox1);
     expect(response1.status).toBe(StatusCodes.OK);
     expect(response1.statusCode).toBe(StatusCodes.OK);
     expect(response1.body).toEqual(jukeboxSuccessfulLogin(jukebox1.name));
@@ -95,7 +95,7 @@ describe('jukebox', () => {
     const session1 = await getSessionFromWebToken(webToken1);
     expect(session1).not.toBe(null);
     const response2 = await request(app)
-      .post(makeUrl(jukeboxLoginPath))
+      .post(makeUrl(loginPath))
       .set('Cookie', `webToken=${webToken1}`)
       .send(jukebox2);
     expect(response2.status).toBe(StatusCodes.OK);
@@ -112,7 +112,7 @@ describe('jukebox', () => {
   it('jukebox logout', async () => {
     const testJukebox = makeMockJukebox();
     await request(app).post(makeUrl(jukeboxCreatePath)).send(testJukebox);
-    const loginResponse = await request(app).post(makeUrl(jukeboxLoginPath)).send(testJukebox);
+    const loginResponse = await request(app).post(makeUrl(loginPath)).send(testJukebox);
     expect(loginResponse.status).toBe(StatusCodes.OK);
     expect(loginResponse.statusCode).toBe(StatusCodes.OK);
     expect(loginResponse.body).toEqual(jukeboxSuccessfulLogin(testJukebox.name));
@@ -121,7 +121,7 @@ describe('jukebox', () => {
     const session = await getSessionFromWebToken(webTokenOriginal);
     expect(session).not.toBe(null);
     const logoutResponse = await request(app)
-      .post(makeUrl(jukeboxLogoutPath))
+      .post(makeUrl(logoutPath))
       .set('Cookie', `webToken=${webTokenOriginal}`)
       .send({ name: testJukebox.name, sessionId: session._id });
     expect(logoutResponse.status).toBe(StatusCodes.OK);

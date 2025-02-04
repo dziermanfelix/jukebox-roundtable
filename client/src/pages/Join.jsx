@@ -3,7 +3,7 @@ import { FormRow, SubmitButton } from '../components';
 import {
   spotifyLoginPath,
   jukeboxPath,
-  jukeboxLoginPath,
+  loginPath,
   jukeboxCreatePath,
   jukeboxExistsPath,
 } from '../../../common/paths';
@@ -33,13 +33,13 @@ export const action = async ({ request }) => {
     } = await customFetch.get(`${jukeboxExistsPath}${name}`);
     if (jukebox) {
       data.role = Role.JOINER;
-      await customFetch.post(jukeboxLoginPath, data);
+      await customFetch.post(loginPath, data);
       return redirect(`${jukeboxPath}${name}`);
     } else {
       data.role = Role.STARTER;
       localStorage.setItem('name', name);
       await customFetch.post(jukeboxCreatePath, data);
-      await customFetch.post(jukeboxLoginPath, data);
+      await customFetch.post(loginPath, data);
       return redirect(`${spotifyLoginPath}${name}`);
     }
   } catch (error) {

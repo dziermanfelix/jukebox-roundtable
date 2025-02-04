@@ -1,6 +1,6 @@
 import { Form, Link, redirect, useLoaderData } from 'react-router-dom';
 import { FormRow, HomeLogoLink, SubmitButton } from '../components';
-import { joinPath, jukeboxLoginPath, jukeboxCreatePath, jukeboxPath, initAccessTokenPath } from '../../../common/paths';
+import { joinPath, loginPath, jukeboxCreatePath, jukeboxPath, initAccessTokenPath } from '../../../common/paths';
 import customFetch from '../../../common/customFetch';
 import { toast } from 'react-toastify';
 import { Role } from '../../../utils/roles';
@@ -18,7 +18,7 @@ export const action = async ({ request }) => {
   try {
     await customFetch.post(jukeboxCreatePath, data);
     await customFetch.post(initAccessTokenPath, data);
-    await customFetch.post(jukeboxLoginPath, data);
+    await customFetch.post(loginPath, data);
     return redirect(`${jukeboxPath}${name}`);
   } catch (error) {
     toast.error(error?.response?.data?.msg);

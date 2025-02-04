@@ -11,14 +11,14 @@ export const jukeboxPath = `${basePath}jukebox/`;
 export const jukeboxPrivatePath = `${basePath}jukebox-priv/`;
 export const startJukeboxPath = `${jukeboxPath}start/`;
 export const playedTracksPath = `${jukeboxPath}played-tracks/`;
+export const jukeboxExistsPath = `${jukeboxPath}jukebox-exists/`;
+export const jukeboxCreatePath = `${jukeboxPath}create/`;
 
 // auth
-export const jukeboxAuthPath = `${basePath}auth/`;
-export const jukeboxExistsPath = `${jukeboxAuthPath}jukebox-exists/`;
-export const jukeboxCreatePath = `${jukeboxAuthPath}create/`;
-export const initAccessTokenPath = `${jukeboxAuthPath}init-access-token/`;
-export const jukeboxLoginPath = `${jukeboxAuthPath}login/`;
-export const jukeboxLogoutPath = `${jukeboxAuthPath}logout/`;
+export const authPath = `${basePath}auth/`;
+export const loginPath = `${authPath}login/`;
+export const logoutPath = `${authPath}logout/`;
+export const initAccessTokenPath = `${authPath}init-access-token/`;
 
 // queue
 export const queuePath = `${basePath}queue/`;

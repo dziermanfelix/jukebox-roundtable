@@ -1,4 +1,4 @@
-import { jukeboxCreatePath, jukeboxLoginPath, jukeboxPrivatePath } from '../common/paths';
+import { jukeboxCreatePath, loginPath, jukeboxPrivatePath } from '../common/paths';
 import { app } from '../app';
 import request from 'supertest';
 import {
@@ -34,7 +34,7 @@ describe('jukebox', () => {
   it('jukebox get success', async () => {
     const jukebox1 = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox1);
-    const loginResponse = await request(app).post(makeUrl(jukeboxLoginPath)).send(jukebox1);
+    const loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox1);
     expect(loginResponse.status).toBe(StatusCodes.OK);
     expect(loginResponse.statusCode).toBe(StatusCodes.OK);
     expect(loginResponse.body).toEqual(jukeboxSuccessfulLogin(jukebox1.name));
@@ -53,7 +53,7 @@ describe('jukebox', () => {
   it('jukebox get error no web token', async () => {
     const jukebox1 = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox1);
-    const loginResponse = await request(app).post(makeUrl(jukeboxLoginPath)).send(jukebox1);
+    const loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox1);
     expect(loginResponse.status).toBe(StatusCodes.OK);
     expect(loginResponse.statusCode).toBe(StatusCodes.OK);
     expect(loginResponse.body).toEqual(jukeboxSuccessfulLogin(jukebox1.name));
@@ -72,7 +72,7 @@ describe('jukebox', () => {
     const jukebox2 = { name: 'dered', code: 'dered', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox1);
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox2);
-    const loginResponse = await request(app).post(makeUrl(jukeboxLoginPath)).send(jukebox1);
+    const loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox1);
     expect(loginResponse.status).toBe(StatusCodes.OK);
     expect(loginResponse.statusCode).toBe(StatusCodes.OK);
     expect(loginResponse.body).toEqual(jukeboxSuccessfulLogin(jukebox1.name));
@@ -97,7 +97,7 @@ describe('jukebox', () => {
   it('jukebox delete success', async () => {
     const jukebox = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox);
-    const loginResponse = await request(app).post(makeUrl(jukeboxLoginPath)).send(jukebox);
+    const loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox);
     expect(loginResponse.status).toBe(StatusCodes.OK);
     expect(loginResponse.statusCode).toBe(StatusCodes.OK);
     expect(loginResponse.body).toEqual(jukeboxSuccessfulLogin(jukebox.name));
@@ -123,7 +123,7 @@ describe('jukebox', () => {
     const webTokens = [];
     const sessions = [];
     for (let count = 0; count < 10; count++) {
-      let loginResponse = await request(app).post(makeUrl(jukeboxLoginPath)).send(jukebox);
+      let loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox);
       expect(loginResponse.status).toBe(StatusCodes.OK);
       expect(loginResponse.statusCode).toBe(StatusCodes.OK);
       expect(loginResponse.body).toEqual(jukeboxSuccessfulLogin(jukebox.name));

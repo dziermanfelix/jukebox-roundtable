@@ -1,4 +1,4 @@
-import { jukeboxCreatePath, jukeboxLoginPath, jukeboxPrivatePath } from '../common/paths';
+import { jukeboxCreatePath, loginPath, jukeboxPrivatePath } from '../common/paths';
 import { app } from '../app';
 import request from 'supertest';
 import { deleteJukeboxSuccess, jukeboxSuccessfulLogin } from '../common/responseMessages';
@@ -14,7 +14,7 @@ describe('jukebox', () => {
     const webTokens = [];
     const sessions = [];
     for (let count = 0; count < 10; count++) {
-      let loginResponse = await request(app).post(makeUrl(jukeboxLoginPath)).send(jukebox);
+      let loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox);
       expect(loginResponse.status).toBe(StatusCodes.OK);
       expect(loginResponse.statusCode).toBe(StatusCodes.OK);
       expect(loginResponse.body).toEqual(jukeboxSuccessfulLogin(jukebox.name));

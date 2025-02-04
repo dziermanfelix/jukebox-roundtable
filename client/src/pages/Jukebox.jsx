@@ -4,7 +4,7 @@ import {
   getQueuePath,
   setQueuePath,
   sessionPath,
-  jukeboxLogoutPath,
+  logoutPath,
   basePath,
   jukeboxPrivatePath,
 } from '../../../common/paths';
@@ -74,7 +74,7 @@ const Jukebox = () => {
   };
 
   async function logoutSession() {
-    await customFetch.post(jukeboxLogoutPath, { name: name, sessionId: session._id });
+    await customFetch.post(logoutPath, { name: name, sessionId: session._id });
     navigate(basePath);
   }
 

@@ -3,7 +3,7 @@ import { spotifyLoginUrlPath, basePath } from '../../../common/paths';
 import customFetch from '../../../common/customFetch';
 import { toast } from 'react-toastify';
 
-export const loader = async ({ params }) => {
+export const loader = async () => {
   try {
     const { data } = await customFetch.get(spotifyLoginUrlPath);
     return data;

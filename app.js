@@ -7,7 +7,6 @@ import jukeboxPrivateRouter from './routes/jukeboxPrivateRouter.js';
 import queueRouter from './routes/queueRouter.js';
 import authRouter from './routes/authRouter.js';
 import spotifyRouter from './routes/spotifyRouter.js';
-import accessTokenRouter from './routes/accessTokenRouter.js';
 import sessionRouter from './routes/sessionRouter.js';
 import { authenticateUser } from './middleware/authMiddleware.js';
 import { apiVersionBaseUrl } from './common/api.js';
@@ -27,7 +26,6 @@ app.use(`${apiVersionBaseUrl}/jukebox`, jukeboxRouter);
 app.use(`${apiVersionBaseUrl}/jukebox-priv`, authenticateUser, jukeboxPrivateRouter);
 app.use(`${apiVersionBaseUrl}/queue`, queueRouter);
 app.use(`${apiVersionBaseUrl}/spotify`, spotifyRouter);
-app.use(`${apiVersionBaseUrl}/access-token`, accessTokenRouter);
 
 // catch controller routing error
 app.use('*', (req, res) => {

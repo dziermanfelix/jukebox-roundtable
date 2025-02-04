@@ -1,4 +1,4 @@
-import AccessToken from '../models/AccessTokenModel.js';
+import Jukebox from '../models/JukeboxModel.js';
 import { StatusCodes } from 'http-status-codes';
 import { currentTimeSeconds } from '../utils/time.js';
 import { spotifyTokenUrl } from '../utils/spotifyEndpoints.js';
@@ -15,15 +15,16 @@ export const initAccessToken = async (req, res) => {
   return res.status(StatusCodes.OK).json({ msg: 'access token initialized' });
 };
 
-export const getAccessToken = async (jukebox) => {
-  let token = await AccessToken.findOne({ jukebox: jukebox });
+export const getAccessToken = async (jukeboxName) => {
+  const jukebox = await Jukebox.findOne({ name: jukeboxName });
+  const token = jukebox.accessToken;
   if (currentTimeSeconds() >= token.expiresAt) {
-    return await refreshAccessToken(token);
+    return await refreshAccessToken(jukebox.name, token);
   }
   return token.access_token;
 };
 
-export const requestAccessToken = async (jukebox, spotifyCode) => {
+export const requestAccessToken = async (jukeboxName, spotifyCode) => {
   var data = {
     grant_type: 'authorization_code',
     code: spotifyCode,
@@ -37,11 +38,11 @@ export const requestAccessToken = async (jukebox, spotifyCode) => {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   };
   const response = await axios.post(spotifyTokenUrl, data, options);
-  setAccessToken(jukebox, response.data);
+  setAccessToken(jukeboxName, response.data);
   return response.data.access_token;
 };
 
-export const refreshAccessToken = async (token) => {
+export const refreshAccessToken = async (jukeboxName, token) => {
   var data = {
     grant_type: 'refresh_token',
     refresh_token: token.refresh_token,
@@ -53,14 +54,15 @@ export const refreshAccessToken = async (token) => {
   };
   const response = await axios.post(spotifyTokenUrl, data, options);
   response.data.refresh_token = token.refresh_token;
-  setAccessToken(token.jukebox, response.data);
+  setAccessToken(jukeboxName, response.data);
   return response.data.access_token;
 };
 
-export const setAccessToken = async (jukebox, data) => {
-  data.jukebox = jukebox;
+export const setAccessToken = async (jukeboxName, data) => {
   data.expiresAt = currentTimeSeconds() + data.expires_in;
-  await AccessToken.replaceOne({ jukebox: jukebox }, data, {
+  const jukebox = await Jukebox.findOne({ name: jukeboxName });
+  jukebox.accessToken = data;
+  await Jukebox.replaceOne({ name: jukeboxName }, jukebox, {
     upsert: true,
   });
 };

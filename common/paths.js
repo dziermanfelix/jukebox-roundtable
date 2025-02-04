@@ -13,20 +13,18 @@ export const startJukeboxPath = `${jukeboxPath}start/`;
 export const playedTracksPath = `${jukeboxPath}played-tracks/`;
 export const jukeboxExistsPath = `${jukeboxPath}jukebox-exists/`;
 export const jukeboxCreatePath = `${jukeboxPath}create/`;
+export const initAccessTokenPath = `${jukeboxPath}init-access-token/`;
+export const accessTokenPath = `${jukeboxPath}access-token/`;
 
 // auth
 export const authPath = `${basePath}auth/`;
 export const loginPath = `${authPath}login/`;
 export const logoutPath = `${authPath}logout/`;
-export const initAccessTokenPath = `${authPath}init-access-token/`;
 
 // queue
 export const queuePath = `${basePath}queue/`;
 export const getQueuePath = `${queuePath}get-queue/`;
 export const setQueuePath = `${queuePath}set-queue/`;
-
-// access token
-export const accessTokenPath = `${basePath}access-token/`;
 
 // session
 export const sessionPath = `${basePath}session/`;

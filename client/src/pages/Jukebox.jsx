@@ -3,10 +3,10 @@ import {
   joinPath,
   getQueuePath,
   setQueuePath,
-  jukeboxPath,
   sessionPath,
   jukeboxLogoutPath,
   basePath,
+  jukeboxPrivatePath,
 } from '../../../common/paths';
 import { toast } from 'react-toastify';
 import { useLoaderData, redirect, useNavigate } from 'react-router-dom';
@@ -19,7 +19,7 @@ export const loader = async ({ params }) => {
   try {
     const {
       data: { jukebox },
-    } = await customFetch.get(`${jukeboxPath}${params.id}`);
+    } = await customFetch.get(`${jukeboxPrivatePath}${params.id}`);
     const {
       data: { session },
     } = await customFetch.get(`${sessionPath}`);
@@ -73,7 +73,7 @@ const Jukebox = () => {
     setQueue(tracks);
   };
 
-  async function logout() {
+  async function logoutSession() {
     await customFetch.post(jukeboxLogoutPath, { name: name, sessionId: session._id });
     navigate(basePath);
   }
@@ -86,7 +86,7 @@ const Jukebox = () => {
             <Search />
           </div>
           <div className='right-panel'>
-            <button onClick={() => logout()}>logout</button>
+            <button onClick={() => logoutSession()}>logout</button>
             <p>{session.displayName}</p>
             <p>i am a {session.role}</p>
             <Queue />

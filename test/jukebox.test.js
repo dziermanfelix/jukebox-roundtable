@@ -1,4 +1,4 @@
-import { jukeboxCreatePath, jukeboxLoginPath, jukeboxPath } from '../common/paths';
+import { jukeboxCreatePath, jukeboxLoginPath, jukeboxPrivatePath } from '../common/paths';
 import { app } from '../app';
 import request from 'supertest';
 import {
@@ -43,7 +43,7 @@ describe('jukebox', () => {
     const session = await getSessionFromWebToken(webToken);
     expect(session).not.toBe(null);
     const jukeboxResponse = await request(app)
-      .get(`${makeUrl(jukeboxPath)}/${jukebox1.name}`)
+      .get(`${makeUrl(jukeboxPrivatePath)}/${jukebox1.name}`)
       .set('Cookie', `webToken=${webToken}`);
     expect(jukeboxResponse.status).toBe(StatusCodes.OK);
     expect(jukeboxResponse.statusCode).toBe(StatusCodes.OK);
@@ -61,7 +61,7 @@ describe('jukebox', () => {
     expect(webToken).not.toEqual(undefined);
     const session = await getSessionFromWebToken(webToken);
     expect(session).not.toBe(null);
-    const jukeboxResponse = await request(app).get(`${makeUrl(jukeboxPath)}/${jukebox1.name}`);
+    const jukeboxResponse = await request(app).get(`${makeUrl(jukeboxPrivatePath)}/${jukebox1.name}`);
     expect(jukeboxResponse.status).toBe(StatusCodes.FORBIDDEN);
     expect(jukeboxResponse.statusCode).toBe(StatusCodes.FORBIDDEN);
     expect(jukeboxResponse.error.text).toBe(JSON.stringify(noToken()));
@@ -81,13 +81,13 @@ describe('jukebox', () => {
     const session = await getSessionFromWebToken(webToken);
     expect(session).not.toBe(null);
     const jukeboxResponse1 = await request(app)
-      .get(`${makeUrl(jukeboxPath)}/${jukebox1.name}`)
+      .get(`${makeUrl(jukeboxPrivatePath)}/${jukebox1.name}`)
       .set('Cookie', `webToken=${webToken}`);
     expect(jukeboxResponse1.status).toBe(StatusCodes.OK);
     expect(jukeboxResponse1.statusCode).toBe(StatusCodes.OK);
     expect(jukeboxResponse1.body).toMatchObject({ jukebox: { name: jukebox1.name }, sessionId: webToken });
     const jukeboxResponse2 = await request(app)
-      .get(`${makeUrl(jukeboxPath)}/${jukebox2.name}`)
+      .get(`${makeUrl(jukeboxPrivatePath)}/${jukebox2.name}`)
       .set('Cookie', `webToken=${webToken}`);
     expect(jukeboxResponse2.status).toBe(StatusCodes.FORBIDDEN);
     expect(jukeboxResponse2.statusCode).toBe(StatusCodes.FORBIDDEN);
@@ -106,7 +106,7 @@ describe('jukebox', () => {
     const session = await getSessionFromWebToken(webToken);
     expect(session).not.toBe(null);
     const deleteJukeboxResponse = await request(app)
-      .delete(`${makeUrl(jukeboxPath)}/${jukebox.name}`)
+      .delete(`${makeUrl(jukeboxPrivatePath)}/${jukebox.name}`)
       .set('Cookie', `webToken=${webToken}`);
     expect(deleteJukeboxResponse.status).toBe(StatusCodes.OK);
     expect(deleteJukeboxResponse.statusCode).toBe(StatusCodes.OK);
@@ -136,7 +136,7 @@ describe('jukebox', () => {
     }
     for (const webToken of webTokens) {
       const getJukeboxResponse = await request(app)
-        .get(`${makeUrl(jukeboxPath)}/${jukebox.name}`)
+        .get(`${makeUrl(jukeboxPrivatePath)}/${jukebox.name}`)
         .set('Cookie', `webToken=${webToken}`);
       expect(getJukeboxResponse.status).toBe(StatusCodes.OK);
       expect(getJukeboxResponse.statusCode).toBe(StatusCodes.OK);

@@ -8,6 +8,7 @@ export const joinPath = `${basePath}join/`;
 export const jukeboxPath = `${basePath}jukebox/`;
 
 // jukebox
+export const jukeboxPrivatePath = `${basePath}jukebox-priv/`;
 export const startJukeboxPath = `${jukeboxPath}start/`;
 export const playedTracksPath = `${jukeboxPath}played-tracks/`;
 

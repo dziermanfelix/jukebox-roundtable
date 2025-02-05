@@ -1,8 +1,8 @@
 import Session from '../models/SessionModel.js';
 import { StatusCodes } from 'http-status-codes';
 
-export const createSession = async (req, webToken) => {
-  req.body.jukebox = req.body.name;
+export const createSession = async (req, jukebox, webToken) => {
+  req.body.jukebox = jukebox._id;
   req.body.webToken = webToken;
   return await Session.create(req.body);
 };
@@ -53,7 +53,8 @@ export async function deleteSessionFromId(sessionId) {
 export async function webTokenMatchesJukebox(webToken, jukebox) {
   const session = await getSessionFromWebToken(webToken);
   if (session) {
-    return session.jukebox === jukebox;
+    const val = String(session.jukebox) === String(jukebox._id);
+    return val;
   }
   return false;
 }

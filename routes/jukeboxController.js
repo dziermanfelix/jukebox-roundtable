@@ -55,8 +55,8 @@ export async function updateJukeboxPlayedTracks(jukebox, track) {
 
 export const deleteJukebox = async (req, res) => {
   const name = req.params.id;
-  await Jukebox.findOneAndDelete({ name: name });
-  await deleteSessionsFromJukebox(name);
+  const jukebox = await Jukebox.findOneAndDelete({ name: name });
+  await deleteSessionsFromJukebox(jukebox);
   return res.status(StatusCodes.OK).json(deleteJukeboxSuccess(name));
 };
 

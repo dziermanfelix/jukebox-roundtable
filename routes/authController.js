@@ -24,9 +24,9 @@ export const login = async (req, res) => {
   if (!userAuthenticated) return res.status(StatusCodes.UNAUTHORIZED).json(jukeboxBadCredentialsError(req.body.name));
   let webToken = req.cookies.webToken;
   if (webToken) {
-    const webTokenMatches = await webTokenMatchesJukebox(webToken, jukebox.name);
+    const webTokenMatches = await webTokenMatchesJukebox(webToken, jukebox);
     if (!webTokenMatches) {
-      if (await getSessionFromWebTokenAndJukebox(webToken, jukebox.name)) {
+      if (await getSessionFromWebTokenAndJukebox(webToken, jukebox)) {
         await cleanupSessionFromWebToken(webToken);
       }
       webToken = await newSessionAndWebToken(req, jukebox);
@@ -40,7 +40,7 @@ export const login = async (req, res) => {
 
 async function newSessionAndWebToken(req, jukebox) {
   const webToken = createJwt({ name: jukebox.name, randomString: generateRandomString(10) });
-  await createSession(req, webToken);
+  await createSession(req, jukebox, webToken);
   return webToken;
 }
 

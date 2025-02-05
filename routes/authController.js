@@ -14,6 +14,7 @@ import {
   jukeboxDoesNotExistError,
   jukeboxSuccessfulLogin,
   jukeboxSuccessfulLogout,
+  sessionExistsError,
 } from '../common/responseMessages.js';
 import { generateRandomString } from '../common/string.js';
 
@@ -23,26 +24,24 @@ export const login = async (req, res) => {
   const userAuthenticated = jukebox && (await comparePassword(req.body.code, jukebox.code));
   if (!userAuthenticated) return res.status(StatusCodes.UNAUTHORIZED).json(jukeboxBadCredentialsError(req.body.name));
   let webToken = req.cookies.webToken;
+  let needNewSession = true;
   if (webToken) {
-    const webTokenMatches = await webTokenMatchesJukebox(webToken, jukebox);
-    if (!webTokenMatches) {
+    if (await webTokenMatchesJukebox(webToken, jukebox)) {
+      needNewSession = false;
+    } else {
       if (await getSessionFromWebTokenAndJukebox(webToken, jukebox)) {
         await cleanupSessionFromWebToken(webToken);
       }
-      webToken = await newSessionAndWebToken(req, jukebox);
     }
-  } else {
-    webToken = await newSessionAndWebToken(req, jukebox);
+  }
+  if (needNewSession) {
+    webToken = createJwt({ name: jukebox.name, randomString: generateRandomString(10) });
+    const session = await createSession(req, jukebox, webToken);
+    if (!session) return res.status(StatusCodes.BAD_REQUEST).json(sessionExistsError(webToken));
   }
   res.cookie('webToken', webToken, cookieOptions());
   return res.status(StatusCodes.OK).json(jukeboxSuccessfulLogin(jukebox.name));
 };
-
-async function newSessionAndWebToken(req, jukebox) {
-  const webToken = createJwt({ name: jukebox.name, randomString: generateRandomString(10) });
-  await createSession(req, jukebox, webToken);
-  return webToken;
-}
 
 export const logout = async (req, res) => {
   if (req.cookies.webToken) {

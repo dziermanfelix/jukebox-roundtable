@@ -30,14 +30,14 @@ async function jukeboxExistsDb(name) {
 
 export const getJukebox = async (req, res) => {
   const name = req.params.id;
-  const jukebox = await getJukeboxDb(name);
+  const jukebox = await getJukeboxByName(name);
   if (!jukebox) {
     return res.status(StatusCodes.NOT_FOUND).json(jukeboxDoesNotExistError(name));
   }
   return res.status(StatusCodes.OK).json({ jukebox: jukebox, sessionId: req.cookies.webToken });
 };
 
-export async function getJukeboxDb(name) {
+export async function getJukeboxByName(name) {
   return await Jukebox.findOne({ name: name });
 }
 

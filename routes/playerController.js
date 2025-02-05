@@ -3,7 +3,7 @@ import { updateQueueEvent, updateTrackEvent } from '../utils/socketEvents.js';
 import { getAccessToken } from './accessTokenController.js';
 import axios from 'axios';
 import { getQueueDb, setQueueDb } from './queueController.js';
-import { getJukeboxDb, updateJukeboxPlayedTracks } from './jukeboxController.js';
+import { getJukeboxByName, updateJukeboxPlayedTracks } from './jukeboxController.js';
 import { delay } from '../utils/time.js';
 
 export const startJukeboxRequest = async (req, res) => {
@@ -13,7 +13,7 @@ export const startJukeboxRequest = async (req, res) => {
 export async function startJukebox(jukebox, deviceId, sessionId) {
   let { id: queuedTrackId } = await playNextTrack(jukebox, deviceId, sessionId);
   let readyToQueueTrack = true;
-  while (await getJukeboxDb(jukebox)) {
+  while (await getJukeboxByName(jukebox)) {
     let current = await getCurrentPlaying(jukebox);
     if (current !== '' && current.is_playing) {
       if (current.item.id === queuedTrackId) {

@@ -25,7 +25,7 @@ const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
   }, [queue]);
 
   const addToQueue = (track) => {
-    updateQueue(session._id, [...queue, track]);
+    updateQueue([...queue, track]);
   };
 
   const addButton = (track) => {

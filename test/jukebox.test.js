@@ -12,6 +12,7 @@ import { StatusCodes } from 'http-status-codes';
 import { getWebTokenFromResponse } from '../utils/tokenUtils';
 import { getSessionFromWebToken } from '../routes/sessionController';
 import { makeMockJukebox, makeUrl } from './setup';
+import { getJukeboxByName } from '../routes/jukeboxController';
 
 describe('jukebox', () => {
   it('jukebox create', async () => {
@@ -20,6 +21,11 @@ describe('jukebox', () => {
     expect(response.status).toBe(StatusCodes.CREATED);
     expect(response.statusCode).toBe(StatusCodes.CREATED);
     expect(response.body).toMatchObject({ jukebox: { name: testJukebox.name } });
+    const jukeboxDb = await getJukeboxByName(testJukebox.name);
+    expect(jukeboxDb.name).toEqual(testJukebox.name);
+    expect(jukeboxDb.code).not.toBe(null);
+    expect(jukeboxDb.accessToken).not.toBe(null);
+    expect(jukeboxDb.playedTracks).toEqual([]);
   });
 
   it('jukebox create error duplicate', async () => {

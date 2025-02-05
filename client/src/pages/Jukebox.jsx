@@ -65,10 +65,10 @@ const Jukebox = () => {
   }, []);
 
   const reorderQueue = async (tracks) => {
-    updateQueue(session._id, tracks);
+    updateQueue(tracks);
   };
 
-  const updateQueue = async (sessionId, tracks) => {
+  const updateQueue = async (tracks) => {
     await customFetch.post(`${setQueuePath}${session._id}`, { queue: tracks });
     setQueue(tracks);
   };

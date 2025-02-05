@@ -1,35 +1,39 @@
-export const jukeboxExistsError = (jukebox) => {
-  return { msg: `jukebox ${jukebox} is being used` };
+export const jukeboxExistsError = (jukeboxName) => {
+  return { msg: `jukebox ${jukeboxName} is being used` };
 };
 
-export const jukeboxDoesNotExistError = (jukebox) => {
-  return { msg: `jukebox ${jukebox} does not exist` };
+export const jukeboxDoesNotExistError = (jukeboxName) => {
+  return { msg: `jukebox ${jukeboxName} does not exist` };
 };
 
-export const jukeboxBadCredentialsError = (jukebox) => {
-  return { msg: `wrong code for jukebox ${jukebox}` };
+export const jukeboxBadCredentialsError = (jukeboxName) => {
+  return { msg: `wrong code for jukebox ${jukeboxName}` };
 };
 
-export const jukeboxSuccessfulLogin = (jukebox) => {
-  return { msg: `user logged into jukebox ${jukebox}` };
+export const jukeboxSuccessfulLogin = (jukeboxName) => {
+  return { msg: `user logged into jukebox ${jukeboxName}` };
 };
 
-export const jukeboxSuccessfulLogout = (jukebox, sessionId) => {
-  return { msg: `user logged out of jukebox ${jukebox} with session id ${sessionId}` };
+export const jukeboxSuccessfulLogout = (jukeboxName, sessionId) => {
+  return { msg: `user logged out of jukebox ${jukeboxName} with session id ${sessionId}` };
 };
 
 export const noToken = (jukbox) => {
   return { msg: `no token` };
 };
 
-export const notAuthorizedToJoinJukebox = (jukebox) => {
-  return { msg: `not authorized to join jukebox ${jukebox}` };
+export const notAuthorizedToJoinJukebox = (jukeboxName) => {
+  return { msg: `not authorized to join jukebox ${jukeboxName}` };
 };
 
-export const placeHolder = (jukebox) => {
-  return { msg: `place holder ${jukebox}` };
+export const placeHolder = (jukeboxName) => {
+  return { msg: `place holder ${jukeboxName}` };
 };
 
-export const deleteJukeboxSuccess = (jukebox) => {
-  return { msg: `jukebox ${jukebox} deleted` };
+export const deleteJukeboxSuccess = (jukeboxName) => {
+  return { msg: `jukebox ${jukeboxName} deleted` };
+};
+
+export const sessionExistsError = (webToken) => {
+  return { msg: `session exists with web token ${webToken}` };
 };

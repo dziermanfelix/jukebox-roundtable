@@ -2,9 +2,9 @@ import Session from '../models/SessionModel.js';
 import { StatusCodes } from 'http-status-codes';
 
 export const createSession = async (req, jukebox, webToken) => {
-  req.body.jukebox = jukebox._id;
-  req.body.webToken = webToken;
-  return await Session.create(req.body);
+  if (await Session.exists({ webToken: webToken })) return null;
+  const sessionObj = { webToken: webToken, role: req.body.role, jukebox: jukebox._id };
+  return await Session.create(sessionObj);
 };
 
 export const getSession = async (req, res) => {

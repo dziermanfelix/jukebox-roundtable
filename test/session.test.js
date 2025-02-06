@@ -28,7 +28,7 @@ describe('session', () => {
     expect(session.displayName).toEqual('player1');
     expect(session.queue).toEqual([]);
     const jukeboxQueueOrder = await getQueueOrderForJukebox(jukebox.name);
-    expect(JSON.stringify(jukeboxQueueOrder)).toEqual(JSON.stringify([{ _id: session._id }]));
+    expect(JSON.stringify(jukeboxQueueOrder)).toEqual(JSON.stringify([session._id]));
   });
 
   it('create duplicate session attempt', async () => {

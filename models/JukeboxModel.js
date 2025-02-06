@@ -28,7 +28,7 @@ const JukeboxSchema = new mongoose.Schema(
       expiresAt: Number,
     },
     queueOrder: {
-      type: [{ _id: String }],
+      type: [String],
       default: [],
     },
   },

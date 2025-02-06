@@ -20,23 +20,21 @@ export async function getQueueOrderForJukebox(jukeboxName) {
   return jukebox.queueOrder;
 }
 
-export async function addToQueueOrder(jukebox, session) {
-  let strippedSession = { _id: session._id };
+export async function addToQueueOrder(jukebox, session) {;
   let sessions = await getOrderDb(jukebox.name);
   if (sessions != null) {
-    sessions.push(strippedSession);
+    sessions.push(session._id);
   } else {
-    sessions = [strippedSession];
+    sessions = [session._id];
     return await createSessionOrder(jukebox, sessions);
   }
   return await setOrderDb(jukebox.name, sessions);
 }
 
 export async function removeFromQueueOrder(jukeboxName, sessionId) {
-  let strippedSession = { _id: sessionId };
   let sessions = await getOrderDb(jukeboxName);
   if (sessions != null) {
-    sessions.remove(strippedSession);
+    sessions.remove(sessionId);
   }
   return await setOrderDb(jukeboxName, sessions);
 }

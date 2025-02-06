@@ -47,7 +47,7 @@ const Player = () => {
 
         player.addListener('ready', ({ device_id }) => {
           try {
-            customFetch.post(`${startJukeboxPath}${name}`, { sessionId: session._id, deviceId: device_id });
+            customFetch.post(`${startJukeboxPath}${name}`, { deviceId: device_id });
           } catch (error) {
             console.log(error);
             toast.error(error?.response?.data?.msg);

@@ -2,24 +2,17 @@ import { serverSocket } from '../server.js';
 import { updateQueueEvent, updateTrackEvent } from '../utils/socketEvents.js';
 import { getAccessToken } from './accessTokenController.js';
 import axios from 'axios';
-import { getQueueDb, setQueueDb } from './queueController.js';
+import { getQueueFromSessionId, setQueueForSessionId } from './queueController.js';
 import { jukeboxExistsByName, updateJukeboxPlayedTracks } from './jukeboxController.js';
 import { delay } from '../utils/time.js';
 import { getQueueOrderForJukebox } from './queueOrderController.js';
 
 export const startJukeboxRequest = async (req, res) => {
-  startJukebox(req.params.id, req.body.deviceId, req.body.sessionId);
+  jukeboxEngine(req.params.id, req.body.deviceId);
 };
 
-export async function startJukebox(jukeboxName, deviceId, sessionId) {
-  const sessions = await getQueueOrderForJukebox(jukeboxName);
-  console.log(`sessions = ${JSON.stringify(sessions)}`);
-  let currentSessionIndex = 0;
-  let currentSession = sessions.at(currentSessionIndex);
-  currentSessionIndex += 1;
-  currentSessionIndex = currentSessionIndex % sessions;
-  console.log(`got sessions ${JSON.stringify(sessions)}`);
-  let { id: queuedTrackId } = await playNextTrack(jukeboxName, deviceId, sessionId);
+export async function jukeboxEngine(jukeboxName, deviceId) {
+  let { id: queuedTrackId } = await playNextTrack(jukeboxName, deviceId);
   let readyToQueueTrack = true;
   while (await jukeboxExistsByName(jukeboxName)) {
     let current = await getCurrentPlaying(jukeboxName);
@@ -30,7 +23,7 @@ export async function startJukebox(jukeboxName, deviceId, sessionId) {
       const remaining = current.item.duration_ms - current.progress_ms;
       const midpoint = Math.floor(remaining / 2);
       if (remaining <= 30000 && readyToQueueTrack) {
-        const nextTrack = await addNextTrackToPlayerQueue(jukeboxName, sessionId);
+        const nextTrack = await addNextTrackToPlayerQueue(jukeboxName);
         queuedTrackId = nextTrack.id;
         readyToQueueTrack = false;
       }
@@ -53,8 +46,8 @@ async function getCurrentPlaying(jukeboxName) {
   }
 }
 
-async function addNextTrackToPlayerQueue(jukeboxName, sessionId) {
-  const track = await getNextTrack(jukeboxName, sessionId);
+async function addNextTrackToPlayerQueue(jukeboxName) {
+  const track = await getNextTrack(jukeboxName);
   const token = await getAccessToken(jukeboxName);
   try {
     var options = {
@@ -68,8 +61,8 @@ async function addNextTrackToPlayerQueue(jukeboxName, sessionId) {
   }
 }
 
-async function playNextTrack(jukeboxName, deviceId, sessionId) {
-  const track = await getNextTrack(jukeboxName, sessionId);
+async function playNextTrack(jukeboxName, deviceId) {
+  const track = await getNextTrack(jukeboxName);
   const token = await getAccessToken(jukeboxName);
   try {
     var data = {
@@ -88,11 +81,20 @@ async function playNextTrack(jukeboxName, deviceId, sessionId) {
   }
 }
 
-export const getNextTrack = async (jukeboxName, sessionId) => {
-  const queue = await getQueueDb(sessionId);
+export const getNextTrack = async (jukeboxName) => {
+  const sessionId = await getNextSessionId(jukeboxName);
+  const queue = await getQueueFromSessionId(sessionId);
   const track = queue.shift();
-  await setQueueDb(sessionId, queue);
-  await updateJukeboxPlayedTracks(jukeboxName, track);
-  serverSocket.emit(updateQueueEvent, queue);
+  if (track) {
+    await setQueueForSessionId(sessionId, queue);
+    await updateJukeboxPlayedTracks(jukeboxName, track);
+    serverSocket.emit(updateQueueEvent, queue);
+  }
   return track;
+};
+
+export const getNextSessionId = async (jukeboxName) => {
+  const order = await getQueueOrderForJukebox(jukeboxName);
+  const sessionId = order.at(0);
+  return sessionId;
 };

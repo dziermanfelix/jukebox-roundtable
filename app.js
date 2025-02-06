@@ -7,7 +7,6 @@ import jukeboxPrivateRouter from './routes/jukeboxPrivateRouter.js';
 import authRouter from './routes/authRouter.js';
 import spotifyRouter from './routes/spotifyRouter.js';
 import sessionRouter from './routes/sessionRouter.js';
-import sessionOrderRouter from './routes/sessionOrderRouter.js';
 import { authenticateUser } from './middleware/authMiddleware.js';
 import { apiVersionBaseUrl } from './common/api.js';
 import { nodeEnv } from './utils/environmentVariables.js';
@@ -22,7 +21,6 @@ if (nodeEnv === 'development') {
 
 app.use(`${apiVersionBaseUrl}/auth`, authRouter);
 app.use(`${apiVersionBaseUrl}/session`, sessionRouter);
-app.use(`${apiVersionBaseUrl}/order`, sessionOrderRouter);
 app.use(`${apiVersionBaseUrl}/jukebox`, jukeboxRouter);
 app.use(`${apiVersionBaseUrl}/jukebox-priv`, authenticateUser, jukeboxPrivateRouter);
 app.use(`${apiVersionBaseUrl}/spotify`, spotifyRouter);

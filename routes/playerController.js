@@ -5,14 +5,14 @@ import axios from 'axios';
 import { getQueueDb, setQueueDb } from './queueController.js';
 import { jukeboxExistsByName, updateJukeboxPlayedTracks } from './jukeboxController.js';
 import { delay } from '../utils/time.js';
-import { getSessionOrderForJukebox } from './sessionOrderController.js';
+import { getQueueOrderForJukebox } from './queueOrderController.js';
 
 export const startJukeboxRequest = async (req, res) => {
   startJukebox(req.params.id, req.body.deviceId, req.body.sessionId);
 };
 
 export async function startJukebox(jukeboxName, deviceId, sessionId) {
-  const sessions = await getSessionOrderForJukebox(jukeboxName);
+  const sessions = await getQueueOrderForJukebox(jukeboxName);
   console.log(`sessions = ${JSON.stringify(sessions)}`);
   let currentSessionIndex = 0;
   let currentSession = sessions.at(currentSessionIndex);

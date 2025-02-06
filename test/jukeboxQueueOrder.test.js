@@ -7,10 +7,10 @@ import { getWebTokenFromResponse } from '../utils/tokenUtils';
 import { getSessionFromWebToken } from '../routes/sessionController';
 import { makeUrl } from './setup';
 import { getJukeboxByName } from '../routes/jukeboxController';
-import { getOrderDb } from '../routes/sessionOrderController';
+import { getOrderDb } from '../routes/queueOrderController';
 
-describe('session order', () => {
-  it('session order', async () => {
+describe('queue order', () => {
+  it('queue order http', async () => {
     const jukebox = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox);
     let loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox);
@@ -27,19 +27,19 @@ describe('session order', () => {
     expect(session.role).toEqual('starter');
     expect(session.displayName).toEqual('player1');
     expect(session.queue).toEqual([]);
-    const setSessionOrderResponse = await request(app)
+    const setOrderResponse = await request(app)
       .post(makeUrl(`${setOrderPath}${jukeboxDb.name}`))
       .send({ order: [session] });
-    expect(setSessionOrderResponse.status).toBe(StatusCodes.OK);
-    expect(setSessionOrderResponse.statusCode).toBe(StatusCodes.OK);
-    expect(JSON.stringify(setSessionOrderResponse.body)).toEqual(JSON.stringify({ sessions: [{ _id: session._id }] }));
-    const getSessionOrderResponse = await request(app).get(makeUrl(`${getOrderPath}${jukeboxDb.name}`));
-    expect(getSessionOrderResponse.status).toBe(StatusCodes.OK);
-    expect(getSessionOrderResponse.statusCode).toBe(StatusCodes.OK);
-    expect(JSON.stringify(setSessionOrderResponse.body)).toEqual(JSON.stringify({ sessions: [{ _id: session._id }] }));
+    expect(setOrderResponse.status).toBe(StatusCodes.OK);
+    expect(setOrderResponse.statusCode).toBe(StatusCodes.OK);
+    expect(JSON.stringify(setOrderResponse.body)).toEqual(JSON.stringify({ sessions: [{ _id: session._id }] }));
+    const getOrderResponse = await request(app).get(makeUrl(`${getOrderPath}${jukeboxDb.name}`));
+    expect(getOrderResponse.status).toBe(StatusCodes.OK);
+    expect(getOrderResponse.statusCode).toBe(StatusCodes.OK);
+    expect(JSON.stringify(setOrderResponse.body)).toEqual(JSON.stringify({ sessions: [{ _id: session._id }] }));
   });
 
-  it('session order reorder', async () => {
+  it('queue order reorder', async () => {
     const strippedSessions = [];
     const jukebox = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox);
@@ -74,7 +74,7 @@ describe('session order', () => {
     }
   });
 
-  it('session order login single', async () => {
+  it('queue order login single', async () => {
     const jukebox = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox);
     let loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox);
@@ -95,7 +95,7 @@ describe('session order', () => {
     expect(JSON.stringify(sessionOrder)).toEqual(JSON.stringify([{ _id: session._id }]));
   });
 
-  it('session order login multiple', async () => {
+  it('queue order login multiple', async () => {
     const jukebox = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox);
     let expectedSessions = [];
@@ -120,7 +120,7 @@ describe('session order', () => {
     }
   });
 
-  it('session order logout', async () => {
+  it('queue order logout', async () => {
     const jukebox = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox);
     let loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox);
@@ -154,7 +154,7 @@ describe('session order', () => {
     expect(JSON.stringify(sessionOrderAfterLogout)).toEqual(JSON.stringify([]));
   });
 
-  it('session order logout multiple', async () => {
+  it('queue order logout multiple', async () => {
     const numSessions = 10;
     const jukebox = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox);

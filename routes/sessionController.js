@@ -1,12 +1,12 @@
 import Session from '../models/SessionModel.js';
 import { StatusCodes } from 'http-status-codes';
-import { addToSessionOrder } from './sessionOrderController.js';
+import { addToQueueOrder } from './queueOrderController.js';
 
 export const createSession = async (req, jukebox, webToken) => {
   if (await Session.exists({ webToken: webToken })) return null;
   const sessionObj = { webToken: webToken, role: req.body.role, jukebox: jukebox._id };
   const session = await Session.create(sessionObj);
-  await addToSessionOrder(jukebox, session);
+  await addToQueueOrder(jukebox, session);
   return session;
 };
 

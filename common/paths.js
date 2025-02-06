@@ -15,6 +15,8 @@ export const jukeboxExistsPath = `${jukeboxPath}jukebox-exists/`;
 export const jukeboxCreatePath = `${jukeboxPath}create/`;
 export const initAccessTokenPath = `${jukeboxPath}init-access-token/`;
 export const accessTokenPath = `${jukeboxPath}access-token/`;
+export const getOrderPath = `${jukeboxPath}get-queue-order/`;
+export const setOrderPath = `${jukeboxPath}set-queue-order/`;
 
 // auth
 export const authPath = `${basePath}auth/`;
@@ -27,11 +29,6 @@ export const starterSessionPath = `${sessionPath}starter/`;
 export const joinerSessionPath = `${sessionPath}joiner/`;
 export const getQueuePath = `${sessionPath}get-queue/`;
 export const setQueuePath = `${sessionPath}set-queue/`;
-
-// order
-export const orderPath = `${basePath}order/`;
-export const getOrderPath = `${orderPath}get-order/`;
-export const setOrderPath = `${orderPath}set-order/`;
 
 // spotify
 export const spotifyPath = `${basePath}spotify/`;

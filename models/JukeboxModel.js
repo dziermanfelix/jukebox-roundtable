@@ -24,6 +24,15 @@ const JukeboxSchema = new mongoose.Schema(
       accessTime: { type: Number, default: currentTimeSeconds() },
       expiresAt: Number,
     },
+    queueOrder: [
+      {
+        _id: String,
+      },
+    ],
+    // queueOrder: {
+    //   type: [{ _id: String }],
+    //   default: [],
+    // },
   },
   { timestamps: true }
 );

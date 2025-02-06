@@ -9,22 +9,22 @@ export const createJukebox = async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const hashedCode = await bcrypt.hash(req.body.code, salt);
   req.body.code = hashedCode;
-  if (await jukeboxExistsDb(name)) {
+  if (await jukeboxExistsByName(name)) {
     return res.status(StatusCodes.BAD_REQUEST).json(jukeboxExistsError(name));
   }
   const jukebox = await Jukebox.create(req.body);
   return res.status(StatusCodes.CREATED).json({ jukebox });
 };
 
-export const jukeboxExists = async (req, res) => {
+export const jukeboxExistsHttp = async (req, res) => {
   const name = req.params.id;
-  if (await jukeboxExistsDb(name)) {
+  if (await jukeboxExistsByName(name)) {
     return res.status(StatusCodes.OK).json({ jukebox: { name: name } });
   }
   return res.status(StatusCodes.OK).json({});
 };
 
-async function jukeboxExistsDb(name) {
+export async function jukeboxExistsByName(name) {
   return await Jukebox.exists({ name: name });
 }
 
@@ -48,11 +48,6 @@ export const getJukeboxes = async (req, res) => {
 
 export const updateJukebox = async (req, res) => {};
 
-export async function updateJukeboxPlayedTracks(jukebox, track) {
-  const updatedJukebox = Jukebox.findOneAndUpdate({ name: jukebox }, { $push: { playedTracks: track } }, { new: true });
-  return updatedJukebox;
-}
-
 export const deleteJukebox = async (req, res) => {
   const name = req.params.id;
   const jukebox = await Jukebox.findOneAndDelete({ name: name });
@@ -65,3 +60,12 @@ export const getPlayedTracks = async (req, res) => {
   const jukebox = await Jukebox.findOne({ name: name });
   return res.status(StatusCodes.OK).json({ playedTracks: jukebox.playedTracks });
 };
+
+export async function updateJukeboxPlayedTracks(jukeboxName, track) {
+  const updatedJukebox = Jukebox.findOneAndUpdate(
+    { name: jukeboxName },
+    { $push: { playedTracks: track } },
+    { new: true }
+  );
+  return updatedJukebox;
+}

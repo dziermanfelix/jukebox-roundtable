@@ -7,7 +7,7 @@ import {
   getSessionFromWebTokenAndJukebox,
   webTokenMatchesJukebox,
   cleanupSessionFromId,
-  cleanupSessionFromWebToken,
+  cleanupOldSessionFromWebToken,
 } from './sessionController.js';
 import {
   jukeboxBadCredentialsError,
@@ -17,6 +17,8 @@ import {
   sessionExistsError,
 } from '../common/responseMessages.js';
 import { generateRandomString } from '../common/string.js';
+import { removeFromSessionOrder } from './sessionOrderController.js';
+import { getJukeboxByName } from './jukeboxController.js';
 
 export const login = async (req, res) => {
   const jukebox = await Jukebox.findOne({ name: req.body.name });
@@ -30,7 +32,7 @@ export const login = async (req, res) => {
       needNewSession = false;
     } else {
       if (await getSessionFromWebTokenAndJukebox(webToken, jukebox)) {
-        await cleanupSessionFromWebToken(webToken);
+        await cleanupOldSessionFromWebToken(webToken);
       }
     }
   }
@@ -48,5 +50,6 @@ export const logout = async (req, res) => {
     res.clearCookie('webToken');
   }
   await cleanupSessionFromId(req.body.sessionId);
+  await removeFromSessionOrder(req.body.name, req.body.sessionId);
   return res.status(StatusCodes.OK).json(jukeboxSuccessfulLogout(req.body.name, req.body.sessionId));
 };

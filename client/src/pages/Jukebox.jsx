@@ -33,10 +33,9 @@ export const loader = async ({ params }) => {
 const JukeboxContext = createContext();
 
 const Jukebox = () => {
-  const { jukebox, session: initialSesion } = useLoaderData();
+  const { jukebox, session } = useLoaderData();
   const { name } = jukebox;
   const [queue, setQueue] = useState([]);
-  const [session, setSession] = useState(initialSesion);
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -28,6 +28,11 @@ export const joinerSessionPath = `${sessionPath}joiner/`;
 export const getQueuePath = `${sessionPath}get-queue/`;
 export const setQueuePath = `${sessionPath}set-queue/`;
 
+// order
+export const orderPath = `${basePath}order/`;
+export const getOrderPath = `${orderPath}get-order/`;
+export const setOrderPath = `${orderPath}set-order/`;
+
 // spotify
 export const spotifyPath = `${basePath}spotify/`;
 export const spotifyLoginUrlPath = `${spotifyPath}login-url/`;

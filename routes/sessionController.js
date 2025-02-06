@@ -1,10 +1,13 @@
 import Session from '../models/SessionModel.js';
 import { StatusCodes } from 'http-status-codes';
+import { addToSessionOrder } from './sessionOrderController.js';
 
 export const createSession = async (req, jukebox, webToken) => {
   if (await Session.exists({ webToken: webToken })) return null;
   const sessionObj = { webToken: webToken, role: req.body.role, jukebox: jukebox._id };
-  return await Session.create(sessionObj);
+  const session = await Session.create(sessionObj);
+  await addToSessionOrder(jukebox, session);
+  return session;
 };
 
 export const getSession = async (req, res) => {
@@ -59,7 +62,7 @@ export async function webTokenMatchesJukebox(webToken, jukebox) {
   return false;
 }
 
-export async function cleanupSessionFromWebToken(webToken) {
+export async function cleanupOldSessionFromWebToken(webToken) {
   const { _id: sessionId } = await getSessionFromWebToken(webToken);
   await cleanupSessionFromId(sessionId);
 }

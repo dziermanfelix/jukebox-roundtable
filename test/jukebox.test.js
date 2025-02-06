@@ -15,7 +15,7 @@ import { makeMockJukebox, makeUrl } from './setup';
 import { getJukeboxByName } from '../routes/jukeboxController';
 
 describe('jukebox', () => {
-  it('jukebox create', async () => {
+  it('jukebox create and check contents', async () => {
     const testJukebox = makeMockJukebox();
     const response = await request(app).post(makeUrl(jukeboxCreatePath)).send(testJukebox);
     expect(response.status).toBe(StatusCodes.CREATED);
@@ -26,6 +26,7 @@ describe('jukebox', () => {
     expect(jukeboxDb.code).not.toBe(null);
     expect(jukeboxDb.accessToken).not.toBe(null);
     expect(jukeboxDb.playedTracks).toEqual([]);
+    expect(jukeboxDb.queueOrder).toEqual([]);
   });
 
   it('jukebox create error duplicate', async () => {

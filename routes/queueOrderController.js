@@ -17,7 +17,7 @@ export const getOrder = async (req, res) => {
 
 export async function getQueueOrderForJukebox(jukeboxName) {
   const jukebox = await getJukeboxByName(jukeboxName);
-  return jukebox.queue;
+  return jukebox.queueOrder;
 }
 
 export async function addToQueueOrder(jukebox, session) {

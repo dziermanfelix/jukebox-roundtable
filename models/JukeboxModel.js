@@ -5,16 +5,19 @@ const JukeboxSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     code: { type: String, required: true },
-    playedTracks: [
-      {
-        id: String,
-        uri: String,
-        name: String,
-        album: { images: [] },
-        artists: [],
-        duration_ms: Number,
-      },
-    ],
+    playedTracks: {
+      type: [
+        {
+          id: String,
+          uri: String,
+          name: String,
+          album: { images: [] },
+          artists: [],
+          duration_ms: Number,
+        },
+      ],
+      default: [],
+    },
     accessToken: {
       access_token: String,
       refresh_token: String,
@@ -24,15 +27,10 @@ const JukeboxSchema = new mongoose.Schema(
       accessTime: { type: Number, default: currentTimeSeconds() },
       expiresAt: Number,
     },
-    queueOrder: [
-      {
-        _id: String,
-      },
-    ],
-    // queueOrder: {
-    //   type: [{ _id: String }],
-    //   default: [],
-    // },
+    queueOrder: {
+      type: [{ _id: String }],
+      default: [],
+    },
   },
   { timestamps: true }
 );

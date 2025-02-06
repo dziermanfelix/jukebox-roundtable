@@ -7,9 +7,10 @@ import { getWebTokenFromResponse } from '../utils/tokenUtils';
 import { createSession, getSessionFromWebToken } from '../routes/sessionController';
 import { makeUrl, multiTrackQueue1, multiTrackQueue1Reordered, oneTrackQueue } from './setup';
 import { getJukeboxByName } from '../routes/jukeboxController';
+import { getQueueOrderForJukebox } from '../routes/queueOrderController';
 
 describe('session', () => {
-  it('check session contents', async () => {
+  it('session login check contents', async () => {
     const jukebox = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox);
     let loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox);
@@ -19,13 +20,15 @@ describe('session', () => {
     let webToken = getWebTokenFromResponse(loginResponse);
     expect(webToken).not.toEqual(undefined);
     const jukeboxDb = await getJukeboxByName(jukebox.name);
-    let session = await getSessionFromWebToken(webToken);
+    const session = await getSessionFromWebToken(webToken);
     expect(session).not.toBe(null);
     expect(session.webToken).toEqual(webToken);
     expect(session.jukebox).toEqual(jukeboxDb._id);
     expect(session.role).toEqual('starter');
     expect(session.displayName).toEqual('player1');
     expect(session.queue).toEqual([]);
+    const jukeboxQueueOrder = await getQueueOrderForJukebox(jukebox.name);
+    expect(JSON.stringify(jukeboxQueueOrder)).toEqual(JSON.stringify([{ _id: session._id }]));
   });
 
   it('create duplicate session attempt', async () => {
@@ -73,7 +76,7 @@ describe('session', () => {
     }
   });
 
-  it('get empty queue', async () => {
+  it('session get empty queue', async () => {
     const jukebox = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox);
     const loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox);
@@ -88,7 +91,7 @@ describe('session', () => {
     expect(getQueueResponse.body).toEqual({ queue: [] });
   });
 
-  it('set/get one track queue', async () => {
+  it('session set/get one track queue', async () => {
     const jukebox = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox);
     const loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox);
@@ -109,7 +112,7 @@ describe('session', () => {
     expect(getQueueResponse.body).toEqual({ queue: oneTrackQueue });
   });
 
-  it('set/get multi track queue', async () => {
+  it('session set/get multi track queue', async () => {
     const jukebox = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox);
     const loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox);
@@ -130,7 +133,7 @@ describe('session', () => {
     expect(getQueueResponse.body).toEqual({ queue: multiTrackQueue1 });
   });
 
-  it('reorder queue', async () => {
+  it('session reorder queue', async () => {
     const jukebox = { name: 'dust', code: 'dust', spotifyCode: '', role: 'starter' };
     await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox);
     const loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox);

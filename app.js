@@ -11,9 +11,14 @@ import { authenticateUser } from './middleware/authMiddleware.js';
 import { apiVersionBaseUrl } from './common/api.js';
 import { nodeEnv } from './utils/environmentVariables.js';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const app = express();
 
+app.use(express.static(path.resolve(__dirname, './client/dist')));
 app.use(express.json());
 app.use(cookieParser());
 if (nodeEnv === 'development') {

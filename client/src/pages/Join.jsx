@@ -1,12 +1,6 @@
 import { Form, useLoaderData, redirect } from 'react-router-dom';
 import { FormRow, SubmitButton } from '../components';
-import {
-  spotifyLoginPath,
-  jukeboxPath,
-  loginPath,
-  jukeboxCreatePath,
-  jukeboxExistsPath,
-} from '../../../common/paths';
+import { spotifyLoginPath, jukeboxPath, loginPath, jukeboxCreatePath, jukeboxExistsPath } from '../../../common/paths';
 import { toast } from 'react-toastify';
 import customFetch from '../../../common/customFetch';
 import { Role } from '../../../utils/roles';
@@ -27,6 +21,7 @@ export const action = async ({ request }) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
   const name = data.name;
+  localStorage.setItem('name', name);
   try {
     const {
       data: { jukebox },
@@ -37,7 +32,6 @@ export const action = async ({ request }) => {
       return redirect(`${jukeboxPath}${name}`);
     } else {
       data.role = Role.STARTER;
-      localStorage.setItem('name', name);
       await customFetch.post(jukeboxCreatePath, data);
       await customFetch.post(loginPath, data);
       return redirect(`${spotifyLoginPath}${name}`);

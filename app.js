@@ -10,6 +10,7 @@ import sessionRouter from './routes/sessionRouter.js';
 import { authenticateUser } from './middleware/authMiddleware.js';
 import { apiVersionBaseUrl } from './common/api.js';
 import { nodeEnv } from './utils/environmentVariables.js';
+import path from 'path';
 
 export const app = express();
 
@@ -24,6 +25,10 @@ app.use(`${apiVersionBaseUrl}/session`, sessionRouter);
 app.use(`${apiVersionBaseUrl}/jukebox`, jukeboxRouter);
 app.use(`${apiVersionBaseUrl}/jukebox-priv`, authenticateUser, jukeboxPrivateRouter);
 app.use(`${apiVersionBaseUrl}/spotify`, spotifyRouter);
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, './client/dist', 'index.html'));
+});
 
 // catch controller routing error
 app.use('*', (req, res) => {

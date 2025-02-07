@@ -1,6 +1,4 @@
 import { getOrderPath, jukeboxCreatePath, loginPath, logoutPath, setOrderPath } from '../common/paths';
-import { app } from '../app';
-import request from 'supertest';
 import { jukeboxSuccessfulLogin, jukeboxSuccessfulLogout } from '../common/responseMessages';
 import { StatusCodes } from 'http-status-codes';
 import { getWebTokenFromResponse } from '../utils/tokenUtils';
@@ -8,6 +6,8 @@ import { getSessionFromWebToken } from '../routes/sessionController';
 import { makeUrl } from './setup';
 import { getJukeboxByName } from '../routes/jukeboxController';
 import { getOrderDb, getQueueOrderForJukebox } from '../routes/queueOrderController';
+import { serverApp as app } from './setup';
+import { serverRequest as request } from './setup';
 
 describe('queue order', () => {
   it('login check queue order', async () => {

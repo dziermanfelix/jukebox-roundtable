@@ -1,6 +1,4 @@
 import { getQueuePath, jukeboxCreatePath, loginPath, setQueuePath } from '../common/paths';
-import { app } from '../app';
-import request from 'supertest';
 import { jukeboxSuccessfulLogin } from '../common/responseMessages';
 import { StatusCodes } from 'http-status-codes';
 import { getWebTokenFromResponse } from '../utils/tokenUtils';
@@ -8,6 +6,8 @@ import { getSessionFromWebToken } from '../routes/sessionController';
 import { makeUrl, multiTrackQueue1, oneTrackQueue, q1, q2, q3, q4 } from './setup';
 import { getQueueOrderForJukebox } from '../routes/queueOrderController';
 import { getNextTrack } from '../routes/playerController';
+import { serverApp as app } from './setup';
+import { serverRequest as request } from './setup';
 
 describe('player', () => {
   it('player get queue order single', async () => {

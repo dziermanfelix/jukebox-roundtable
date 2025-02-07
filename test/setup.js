@@ -1,6 +1,11 @@
 import mongoose from 'mongoose';
 import { mongoUrl } from '../utils/environmentVariables';
 import { apiVersionBaseUrl } from '../common/api';
+import { app } from '../app';
+import request from 'supertest';
+
+export const serverApp = app;
+export const serverRequest = request;
 
 beforeAll(async () => {
   await mongoose.connect(mongoUrl);

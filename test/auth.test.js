@@ -1,6 +1,4 @@
 import { jukeboxCreatePath, loginPath, logoutPath } from '../common/paths';
-import { app } from '../app';
-import request from 'supertest';
 import {
   jukeboxBadCredentialsError,
   jukeboxDoesNotExistError,
@@ -10,7 +8,7 @@ import {
 import { StatusCodes } from 'http-status-codes';
 import { getSessionFromWebToken } from '../routes/sessionController';
 import { getWebTokenFromResponse } from '../utils/tokenUtils';
-import { makeMockJukebox, makeUrl } from './setup';
+import { makeMockJukebox, makeUrl, serverApp as app, serverRequest as request } from './setup';
 
 describe('authentication', () => {
   it('jukebox login error jukebox does not exist', async () => {

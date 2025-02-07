@@ -1,6 +1,4 @@
 import { jukeboxCreatePath, loginPath, jukeboxPrivatePath } from '../common/paths';
-import { app } from '../app';
-import request from 'supertest';
 import {
   deleteJukeboxSuccess,
   jukeboxExistsError,
@@ -13,6 +11,8 @@ import { getWebTokenFromResponse } from '../utils/tokenUtils';
 import { getSessionFromWebToken } from '../routes/sessionController';
 import { makeMockJukebox, makeUrl } from './setup';
 import { getJukeboxByName } from '../routes/jukeboxController';
+import { serverApp as app } from './setup';
+import { serverRequest as request } from './setup';
 
 describe('jukebox', () => {
   it('jukebox create and check contents', async () => {

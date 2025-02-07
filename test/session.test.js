@@ -1,6 +1,4 @@
 import { jukeboxCreatePath, loginPath, jukeboxPrivatePath, setQueuePath, getQueuePath } from '../common/paths';
-import { app } from '../app';
-import request from 'supertest';
 import { deleteJukeboxSuccess, jukeboxSuccessfulLogin } from '../common/responseMessages';
 import { StatusCodes } from 'http-status-codes';
 import { getWebTokenFromResponse } from '../utils/tokenUtils';
@@ -8,6 +6,8 @@ import { createSession, getSessionFromWebToken } from '../routes/sessionControll
 import { makeUrl, multiTrackQueue1, multiTrackQueue1Reordered, oneTrackQueue } from './setup';
 import { getJukeboxByName } from '../routes/jukeboxController';
 import { getQueueOrderForJukebox } from '../routes/queueOrderController';
+import { serverApp as app } from './setup';
+import { serverRequest as request } from './setup';
 
 describe('session', () => {
   it('session login check contents', async () => {

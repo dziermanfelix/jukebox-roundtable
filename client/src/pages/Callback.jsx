@@ -4,7 +4,8 @@ import customFetch from '../../../common/customFetch';
 
 export const loader = async ({ request }) => {
   const params = Object.fromEntries([...new URL(request.url).searchParams.entries()]);
-  const name = localStorage.getItem('name');
+  const name = localStorage.getItem('jukeboxName');
+  localStorage.removeItem('jukeboxName');
   await customFetch.post(initAccessTokenPath, { name: name, spotifyCode: params.code });
   return redirect(`${jukeboxPath}${name}`);
 };

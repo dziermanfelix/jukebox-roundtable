@@ -14,6 +14,7 @@ import customFetch from '../../../common/customFetch';
 import Wrapper from '../wrappers/Jukebox';
 import { useState, useContext, createContext, useEffect } from 'react';
 import socket from '../utils/socket';
+import { Role } from '../../../utils/roles';
 
 export const loader = async ({ params }) => {
   try {
@@ -86,10 +87,11 @@ const Jukebox = () => {
           </div>
           <div className='right-panel'>
             <button onClick={() => logoutSession()}>logout</button>
-            <p>{session.displayName}</p>
-            <p>i am a {session.role}</p>
+            <p>
+              {session.role} {session.displayName}
+            </p>
             <Queue />
-            <Player />
+            {session.role === Role.STARTER && <Player />}
           </div>
         </div>
       </JukeboxContext.Provider>

@@ -21,7 +21,7 @@ export const action = async ({ request }) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
   const name = data.name;
-  localStorage.setItem('name', name);
+  localStorage.setItem('jukeboxName', name);
   try {
     const {
       data: { jukebox },

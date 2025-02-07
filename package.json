@@ -51,23 +51,12 @@
             "node": "current"
           }
         }
-      ],
-      "@babel/preset-react",
-      "babel-preset-vite"
-    ],
-    "plugins": []
+      ]
+    ]
   },
   "jest": {
     "setupFilesAfterEnv": [
       "<rootDir>/test/setup.js"
-    ],
-    "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
-    },
-    "extensionsToTreatAsEsm": [
-      ".ts",
-      ".tsx",
-      ".jsx"
     ]
   }
 }

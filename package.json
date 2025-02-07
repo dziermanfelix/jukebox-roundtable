@@ -22,7 +22,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon main.js",
+    "server": "node main.js",
     "client": "cd client && npm run dev",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "test": "jest --runInBand",
@@ -56,6 +56,9 @@
   "jest": {
     "setupFilesAfterEnv": [
       "<rootDir>/test/setup.js"
-    ]
+    ],
+    "transform": {
+      "\\.[jt]sx?$": "babel-jest"
+    }
   }
 }

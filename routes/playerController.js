@@ -7,6 +7,8 @@ import { jukeboxExistsByName, updateJukeboxPlayedTracks } from './jukeboxControl
 import { delay } from '../utils/time.js';
 import { getQueueOrderForJukebox } from './queueOrderController.js';
 
+let previous = undefined;
+
 export const startJukeboxRequest = async (req, res) => {
   jukeboxEngine(req.params.id, req.body.deviceId);
 };
@@ -95,6 +97,12 @@ export const getNextTrack = async (jukeboxName) => {
 
 export const getNextSessionId = async (jukeboxName) => {
   const order = await getQueueOrderForJukebox(jukeboxName);
-  const sessionId = order.at(0);
+  let prevIndex = -1;
+  if (previous) {
+    prevIndex = order.indexOf(previous);
+  }
+  const nextIndex = (prevIndex + 1) % order.length;
+  const sessionId = order.at(nextIndex);
+  previous = sessionId;
   return sessionId;
 };

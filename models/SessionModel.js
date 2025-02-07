@@ -14,16 +14,20 @@ const SessionSchema = new mongoose.Schema({
     type: String,
     default: 'player1',
   },
-  queue: [
-    {
-      id: String,
-      uri: String,
-      name: String,
-      album: { images: [] },
-      artists: [],
-      duration_ms: Number,
-    },
-  ],
+  queue: {
+    type: [
+      {
+        _id: false,
+        id: String,
+        uri: String,
+        name: String,
+        album: { images: [] },
+        artists: [],
+        duration_ms: Number,
+      },
+    ],
+    default: [],
+  },
 });
 
 export default mongoose.model('Session', SessionSchema);

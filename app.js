@@ -16,13 +16,14 @@ import { dirname } from 'path';
 
 export const app = express();
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-app.use(express.static(path.resolve(__dirname, './client/dist')));
-app.use(express.json());
-app.use(cookieParser());
 if (nodeEnv === 'development') {
   app.use(morgan('dev'));
 }
+app.use(cookieParser());
+app.use(express.json());
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+app.use(express.static(path.resolve(__dirname, './client/dist')));
 
 app.use(`${apiVersionBaseUrl}/auth`, authRouter);
 app.use(`${apiVersionBaseUrl}/session`, sessionRouter);

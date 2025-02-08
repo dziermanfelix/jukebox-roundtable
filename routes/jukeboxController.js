@@ -13,7 +13,8 @@ export const createJukebox = async (req, res) => {
     return res.status(StatusCodes.BAD_REQUEST).json(jukeboxExistsError(name));
   }
   const jukebox = await Jukebox.create(req.body);
-  return res.status(StatusCodes.CREATED).json({ jukebox });
+  // return res.status(StatusCodes.CREATED).json({ jukebox });
+  return jukebox;
 };
 
 export const jukeboxExistsHttp = async (req, res) => {

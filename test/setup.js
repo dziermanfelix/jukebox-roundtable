@@ -35,8 +35,7 @@ export function makeMockJukebox() {
   const name = 'dust';
   const code = 'dust';
   const spotifyCode = '';
-  const role = 'starter';
-  return { name: name, code: code, spotifyCode: spotifyCode, role: role };
+  return { name: name, code: code, spotifyCode: spotifyCode };
 }
 
 export const oneTrackQueue = [

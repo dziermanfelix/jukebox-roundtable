@@ -9,21 +9,24 @@ import {
   cleanupSessionFromId,
   cleanupOldSessionFromWebToken,
 } from './sessionController.js';
-import {
-  jukeboxBadCredentialsError,
-  jukeboxDoesNotExistError,
-  jukeboxSuccessfulLogin,
-  jukeboxSuccessfulLogout,
-  sessionExistsError,
-} from '../common/responseMessages.js';
+import { jukeboxBadCredentialsError, jukeboxSuccessfulLogout, sessionExistsError } from '../common/responseMessages.js';
 import { generateRandomString } from '../common/string.js';
 import { removeFromQueueOrder } from './queueOrderController.js';
+import { Role } from '../utils/roles.js';
+import { createJukebox } from './jukeboxController.js';
 
 export const login = async (req, res) => {
-  const jukebox = await Jukebox.findOne({ name: req.body.name });
-  if (!jukebox) return res.status(StatusCodes.NOT_FOUND).json(jukeboxDoesNotExistError(req.body.name));
-  const userAuthenticated = jukebox && (await comparePassword(req.body.code, jukebox.code));
-  if (!userAuthenticated) return res.status(StatusCodes.UNAUTHORIZED).json(jukeboxBadCredentialsError(req.body.name));
+  let jukebox = await Jukebox.findOne({ name: req.body.name });
+  req.body.role = Role.JOINER;
+  let userAuthenticated = true;
+  if (!jukebox) {
+    req.body.role = Role.STARTER;
+    jukebox = await createJukebox(req, res);
+    // userAuthenticated = req.body.code === jukebox.code;
+  } else {
+    userAuthenticated = jukebox && (await comparePassword(req.body.code, jukebox.code));
+    if (!userAuthenticated) return res.status(StatusCodes.UNAUTHORIZED).json(jukeboxBadCredentialsError(req.body.name));
+  }
   let webToken = req.cookies.webToken;
   let needNewSession = true;
   if (webToken) {
@@ -41,7 +44,7 @@ export const login = async (req, res) => {
     if (!session) return res.status(StatusCodes.BAD_REQUEST).json(sessionExistsError(webToken));
   }
   res.cookie('webToken', webToken, cookieOptions());
-  return res.status(StatusCodes.OK).json(jukeboxSuccessfulLogin(jukebox.name));
+  return res.status(StatusCodes.OK).json({ jukebox: jukebox, role: req.body.role });
 };
 
 export const logout = async (req, res) => {

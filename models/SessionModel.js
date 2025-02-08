@@ -7,7 +7,7 @@ const SessionSchema = new mongoose.Schema({
   jukebox: { type: mongoose.Schema.Types.ObjectId, ref: Jukebox },
   role: {
     type: String,
-    enum: [Role.ADMIN, Role.SCRUB],
+    enum: [Role.STARTER, Role.JOINER],
     required: true,
   },
   displayName: {

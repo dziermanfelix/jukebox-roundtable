@@ -2,16 +2,8 @@ export const jukeboxExistsError = (jukeboxName) => {
   return { msg: `jukebox ${jukeboxName} is being used` };
 };
 
-export const jukeboxDoesNotExistError = (jukeboxName) => {
-  return { msg: `jukebox ${jukeboxName} does not exist` };
-};
-
 export const jukeboxBadCredentialsError = (jukeboxName) => {
   return { msg: `wrong code for jukebox ${jukeboxName}` };
-};
-
-export const jukeboxSuccessfulLogin = (jukeboxName) => {
-  return { msg: `user logged into jukebox ${jukeboxName}` };
 };
 
 export const jukeboxSuccessfulLogout = (jukeboxName, sessionId) => {

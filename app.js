@@ -26,11 +26,6 @@ if (nodeEnv === 'production') {
 app.use(cookieParser());
 app.use(express.json());
 
-if (nodeEnv === 'production') {
-  const __dirname = dirname(fileURLToPath(import.meta.url));
-  app.use(express.static(path.resolve(__dirname, './client/dist')));
-}
-
 app.use(`${apiVersionBaseUrl}/auth`, authRouter);
 app.use(`${apiVersionBaseUrl}/session`, sessionRouter);
 app.use(`${apiVersionBaseUrl}/jukebox`, jukeboxRouter);
@@ -38,6 +33,8 @@ app.use(`${apiVersionBaseUrl}/jukebox-priv`, authenticateUser, jukeboxPrivateRou
 app.use(`${apiVersionBaseUrl}/spotify`, spotifyRouter);
 
 if (nodeEnv === 'production') {
+  const __dirname = dirname(fileURLToPath(import.meta.url));
+  app.use(express.static(path.resolve(__dirname, './client/dist')));
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, './client/dist', 'index.html'));
   });

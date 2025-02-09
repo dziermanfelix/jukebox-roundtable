@@ -32,7 +32,7 @@ app.use(`${apiVersionBaseUrl}/jukebox`, jukeboxRouter);
 app.use(`${apiVersionBaseUrl}/jukebox-priv`, authenticateUser, jukeboxPrivateRouter);
 app.use(`${apiVersionBaseUrl}/spotify`, spotifyRouter);
 
-if (nodeEnv === 'production') {
+if (nodeEnv !== 'test') {
   const __dirname = dirname(fileURLToPath(import.meta.url));
   app.use(express.static(path.resolve(__dirname, './client/dist')));
   app.get('*', (req, res) => {

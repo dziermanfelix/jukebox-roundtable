@@ -9,12 +9,17 @@ import { getOrderDb } from './queueOrderController.js';
 
 let previous = undefined;
 
+function emitter(sessionId, event, data) {
+  const socketId = connectedUsers[sessionId];
+  serverSocket.to(socketId).emit(event, data);
+}
+
 export const startJukeboxRequest = async (req, res) => {
-  jukeboxEngine(req.params.id, req.body.deviceId);
+  jukeboxEngine(req.params.id, req.body.deviceId, req.body.sessionId);
 };
 
-export async function jukeboxEngine(jukeboxName, deviceId) {
-  let { id: queuedTrackId } = await playNextTrack(jukeboxName, deviceId);
+export async function jukeboxEngine(jukeboxName, deviceId, sessionId) {
+  let { id: queuedTrackId } = await playNextTrack(jukeboxName, deviceId, sessionId);
   let readyToQueueTrack = true;
   while (await jukeboxExistsByName(jukeboxName)) {
     let current = await getCurrentPlaying(jukeboxName);
@@ -64,7 +69,7 @@ async function addNextTrackToPlayerQueue(jukeboxName) {
   }
 }
 
-async function playNextTrack(jukeboxName, deviceId) {
+async function playNextTrack(jukeboxName, deviceId, sessionId) {
   const track = await getNextTrack(jukeboxName);
   const token = await getAccessToken(jukeboxName);
   try {
@@ -74,9 +79,9 @@ async function playNextTrack(jukeboxName, deviceId) {
     var options = {
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     };
-    axios.put(`https://api.spotify.com/v1/me/player/play/?device_id=${deviceId}`, data, options);
+    await axios.put(`https://api.spotify.com/v1/me/player/play/?device_id=${deviceId}`, data, options);
     await updateJukeboxPlayedTracks(jukeboxName, track);
-    serverSocket.emit(updateTrackEvent, track);
+    emitter(sessionId, updateTrackEvent, track);
     return track;
   } catch (error) {
     console.log('error playing next track');
@@ -92,8 +97,7 @@ export const getNextTrack = async (jukeboxName) => {
   if (track) {
     await setQueueForSessionId(sessionId, queue);
     await updateJukeboxPlayedTracks(jukeboxName, track);
-    const socketId = connectedUsers[sessionId];
-    serverSocket.to(socketId).emit(updateQueueEvent, queue);
+    emitter(sessionId, updateQueueEvent, queue);
   }
   return track;
 };

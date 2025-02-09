@@ -19,11 +19,17 @@ export const app = express();
 if (nodeEnv === 'development') {
   app.use(morgan('dev'));
 }
+// keep this here for testing in production
+if (nodeEnv === 'production') {
+  app.use(morgan('dev'));
+}
 app.use(cookieParser());
 app.use(express.json());
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-app.use(express.static(path.resolve(__dirname, './client/dist')));
+if (nodeEnv === 'production') {
+  const __dirname = dirname(fileURLToPath(import.meta.url));
+  app.use(express.static(path.resolve(__dirname, './client/dist')));
+}
 
 app.use(`${apiVersionBaseUrl}/auth`, authRouter);
 app.use(`${apiVersionBaseUrl}/session`, sessionRouter);
@@ -31,9 +37,11 @@ app.use(`${apiVersionBaseUrl}/jukebox`, jukeboxRouter);
 app.use(`${apiVersionBaseUrl}/jukebox-priv`, authenticateUser, jukeboxPrivateRouter);
 app.use(`${apiVersionBaseUrl}/spotify`, spotifyRouter);
 
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, './client/dist', 'index.html'));
-});
+if (nodeEnv === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, './client/dist', 'index.html'));
+  });
+}
 
 // catch controller routing error
 app.use('*', (req, res) => {

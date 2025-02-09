@@ -37,7 +37,7 @@ export const getJukebox = async (req, res) => {
   if (!jukebox) {
     return res.status(StatusCodes.NOT_FOUND).json(jukeboxDoesNotExistError(name));
   }
-  return res.status(StatusCodes.OK).json({ jukebox: jukebox, sessionId: req.cookies.webToken });
+  return res.status(StatusCodes.OK).json({ jukebox: jukebox });
 };
 
 export async function getJukeboxByName(jukeboxName) {

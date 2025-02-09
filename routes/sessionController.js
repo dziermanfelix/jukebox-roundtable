@@ -1,6 +1,7 @@
 import Session from '../models/SessionModel.js';
 import { StatusCodes } from 'http-status-codes';
 import { addToQueueOrder } from './queueOrderController.js';
+import { getWebTokenFromRequest } from '../utils/tokenUtils.js';
 
 export const createSession = async (jukebox, webToken, role) => {
   if (await Session.exists({ webToken: webToken })) return null;
@@ -10,7 +11,7 @@ export const createSession = async (jukebox, webToken, role) => {
 };
 
 export const getSession = async (req, res) => {
-  const webToken = req['cookies'][`${req.body.name}WebToken`];
+  const webToken = getWebTokenFromRequest(req, req.params.id);
   const session = await getSessionFromWebToken(webToken);
   if (!session) {
     return res.status(404).json({ msg: `no session with webToken ${webToken}` });

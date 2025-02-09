@@ -23,7 +23,7 @@ export const loader = async ({ params }) => {
     } = await customFetch.get(`${jukeboxPrivatePath}${params.id}`);
     const {
       data: { session },
-    } = await customFetch.get(`${sessionPath}`);
+    } = await customFetch.get(`${sessionPath}${params.id}`);
     return { jukebox: jukebox, session: session };
   } catch (error) {
     toast.error(error?.response?.data?.msg);

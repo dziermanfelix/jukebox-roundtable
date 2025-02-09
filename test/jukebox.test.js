@@ -1,4 +1,4 @@
-import { jukeboxCreatePath, loginPath, jukeboxPrivatePath } from '../common/paths';
+import { jukeboxCreatePath, loginPath, jukeboxPrivatePath, sessionPath } from '../common/paths';
 import {
   deleteJukeboxSuccess,
   jukeboxExistsError,
@@ -6,7 +6,7 @@ import {
   noToken,
 } from '../common/responseMessages';
 import { StatusCodes } from 'http-status-codes';
-import { getWebTokenFromResponse } from '../utils/tokenUtils';
+import { getWebTokenFromResponse, getWebTokenKey } from '../utils/tokenUtils';
 import { makeMockJukebox, makeUrl } from './setup';
 import { getJukeboxByName } from '../routes/jukeboxController';
 import { serverApp as app } from './setup';
@@ -50,10 +50,20 @@ describe('jukebox', () => {
     expect(webToken).not.toEqual(undefined);
     const getJukeboxResponse = await request(app)
       .get(`${makeUrl(jukeboxPrivatePath)}/${jukebox.name}`)
-      .set('Cookie', `webToken=${webToken}`);
+      .set('Cookie', `${getWebTokenKey(jukebox.name)}=${webToken}`);
     expect(getJukeboxResponse.status).toBe(StatusCodes.OK);
     expect(getJukeboxResponse.statusCode).toBe(StatusCodes.OK);
-    expect(getJukeboxResponse.body).toMatchObject({ jukebox: { name: jukebox.name }, sessionId: webToken });
+    expect(getJukeboxResponse.body).toMatchObject({ jukebox: { name: jukebox.name } });
+    const getSessionResponse = await request(app)
+      .get(`${makeUrl(sessionPath)}/${jukebox.name}`)
+      .set('Cookie', `${getWebTokenKey(jukebox.name)}=${webToken}`);
+    const jukeboxDb = await getJukeboxByName(jukebox.name);
+    const session = getSessionResponse.body.session;
+    expect(session.webToken).toEqual(webToken);
+    expect(JSON.stringify(session.jukebox)).toEqual(JSON.stringify(jukeboxDb._id));
+    expect(session.role).toEqual(Role.STARTER);
+    expect(session.displayName).toEqual('player1');
+    expect(session.queue).toEqual([]);
   });
 
   it('jukebox get error no web token', async () => {
@@ -110,21 +120,21 @@ describe('jukebox', () => {
 
     const getJukeboxResponse1 = await request(app)
       .get(`${makeUrl(jukeboxPrivatePath)}/${jukebox1.name}`)
-      .set('Cookie', `webToken=${webToken1}`);
+      .set('Cookie', `${getWebTokenKey(jukebox1.name)}=${webToken1}`);
     expect(getJukeboxResponse1.status).toBe(StatusCodes.OK);
     expect(getJukeboxResponse1.statusCode).toBe(StatusCodes.OK);
-    expect(getJukeboxResponse1.body).toMatchObject({ jukebox: { name: jukebox1.name }, sessionId: webToken1 });
+    expect(getJukeboxResponse1.body).toMatchObject({ jukebox: { name: jukebox1.name } });
 
     const getJukeboxResponse2 = await request(app)
       .get(`${makeUrl(jukeboxPrivatePath)}/${jukebox2.name}`)
-      .set('Cookie', `webToken=${webToken2}`);
+      .set('Cookie', `${getWebTokenKey(jukebox2.name)}=${webToken2}`);
     expect(getJukeboxResponse2.status).toBe(StatusCodes.OK);
     expect(getJukeboxResponse2.statusCode).toBe(StatusCodes.OK);
-    expect(getJukeboxResponse2.body).toMatchObject({ jukebox: { name: jukebox2.name }, sessionId: webToken2 });
+    expect(getJukeboxResponse2.body).toMatchObject({ jukebox: { name: jukebox2.name } });
 
     const getJukeboxResponseWrongJukebox = await request(app)
       .get(`${makeUrl(jukeboxPrivatePath)}/${jukebox2.name}`)
-      .set('Cookie', `webToken=${webToken1}`);
+      .set('Cookie', `${getWebTokenKey(jukebox2.name)}=${webToken1}`);
     expect(getJukeboxResponseWrongJukebox.status).toBe(StatusCodes.FORBIDDEN);
     expect(getJukeboxResponseWrongJukebox.statusCode).toBe(StatusCodes.FORBIDDEN);
     expect(getJukeboxResponseWrongJukebox.error.text).toBe(JSON.stringify(notAuthorizedToJoinJukebox(jukebox2.name)));
@@ -167,28 +177,28 @@ describe('jukebox', () => {
 
     const getJukeboxResponse1 = await request(app)
       .get(`${makeUrl(jukeboxPrivatePath)}/${jukebox1.name}`)
-      .set('Cookie', `webToken=${webToken1}`);
+      .set('Cookie', `${getWebTokenKey(jukebox1.name)}=${webToken1}`);
     expect(getJukeboxResponse1.status).toBe(StatusCodes.OK);
     expect(getJukeboxResponse1.statusCode).toBe(StatusCodes.OK);
-    expect(getJukeboxResponse1.body).toMatchObject({ jukebox: { name: jukebox1.name }, sessionId: webToken1 });
+    expect(getJukeboxResponse1.body).toMatchObject({ jukebox: { name: jukebox1.name } });
 
     const getJukeboxResponse2 = await request(app)
       .get(`${makeUrl(jukeboxPrivatePath)}/${jukebox2.name}`)
-      .set('Cookie', `webToken=${webToken2}`);
+      .set('Cookie', `${getWebTokenKey(jukebox2.name)}=${webToken2}`);
     expect(getJukeboxResponse2.status).toBe(StatusCodes.OK);
     expect(getJukeboxResponse2.statusCode).toBe(StatusCodes.OK);
-    expect(getJukeboxResponse2.body).toMatchObject({ jukebox: { name: jukebox2.name }, sessionId: webToken2 });
+    expect(getJukeboxResponse2.body).toMatchObject({ jukebox: { name: jukebox2.name } });
 
     const deleteJukeboxResponse1 = await request(app)
       .delete(`${makeUrl(jukeboxPrivatePath)}/${jukebox1.name}`)
-      .set('Cookie', `webToken=${webToken1}`);
+      .set('Cookie', `${getWebTokenKey(jukebox1.name)}=${webToken1}`);
     expect(deleteJukeboxResponse1.status).toBe(StatusCodes.OK);
     expect(deleteJukeboxResponse1.statusCode).toBe(StatusCodes.OK);
     expect(JSON.stringify(deleteJukeboxResponse1.body)).toBe(JSON.stringify(deleteJukeboxSuccess(jukebox1.name)));
 
     const deleteJukeboxResponse2 = await request(app)
       .delete(`${makeUrl(jukeboxPrivatePath)}/${jukebox2.name}`)
-      .set('Cookie', `webToken=${webToken2}`);
+      .set('Cookie', `${getWebTokenKey(jukebox2.name)}=${webToken2}`);
     expect(deleteJukeboxResponse2.status).toBe(StatusCodes.OK);
     expect(deleteJukeboxResponse2.statusCode).toBe(StatusCodes.OK);
     expect(JSON.stringify(deleteJukeboxResponse2.body)).toBe(JSON.stringify(deleteJukeboxSuccess(jukebox2.name)));

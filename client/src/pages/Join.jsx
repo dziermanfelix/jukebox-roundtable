@@ -24,17 +24,12 @@ export const action = async ({ request }) => {
   localStorage.setItem('jukeboxName', name);
   try {
     const {
-      data: { jukebox },
-    } = await customFetch.get(`${jukeboxExistsPath}${name}`);
-    if (jukebox) {
-      data.role = Role.JOINER;
-      await customFetch.post(loginPath, data);
-      return redirect(`${jukeboxPath}${name}`);
-    } else {
-      data.role = Role.STARTER;
-      await customFetch.post(jukeboxCreatePath, data);
-      await customFetch.post(loginPath, data);
+      data: { role },
+    } = await customFetch.post(loginPath, data);
+    if (role === Role.STARTER) {
       return redirect(`${spotifyLoginPath}${name}`);
+    } else if (role === Role.JOINER) {
+      return redirect(`${jukeboxPath}${name}`);
     }
   } catch (error) {
     toast.error(error?.response?.data?.msg);

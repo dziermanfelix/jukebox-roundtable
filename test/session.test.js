@@ -1,11 +1,10 @@
 import { jukeboxCreatePath, loginPath, jukeboxPrivatePath, setQueuePath, getQueuePath } from '../common/paths';
 import { deleteJukeboxSuccess } from '../common/responseMessages';
 import { StatusCodes } from 'http-status-codes';
-import { getWebTokenFromResponse } from '../utils/tokenUtils';
+import { getWebTokenFromResponse, getWebTokenKey } from '../utils/tokenUtils';
 import { createSession, getSessionFromWebToken } from '../routes/sessionController';
 import { makeMockJukebox, makeUrl, multiTrackQueue1, multiTrackQueue1Reordered, oneTrackQueue } from './setup';
 import { getJukeboxByName } from '../routes/jukeboxController';
-import { getOrderDb } from '../routes/queueOrderController';
 import { serverApp as app } from './setup';
 import { serverRequest as request } from './setup';
 import { Role } from '../utils/roles';
@@ -90,7 +89,7 @@ describe('session', () => {
 
     const deleteJukeboxResponse = await request(app)
       .delete(`${makeUrl(jukeboxPrivatePath)}/${jukebox.name}`)
-      .set('Cookie', `webToken=${webTokens[0]}`);
+      .set('Cookie', `${getWebTokenKey(jukebox.name)}=${webTokens[0]}`);
     expect(deleteJukeboxResponse.status).toBe(StatusCodes.OK);
     expect(deleteJukeboxResponse.statusCode).toBe(StatusCodes.OK);
     expect(JSON.stringify(deleteJukeboxResponse.body)).toBe(JSON.stringify(deleteJukeboxSuccess(jukebox.name)));

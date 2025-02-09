@@ -4,20 +4,13 @@ import { useEffect, useState } from 'react';
 import customFetch from '../../../common/customFetch';
 import { toast } from 'react-toastify';
 import { useJukeboxContext } from '../pages/Jukebox';
-import { updateTrackEvent } from '../../../utils/socketEvents';
 
 const Player = () => {
-  const { name, session, socket } = useJukeboxContext();
+  const { name, session } = useJukeboxContext();
   const [token, setToken] = useState(undefined);
   const [player, setPlayer] = useState(undefined);
   const [isStarted, setStarted] = useState(false);
   const [track, setTrack] = useState(undefined);
-
-  if (socket) {
-    socket.on(updateTrackEvent, (track) => {
-      setTrack(track);
-    });
-  }
 
   useEffect(() => {
     const getAccessToken = async () => {
@@ -57,6 +50,11 @@ const Player = () => {
 
           player.addListener('playback_error', (error) => {
             console.error('playback error:', error.message);
+          });
+
+          player.addListener('player_state_changed', ({ position, duration, track_window: { current_track } }) => {
+            console.log('player state changed, current track: ', current_track);
+            setTrack({ name: current_track?.name, artists: current_track?.artists, album: current_track?.album });
           });
 
           setStarted(true);

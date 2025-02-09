@@ -8,6 +8,7 @@ const Queue = () => {
 
   if (socket) {
     socket.on(updateQueueEvent, (tracks) => {
+      console.log(`socket on update queue`);
       updateQueue(tracks);
     });
   }

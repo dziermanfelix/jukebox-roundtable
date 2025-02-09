@@ -1,5 +1,5 @@
 import { connectedUsers, serverSocket } from '../server.js';
-import { updateQueueEvent, updateTrackEvent } from '../utils/socketEvents.js';
+import { updateQueueEvent } from '../utils/socketEvents.js';
 import { getAccessToken } from './accessTokenController.js';
 import axios from 'axios';
 import { getQueueFromSessionId, setQueueForSessionId } from './queueController.js';
@@ -10,6 +10,7 @@ import { getOrderDb } from './queueOrderController.js';
 let previous = undefined;
 
 function emitter(sessionId, event, data) {
+  console.log(`emitter sessionId=${sessionId}, event=${event}`);
   const socketId = connectedUsers[sessionId];
   serverSocket.to(socketId).emit(event, data);
 }
@@ -80,8 +81,6 @@ async function playNextTrack(jukeboxName, deviceId, sessionId) {
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     };
     await axios.put(`https://api.spotify.com/v1/me/player/play/?device_id=${deviceId}`, data, options);
-    await updateJukeboxPlayedTracks(jukeboxName, track);
-    emitter(sessionId, updateTrackEvent, track);
     return track;
   } catch (error) {
     console.log('error playing next track');

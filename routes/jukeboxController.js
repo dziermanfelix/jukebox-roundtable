@@ -5,17 +5,19 @@ import { jukeboxDoesNotExistError, jukeboxExistsError, deleteJukeboxSuccess } fr
 import { deleteSessionsFromJukebox } from './sessionController.js';
 
 export const createJukebox = async (req, res) => {
-  const name = req.body.name;
-  const salt = await bcrypt.genSalt(10);
-  const hashedCode = await bcrypt.hash(req.body.code, salt);
-  req.body.code = hashedCode;
-  if (await jukeboxExistsByName(name)) {
-    return res.status(StatusCodes.BAD_REQUEST).json(jukeboxExistsError(name));
+  if (await jukeboxExistsByName(req.body.name)) {
+    return res.status(StatusCodes.BAD_REQUEST).json(jukeboxExistsError(req.body.name));
   }
-  const jukebox = await Jukebox.create(req.body);
-  // return res.status(StatusCodes.CREATED).json({ jukebox });
-  return jukebox;
+  const jukebox = await createJukeboxDb(req.body.name, req.body.code, req.body.role);
+  return res.status(StatusCodes.CREATED).json({ jukebox });
 };
+
+export async function createJukeboxDb(jukeboxName, code, role) {
+  const salt = await bcrypt.genSalt(10);
+  const hashedCode = await bcrypt.hash(code, salt);
+  code = hashedCode;
+  return await Jukebox.create({ name: jukeboxName, code: code, role: role });
+}
 
 export const jukeboxExistsHttp = async (req, res) => {
   const name = req.params.id;
@@ -38,8 +40,8 @@ export const getJukebox = async (req, res) => {
   return res.status(StatusCodes.OK).json({ jukebox: jukebox, sessionId: req.cookies.webToken });
 };
 
-export async function getJukeboxByName(name) {
-  return await Jukebox.findOne({ name: name });
+export async function getJukeboxByName(jukeboxName) {
+  return await Jukebox.findOne({ name: jukeboxName });
 }
 
 export const getJukeboxes = async (req, res) => {

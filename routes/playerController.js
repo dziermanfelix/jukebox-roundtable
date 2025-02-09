@@ -5,7 +5,7 @@ import axios from 'axios';
 import { getQueueFromSessionId, setQueueForSessionId } from './queueController.js';
 import { jukeboxExistsByName, updateJukeboxPlayedTracks } from './jukeboxController.js';
 import { delay } from '../utils/time.js';
-import { getQueueOrderForJukebox } from './queueOrderController.js';
+import { getOrderDb } from './queueOrderController.js';
 
 let previous = undefined;
 
@@ -96,7 +96,7 @@ export const getNextTrack = async (jukeboxName) => {
 };
 
 export const getNextSessionId = async (jukeboxName) => {
-  const order = await getQueueOrderForJukebox(jukeboxName);
+  const order = await getOrderDb(jukeboxName);
   let prevIndex = -1;
   if (previous) {
     prevIndex = order.indexOf(previous);

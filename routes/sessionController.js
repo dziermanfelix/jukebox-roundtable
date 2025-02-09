@@ -2,16 +2,15 @@ import Session from '../models/SessionModel.js';
 import { StatusCodes } from 'http-status-codes';
 import { addToQueueOrder } from './queueOrderController.js';
 
-export const createSession = async (req, jukebox, webToken) => {
+export const createSession = async (jukebox, webToken, role) => {
   if (await Session.exists({ webToken: webToken })) return null;
-  const sessionObj = { webToken: webToken, role: req.body.role, jukebox: jukebox._id };
-  const session = await Session.create(sessionObj);
+  const session = await Session.create({ webToken: webToken, role: role, jukebox: jukebox._id });
   await addToQueueOrder(jukebox, session);
   return session;
 };
 
 export const getSession = async (req, res) => {
-  const webToken = req.cookies.webToken;
+  const webToken = req['cookies'][`${req.body.name}WebToken`];
   const session = await getSessionFromWebToken(webToken);
   if (!session) {
     return res.status(404).json({ msg: `no session with webToken ${webToken}` });
@@ -56,8 +55,7 @@ export async function deleteSessionFromId(sessionId) {
 export async function webTokenMatchesJukebox(webToken, jukebox) {
   const session = await getSessionFromWebToken(webToken);
   if (session) {
-    const val = String(session.jukebox) === String(jukebox._id);
-    return val;
+    return String(session.jukebox) === String(jukebox._id);
   }
   return false;
 }

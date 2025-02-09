@@ -25,9 +25,19 @@ export const verifyJwt = (token) => {
   return decoded;
 };
 
+export function getWebTokenFromRequest(req, jukeboxName) {
+  return req['cookies'][getWebTokenKey(jukeboxName)];
+}
+
+export function getWebTokenKey(jukeboxName) {
+  return `${jukeboxName}WebToken`;
+}
+
 export function getWebTokenFromResponse(response) {
+  const jukeboxName = response?.body?.jukebox?.name;
+  if (!jukeboxName) return undefined;
   const cookies = parse(response);
-  const webToken = cookies.find((cookie) => cookie.name === 'webToken');
+  const webToken = cookies.find((cookie) => cookie.name === `${jukeboxName}WebToken`);
   if (webToken) return webToken.value;
   return undefined;
 }

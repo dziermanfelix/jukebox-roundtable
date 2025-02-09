@@ -15,12 +15,7 @@ export const getOrder = async (req, res) => {
   return res.status(StatusCodes.OK).json({ sessions: sessions });
 };
 
-export async function getQueueOrderForJukebox(jukeboxName) {
-  const jukebox = await getJukeboxByName(jukeboxName);
-  return jukebox.queueOrder;
-}
-
-export async function addToQueueOrder(jukebox, session) {;
+export async function addToQueueOrder(jukebox, session) {
   let sessions = await getOrderDb(jukebox.name);
   if (sessions != null) {
     sessions.push(session._id);

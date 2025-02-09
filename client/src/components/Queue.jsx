@@ -6,9 +6,11 @@ import { updateQueueEvent } from '../../../utils/socketEvents';
 const Queue = () => {
   const { queue, updateQueue, reorderQueue, socket } = useJukeboxContext();
 
-  socket.on(updateQueueEvent, (tracks) => {
-    updateQueue(tracks);
-  });
+  if (socket) {
+    socket.on(updateQueueEvent, (tracks) => {
+      updateQueue(tracks);
+    });
+  }
 
   const removeFromQueue = (track) => {
     const tracks = [...queue];

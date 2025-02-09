@@ -4,6 +4,7 @@ dotenv.config();
 // server
 export const nodeEnv = process.env.NODE_ENV;
 export const serverPort = process.env.SERVER_PORT;
+export const serverUrl = process.env.SERVER_URL;
 
 // mongo
 export const mongoUrl = process.env.MONGO_URL;

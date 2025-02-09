@@ -1,5 +1,6 @@
 import io from 'socket.io-client';
+import { serverUrl, serverPort } from '../utils/frontEndEnv';
 
-const socket = io('http://localhost:8144');
-
-export default socket;
+export function createSocketConnection(jukeboxName, sessionId) {
+  return io(`${serverUrl}:${serverPort}/?jukeboxName=${jukeboxName}&&sessionId=${sessionId}`);
+}

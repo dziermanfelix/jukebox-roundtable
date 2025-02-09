@@ -13,9 +13,11 @@ const Player = () => {
   const [isStarted, setStarted] = useState(false);
   const [track, setTrack] = useState(undefined);
 
-  socket.on(updateTrackEvent, (track) => {
-    setTrack(track);
-  });
+  if (socket) {
+    socket.on(updateTrackEvent, (track) => {
+      setTrack(track);
+    });
+  }
 
   useEffect(() => {
     const getAccessToken = async () => {

@@ -1,4 +1,4 @@
-import { serverSocket } from '../server.js';
+import { connectedUsers, serverSocket } from '../server.js';
 import { updateQueueEvent, updateTrackEvent } from '../utils/socketEvents.js';
 import { getAccessToken } from './accessTokenController.js';
 import axios from 'axios';
@@ -18,7 +18,7 @@ export async function jukeboxEngine(jukeboxName, deviceId) {
   let readyToQueueTrack = true;
   while (await jukeboxExistsByName(jukeboxName)) {
     let current = await getCurrentPlaying(jukeboxName);
-    if (current !== '' && current.is_playing) {
+    if (current && current !== '' && current.is_playing) {
       if (current.item.id === queuedTrackId) {
         readyToQueueTrack = true;
       }
@@ -31,6 +31,7 @@ export async function jukeboxEngine(jukeboxName, deviceId) {
       }
       await delay(midpoint);
     }
+    // TODO either reconnect player or kill jukebox
   }
 }
 
@@ -84,13 +85,15 @@ async function playNextTrack(jukeboxName, deviceId) {
 }
 
 export const getNextTrack = async (jukeboxName) => {
+  // TODO handle no next track
   const sessionId = await getNextSessionId(jukeboxName);
   const queue = await getQueueFromSessionId(sessionId);
   const track = queue.shift();
   if (track) {
     await setQueueForSessionId(sessionId, queue);
     await updateJukeboxPlayedTracks(jukeboxName, track);
-    serverSocket.emit(updateQueueEvent, queue);
+    const socketId = connectedUsers[sessionId];
+    serverSocket.to(socketId).emit(updateQueueEvent, queue);
   }
   return track;
 };

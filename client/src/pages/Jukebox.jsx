@@ -13,8 +13,8 @@ import { useLoaderData, redirect, useNavigate } from 'react-router-dom';
 import customFetch from '../../../common/customFetch';
 import Wrapper from '../wrappers/Jukebox';
 import { useState, useContext, createContext, useEffect } from 'react';
-import socket from '../utils/socket';
 import { Role } from '../../../utils/roles';
+import { createSocketConnection } from '../utils/socket';
 
 export const loader = async ({ params }) => {
   try {
@@ -37,6 +37,7 @@ const Jukebox = () => {
   const { jukebox, session } = useLoaderData();
   const { name } = jukebox;
   const [queue, setQueue] = useState([]);
+  const [socket, setSocket] = useState(undefined);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,12 +54,14 @@ const Jukebox = () => {
   }, []);
 
   useEffect(() => {
+    const socket = createSocketConnection(jukebox.name, session._id);
     socket.on('connect_error', (err) => {
       console.log(`socket connect error: ${err}`);
     });
     socket.on('connect', (data) => {});
     socket.on('disconnect', (data) => {});
     socket.connect();
+    setSocket(socket);
     return () => {
       socket.disconnect();
     };

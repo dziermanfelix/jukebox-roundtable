@@ -125,6 +125,69 @@ describe('player', () => {
       expect(getQueueResponse.body).toEqual({ queue: [] });
     }
   });
+
+  it('player many sessions sim2', async () => {
+    const q1edit = q1.splice(0, 2);
+    const q2edit = q2.splice(0, 3);
+    const q3edit = q3.splice(0, 1);
+    const q4edit = [...q4];
+    const q5 = [];
+    const expectations = {
+      s1: { jukebox: undefined, webToken: undefined, q: q5, remainingQ: q5, good: true },
+      s2: { jukebox: undefined, webToken: undefined, q: q1edit, remainingQ: q1edit, good: true },
+      s3: { jukebox: undefined, webToken: undefined, q: q2edit, remainingQ: q2edit, good: true },
+      s4: { jukebox: undefined, webToken: undefined, q: q3edit, remainingQ: q3edit, good: true },
+      s5: { jukebox: undefined, webToken: undefined, q: q4edit, remainingQ: q4edit, good: true },
+    };
+    expectations.s1.jukebox = { name: 'dust', code: 'dust', spotifyCode: '' };
+    expectations.s2.jukebox = { name: 'dust', code: 'dust', spotifyCode: '' };
+    expectations.s3.jukebox = { name: 'dust', code: 'dust', spotifyCode: '' };
+    expectations.s4.jukebox = { name: 'dust', code: 'dust', spotifyCode: '' };
+    expectations.s5.jukebox = { name: 'dust', code: 'dust', spotifyCode: '' };
+    const jukebox = expectations.s1.jukebox;
+    await request(app).post(makeUrl(jukeboxCreatePath)).send(jukebox);
+    for (const s in expectations) {
+      const jukebox = expectations[s].jukebox;
+      const queue = expectations[s].q;
+      let loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox);
+      let webToken = getWebTokenFromResponse(loginResponse);
+      expectations[s].webToken = webToken;
+      const session = await getSessionFromWebToken(webToken);
+      const setQueueResponse = await request(app)
+        .post(makeUrl(`${setQueuePath}${session._id}`))
+        .send({ sessionId: session._id, queue: queue });
+      expect(setQueueResponse.body).toEqual(expect.objectContaining({ queue: queue }));
+      let getQueueResponse = await request(app).get(makeUrl(`${getQueuePath}${session._id}`));
+      expect(getQueueResponse.body).toEqual({ queue: queue });
+    }
+    let i = -1;
+    while (allGood(expectations)) {
+      i = (i + 1) % Object.keys(expectations).length;
+      const expectation = expectations[Object.keys(expectations)[i]];
+      if (expectation.remainingQ.length > 0) {
+        let nextExpectedTrack = expectation.remainingQ.shift();
+        let nextTrack = await getNextTrack(jukebox.name);
+        console.log(`expected ${nextExpectedTrack?.name} actual ${nextTrack?.name}`);
+        expect(nextTrack.id).toEqual(nextExpectedTrack.id);
+        const webToken = expectation.webToken;
+        const session = await getSessionFromWebToken(webToken);
+        const getQueueResponse = await request(app).get(makeUrl(`${getQueuePath}${session._id}`));
+        expect(getQueueResponse.body).toEqual({ queue: expectation.remainingQ });
+      }
+    }
+    // no next track
+    const nextTrack = await getNextTrack(jukebox.name);
+    expect(nextTrack).toBe(undefined);
+    // check all queues are empty
+    for (const k in expectations) {
+      const expectation = expectations[k];
+      const webToken = expectation.webToken;
+      const session = await getSessionFromWebToken(webToken);
+      const getQueueResponse = await request(app).get(makeUrl(`${getQueuePath}${session._id}`));
+      expect(getQueueResponse.body).toEqual({ queue: [] });
+    }
+  });
+
   function allGood(expectations) {
     for (const k in expectations) {
       if (expectations[k].remainingQ.length > 0) return true;

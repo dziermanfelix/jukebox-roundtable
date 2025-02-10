@@ -10,7 +10,6 @@ import { getOrderDb } from './queueOrderController.js';
 let previous = undefined;
 
 function emitter(sessionId, event, data) {
-  console.log(`emitter sessionId=${sessionId}, event=${event}`);
   const socketId = connectedUsers[sessionId];
   serverSocket.to(socketId).emit(event, data);
 }
@@ -57,46 +56,65 @@ async function getCurrentPlaying(jukeboxName) {
 
 async function addNextTrackToPlayerQueue(jukeboxName) {
   const track = await getNextTrack(jukeboxName);
-  const token = await getAccessToken(jukeboxName);
-  try {
-    var options = {
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-    };
-    axios.post(`https://api.spotify.com/v1/me/player/queue?uri=${track.uri}`, null, options);
-    return track;
-  } catch (error) {
-    console.log('error adding next track');
-    console.log(error.status);
+  if (track) {
+    const token = await getAccessToken(jukeboxName);
+    try {
+      var options = {
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      };
+      axios.post(`https://api.spotify.com/v1/me/player/queue?uri=${track.uri}`, null, options);
+      return track;
+    } catch (error) {
+      console.log('error adding next track');
+      console.log(error.status);
+    }
   }
 }
 
 async function playNextTrack(jukeboxName, deviceId, sessionId) {
   const track = await getNextTrack(jukeboxName);
-  const token = await getAccessToken(jukeboxName);
-  try {
-    var data = {
-      uris: [track.uri],
-    };
-    var options = {
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-    };
-    await axios.put(`https://api.spotify.com/v1/me/player/play/?device_id=${deviceId}`, data, options);
-    return track;
-  } catch (error) {
-    console.log('error playing next track');
-    console.log(error);
+  if (track) {
+    const token = await getAccessToken(jukeboxName);
+    try {
+      var data = {
+        uris: [track.uri],
+      };
+      var options = {
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      };
+      await axios.put(`https://api.spotify.com/v1/me/player/play/?device_id=${deviceId}`, data, options);
+      return track;
+    } catch (error) {
+      console.log('error playing next track');
+      console.log(error);
+    }
   }
 }
 
 export const getNextTrack = async (jukeboxName) => {
-  // TODO handle no next track
-  const sessionId = await getNextSessionId(jukeboxName);
-  const queue = await getQueueFromSessionId(sessionId);
-  const track = queue.shift();
-  if (track) {
-    await setQueueForSessionId(sessionId, queue);
-    await updateJukeboxPlayedTracks(jukeboxName, track);
-    emitter(sessionId, updateQueueEvent, queue);
+  let track = undefined;
+  let queue = [];
+  let sessionId = '';
+  const order = await getOrderDb(jukeboxName);
+  const numSessionsInJukebox = order.length;
+  let numEmptyQueue = -1;
+  while (queue.length === 0) {
+    sessionId = await getNextSessionId(jukeboxName);
+    queue = await getQueueFromSessionId(sessionId);
+    numEmptyQueue += 1;
+    if (numEmptyQueue === numSessionsInJukebox) {
+      console.log('no tracks left');
+      queue = null;
+      break;
+    }
+  }
+  if (queue) {
+    track = queue.shift();
+    if (track) {
+      await setQueueForSessionId(sessionId, queue);
+      await updateJukeboxPlayedTracks(jukeboxName, track);
+      emitter(sessionId, updateQueueEvent, queue);
+    }
   }
   return track;
 };

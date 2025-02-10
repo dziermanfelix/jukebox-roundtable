@@ -317,13 +317,7 @@ describe('queue order', () => {
     expect(sessionAfterLogout).toBe(null);
 
     const jukeboxAfterLogout = await getJukeboxByName(jukebox.name);
-    expect(JSON.stringify(jukeboxAfterLogout.queueOrder)).toEqual(JSON.stringify([]));
-    const orderFromDbAfterLogout = await getOrderDb(jukeboxAfterLogout.name);
-    expect(JSON.stringify(orderFromDbAfterLogout)).toEqual(JSON.stringify([]));
-    const getOrderResponse = await request(app).get(makeUrl(`${getOrderPath}${jukebox.name}`));
-    expect(getOrderResponse.status).toBe(StatusCodes.OK);
-    expect(getOrderResponse.statusCode).toBe(StatusCodes.OK);
-    expect(JSON.stringify(getOrderResponse.body)).toEqual(JSON.stringify({ sessions: [] }));
+    expect(jukeboxAfterLogout).toBe(null);
   });
 
   it('queue order logout multiple', async () => {
@@ -332,7 +326,21 @@ describe('queue order', () => {
     let sessionIds = [];
     let webTokens = [];
     let expectedSessions = [];
+
+    // login starter
+    const loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox);
+    expect(loginResponse.status).toBe(StatusCodes.OK);
+    expect(loginResponse.statusCode).toBe(StatusCodes.OK);
+    expect(loginResponse.body.jukebox.name).toEqual(jukebox.name);
+    expect(loginResponse.body.jukebox.playedTracks).toEqual([]);
+
+    const starterWebToken = getWebTokenFromResponse(loginResponse);
+    expect(starterWebToken).not.toEqual(undefined);
+
+    const starterSession = await getSessionFromWebToken(starterWebToken);
+
     for (let i = 0; i < numSessions; i++) {
+      // login joiners
       const loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox);
       expect(loginResponse.status).toBe(StatusCodes.OK);
       expect(loginResponse.statusCode).toBe(StatusCodes.OK);
@@ -355,15 +363,18 @@ describe('queue order', () => {
       webTokens.push(webToken);
       sessionIds.push(session._id);
 
-      expect(JSON.stringify(jukeboxDb.queueOrder)).toEqual(JSON.stringify(expectedSessions));
+      expect(JSON.stringify(jukeboxDb.queueOrder)).toEqual(JSON.stringify([starterSession._id, ...expectedSessions]));
       const sessionOrderFromDb = await getOrderDb(jukeboxDb.name);
-      expect(JSON.stringify(sessionOrderFromDb)).toEqual(JSON.stringify(expectedSessions));
+      expect(JSON.stringify(sessionOrderFromDb)).toEqual(JSON.stringify([starterSession._id, ...expectedSessions]));
       const getSessionOrderResponse = await request(app).get(makeUrl(`${getOrderPath}${jukebox.name}`));
       expect(getSessionOrderResponse.status).toBe(StatusCodes.OK);
       expect(getSessionOrderResponse.statusCode).toBe(StatusCodes.OK);
-      expect(JSON.stringify(getSessionOrderResponse.body)).toEqual(JSON.stringify({ sessions: expectedSessions }));
+      expect(JSON.stringify(getSessionOrderResponse.body)).toEqual(
+        JSON.stringify({ sessions: [starterSession._id, ...expectedSessions] })
+      );
     }
     for (let i = 0; i < numSessions; i++) {
+      // logout joiners
       const sessionId = sessionIds.at(i);
       const webToken = webTokens.at(i);
       expectedSessions.shift();
@@ -374,20 +385,34 @@ describe('queue order', () => {
       expect(logoutResponse.status).toBe(StatusCodes.OK);
       expect(logoutResponse.statusCode).toBe(StatusCodes.OK);
       expect(logoutResponse.body).toEqual(jukeboxSuccessfulLogout(jukebox.name, sessionId));
-
       const webTokenAfterLogout = getWebTokenFromResponse(logoutResponse);
       expect(webTokenAfterLogout).toBe(undefined);
-      const jukeboxDbAfterLogout = await getJukeboxByName(jukebox.name);
       const sessionAfterLogout = await getSessionFromWebToken(webToken);
       expect(sessionAfterLogout).toBe(null);
-
-      expect(JSON.stringify(jukeboxDbAfterLogout.queueOrder)).toEqual(JSON.stringify(expectedSessions));
-      const sessionOrderFromDb = await getOrderDb(jukeboxDbAfterLogout.name);
-      expect(JSON.stringify(sessionOrderFromDb)).toEqual(JSON.stringify(expectedSessions));
+      const jukeboxDb = await getJukeboxByName(jukebox.name);
+      expect(JSON.stringify(jukeboxDb.queueOrder)).toEqual(JSON.stringify([starterSession._id, ...expectedSessions]));
+      const sessionOrderFromDb = await getOrderDb(jukeboxDb.name);
+      expect(JSON.stringify(sessionOrderFromDb)).toEqual(JSON.stringify([starterSession._id, ...expectedSessions]));
       const getSessionOrderResponse = await request(app).get(makeUrl(`${getOrderPath}${jukebox.name}`));
       expect(getSessionOrderResponse.status).toBe(StatusCodes.OK);
       expect(getSessionOrderResponse.statusCode).toBe(StatusCodes.OK);
-      expect(JSON.stringify(getSessionOrderResponse.body)).toEqual(JSON.stringify({ sessions: expectedSessions }));
+      expect(JSON.stringify(getSessionOrderResponse.body)).toEqual(
+        JSON.stringify({ sessions: [starterSession._id, ...expectedSessions] })
+      );
     }
+    // logout starter
+    const logoutResponse = await request(app)
+      .post(makeUrl(logoutPath))
+      .set('Cookie', `webToken=${starterWebToken}}`)
+      .send({ name: jukebox.name, sessionId: starterSession._id });
+    expect(logoutResponse.status).toBe(StatusCodes.OK);
+    expect(logoutResponse.statusCode).toBe(StatusCodes.OK);
+    expect(logoutResponse.body).toEqual(jukeboxSuccessfulLogout(jukebox.name, starterSession._id));
+    const webTokenAfterLogout = getWebTokenFromResponse(logoutResponse);
+    expect(webTokenAfterLogout).toBe(undefined);
+    const sessionAfterLogout = await getSessionFromWebToken(starterWebToken);
+    expect(sessionAfterLogout).toBe(null);
+    const jukeboxDb = await getJukeboxByName(jukebox.name);
+    expect(jukeboxDb).toBe(null);
   });
 });

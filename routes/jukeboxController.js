@@ -52,11 +52,14 @@ export const getJukeboxes = async (req, res) => {
 export const updateJukebox = async (req, res) => {};
 
 export const deleteJukebox = async (req, res) => {
-  const name = req.params.id;
-  const jukebox = await Jukebox.findOneAndDelete({ name: name });
-  await deleteSessionsFromJukebox(jukebox);
-  return res.status(StatusCodes.OK).json(deleteJukeboxSuccess(name));
+  await deleteJukeboxFromName(req.params.id);
+  return res.status(StatusCodes.OK).json(deleteJukeboxSuccess(req.params.id));
 };
+
+export async function deleteJukeboxFromName(jukeboxName) {
+  const jukebox = await Jukebox.findOneAndDelete({ name: jukeboxName });
+  await deleteSessionsFromJukebox(jukebox);
+}
 
 export const getPlayedTracks = async (req, res) => {
   const name = req.params.id;

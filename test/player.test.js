@@ -1,6 +1,4 @@
 import { getQueuePath, jukeboxCreatePath, loginPath, setQueuePath } from '../common/paths';
-import { jukeboxSuccessfulLogin } from '../common/responseMessages';
-import { StatusCodes } from 'http-status-codes';
 import { getWebTokenFromResponse } from '../utils/tokenUtils';
 import { getSessionFromWebToken } from '../routes/sessionController';
 import { makeMockJukebox, makeUrl, multiTrackQueue1, oneTrackQueue, q1, q2, q3, q4 } from './setup';

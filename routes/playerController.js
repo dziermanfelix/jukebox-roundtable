@@ -103,7 +103,6 @@ export const getNextTrack = async (jukeboxName) => {
     queue = await getQueueFromSessionId(sessionId);
     numEmptyQueue += 1;
     if (numEmptyQueue === numSessionsInJukebox) {
-      console.log('no tracks left');
       queue = null;
       break;
     }

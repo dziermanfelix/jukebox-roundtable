@@ -35,10 +35,10 @@ export async function removeFromQueueOrder(jukeboxName, sessionId) {
 }
 
 export async function getOrderDb(jukeboxName) {
+  let order = undefined;
   const jukebox = await getJukeboxByName(jukeboxName);
-  const order = jukebox.queueOrder;
-  if (order) return order;
-  return null;
+  if (jukebox) order = jukebox.queueOrder;
+  return order;
 }
 
 export async function setOrderDb(jukeboxName, sessions) {

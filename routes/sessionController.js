@@ -24,6 +24,11 @@ export async function getSessionFromWebToken(webToken) {
   return session;
 }
 
+export async function getSessionFromId(sessionId) {
+  const session = await Session.findOne({ _id: sessionId });
+  return session;
+}
+
 export async function getSessionFromWebTokenAndJukebox(webToken, jukebox) {
   return await Session.findOne({ webToken: webToken, jukebox: jukebox });
 }
@@ -64,10 +69,6 @@ export async function webTokenMatchesJukebox(webToken, jukebox) {
 export async function cleanupOldSessionFromWebToken(webToken) {
   const { _id: sessionId } = await getSessionFromWebToken(webToken);
   await cleanupSessionFromId(sessionId);
-}
-
-export async function cleanupSessionFromId(sessionId) {
-  await deleteSessionFromId(sessionId);
 }
 
 export async function deleteSessionsFromJukebox(jukebox) {

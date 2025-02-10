@@ -209,7 +209,5 @@ describe('authentication', () => {
     expect(webTokenAfterLogout).toBe(undefined);
     const sessionAfterLogout = await getSessionFromWebToken(webToken);
     expect(sessionAfterLogout).toBe(null);
-    const jukeboxAfterLogout = await getJukeboxByName(jukebox.name);
-    expect(JSON.stringify(jukeboxAfterLogout.queueOrder)).toBe(JSON.stringify([]));
   });
 });

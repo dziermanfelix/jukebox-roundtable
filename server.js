@@ -22,14 +22,13 @@ function getRelevantDataFromSocketHandshake(handshake) {
 export let connectedUsers = {};
 serverSocket.on('connection', (socket) => {
   const relevant = getRelevantDataFromSocketHandshake(socket.handshake);
-  console.log(`user connected: ${socket.id}`);
-  console.log(`socket id = ${socket.id}`);
+  console.log('socket connected:', socket.id);
   console.log(`relevant ${JSON.stringify(relevant)}`);
   console.log(`${serverSocket.engine.clientsCount} clients connected`);
   connectedUsers[relevant.sessionId] = socket.id;
-  console.log(`connectedUsers = ${JSON.stringify(connectedUsers)}`);
+  console.log(`connectedUsers=${JSON.stringify(connectedUsers)}`);
   socket.on('disconnect', () => {
-    console.log('user disconnected:', socket.id);
+    console.log('socket disconnected:', socket.id);
     delete connectedUsers[socket.id];
   });
 });

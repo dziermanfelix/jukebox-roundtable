@@ -58,8 +58,12 @@ const Jukebox = () => {
     socket.on('connect_error', (err) => {
       console.log(`socket connect error: ${err}`);
     });
-    socket.on('connect', (data) => {});
-    socket.on('disconnect', (data) => {});
+    socket.on('connect', (data) => {
+      console.log(`socket connected`);
+    });
+    socket.on('disconnect', (data) => {
+      console.log(`socket disconnected`);
+    });
     socket.connect();
     setSocket(socket);
     return () => {

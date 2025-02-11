@@ -3,7 +3,7 @@ import { updateQueueEvent } from '../utils/socketEvents.js';
 import { getAccessToken } from './accessTokenController.js';
 import axios from 'axios';
 import { getQueueFromSessionId, setQueueForSessionId } from './queueController.js';
-import { jukeboxExistsByName, updateJukeboxPlayedTracks } from './jukeboxController.js';
+import { deleteJukeboxFromName, jukeboxExistsByName, updateJukeboxPlayedTracks } from './jukeboxController.js';
 import { delay } from '../utils/time.js';
 import { getOrderDb } from './queueOrderController.js';
 
@@ -15,11 +15,11 @@ function emitter(sessionId, event, data) {
 }
 
 export const startJukeboxRequest = async (req, res) => {
-  jukeboxEngine(req.params.id, req.body.deviceId, req.body.sessionId);
+  jukeboxEngine(req.params.id, req.body.deviceId);
 };
 
-export async function jukeboxEngine(jukeboxName, deviceId, sessionId) {
-  let { id: queuedTrackId } = await playNextTrack(jukeboxName, deviceId, sessionId);
+export async function jukeboxEngine(jukeboxName, deviceId) {
+  let { id: queuedTrackId } = await playNextTrack(jukeboxName, deviceId);
   let readyToQueueTrack = true;
   while (await jukeboxExistsByName(jukeboxName)) {
     let current = await getCurrentPlaying(jukeboxName);
@@ -31,13 +31,18 @@ export async function jukeboxEngine(jukeboxName, deviceId, sessionId) {
       const midpoint = Math.floor(remaining / 2);
       if (remaining <= 30000 && readyToQueueTrack) {
         const nextTrack = await addNextTrackToPlayerQueue(jukeboxName);
-        queuedTrackId = nextTrack.id;
-        readyToQueueTrack = false;
+        if (nextTrack) {
+          queuedTrackId = nextTrack.id;
+          readyToQueueTrack = false;
+        } else {
+          break;
+        }
       }
       await delay(midpoint);
     }
-    // TODO either reconnect player or kill jukebox
   }
+  console.log(`JUKEBOX ${jukeboxName} HAS ENDED`);
+  await deleteJukeboxFromName(jukeboxName);
 }
 
 async function getCurrentPlaying(jukeboxName) {
@@ -63,15 +68,15 @@ async function addNextTrackToPlayerQueue(jukeboxName) {
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       };
       axios.post(`https://api.spotify.com/v1/me/player/queue?uri=${track.uri}`, null, options);
-      return track;
     } catch (error) {
       console.log('error adding next track');
       console.log(error.status);
     }
   }
+  return track;
 }
 
-async function playNextTrack(jukeboxName, deviceId, sessionId) {
+async function playNextTrack(jukeboxName, deviceId) {
   const track = await getNextTrack(jukeboxName);
   if (track) {
     const token = await getAccessToken(jukeboxName);

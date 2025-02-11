@@ -16,11 +16,7 @@ import { dirname } from 'path';
 
 export const app = express();
 
-if (nodeEnv === 'development') {
-  app.use(morgan('dev'));
-}
-// keep this here for testing in production
-if (nodeEnv === 'production') {
+if (nodeEnv !== 'test') {
   app.use(morgan('dev'));
 }
 app.use(cookieParser());

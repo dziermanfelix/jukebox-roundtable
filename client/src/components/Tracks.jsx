@@ -6,9 +6,10 @@ import { Link } from 'react-router-dom';
 import { SEARCH_TYPE } from '../utils/constants';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { convertMsToDisplayTime } from '../../../utils/time';
 
 const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
-  const { name, session, queue, updateQueue } = useJukeboxContext();
+  const { name, queue, updateQueue } = useJukeboxContext();
   const [playedTracks, setPlayedTracks] = useState([]);
 
   useEffect(() => {
@@ -60,6 +61,9 @@ const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
               {albumDisplay && `${index + 1}.`} {track?.name} |{' '}
               <Link onClick={() => openArtist(track)}>{track?.artists[0]?.name}</Link>
             </p>
+          </div>
+          <div>
+            <p>{convertMsToDisplayTime(track?.duration_ms)}</p>
           </div>
           {addButton(track) && (
             <button className='add-to-queue' onClick={() => addToQueue(track)}>

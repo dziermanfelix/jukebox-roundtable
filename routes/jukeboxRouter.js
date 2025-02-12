@@ -1,12 +1,14 @@
 import { Router } from 'express';
 import { getJukeboxes, getPlayedTracks, jukeboxExistsHttp, createJukebox } from './jukeboxController.js';
-import { startJukeboxRequest } from './playerController.js';
+import { getNextTrackHttp } from './playerController.js';
 import { getAccessTokenHttp, initAccessToken } from './accessTokenController.js';
 import { getOrder, setOrder } from './queueOrderController.js';
 
 const router = Router();
 router.route('/').get(getJukeboxes);
-router.route('/start/:id').post(startJukeboxRequest);
+// TODO delete soon
+// router.route('/start/:id').post(startJukeboxRequest);
+router.route('/get-next-track/:id').get(getNextTrackHttp);
 router.route('/played-tracks/:id').get(getPlayedTracks);
 router.route('/jukebox-exists/:id').get(jukeboxExistsHttp);
 router.route('/create').post(createJukebox);

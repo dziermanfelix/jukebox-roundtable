@@ -1,16 +1,16 @@
 import Wrapper from '../wrappers/Player';
-import { accessTokenPath, startJukeboxPath } from '../../../common/paths';
-import { useEffect, useState } from 'react';
+import { accessTokenPath, getNextTrackPath } from '../../../common/paths';
+import { useRef, useEffect, useState } from 'react';
 import customFetch from '../../../common/customFetch';
 import { toast } from 'react-toastify';
 import { useJukeboxContext } from '../pages/Jukebox';
 
 const Player = () => {
-  const { name, session } = useJukeboxContext();
-  const [token, setToken] = useState(undefined);
-  const [player, setPlayer] = useState(undefined);
+  const { name } = useJukeboxContext();
+  const [token, setToken] = useState(null);
+  const [player, setPlayer] = useState(null);
   const [isStarted, setStarted] = useState(false);
-  const [track, setTrack] = useState(undefined);
+  const [track, setTrack] = useState(null);
 
   useEffect(() => {
     const getAccessToken = async () => {
@@ -25,11 +25,12 @@ const Player = () => {
     getAccessToken();
   }, []);
 
-  async function startJukebox() {
+  async function initJukebox() {
     const script = document.createElement('script');
     script.src = 'https://sdk.scdn.co/spotify-player.js';
     script.async = true;
     document.body.appendChild(script);
+
     if (!player) {
       window.onSpotifyWebPlaybackSDKReady = () => {
         const player = new window.Spotify.Player({
@@ -41,30 +42,63 @@ const Player = () => {
         });
 
         player.addListener('ready', ({ device_id }) => {
-          try {
-            customFetch.post(`${startJukeboxPath}${name}`, { deviceId: device_id });
-          } catch (error) {
-            console.log(error);
-            toast.error(error?.response?.data?.msg);
-          }
+          setPlayer(player);
+          runJukebox(device_id);
+        });
 
-          player.addListener('playback_error', (error) => {
-            console.error('playback error:', error.message);
-          });
+        player.addListener('playback_error', (error) => {
+          console.error('playback error:', error.message);
+        });
 
-          player.addListener('player_state_changed', ({ position, duration, track_window: { current_track } }) => {
-            console.log('player state changed, current track: ', current_track);
-            setTrack({ name: current_track?.name, artists: current_track?.artists, album: current_track?.album });
-          });
-
-          setStarted(true);
+        player.addListener('player_state_changed', ({ position, duration, track_window: { current_track } }) => {
+          console.log('player state changed, current track: ', current_track);
+          setTrack({ name: current_track?.name, artists: current_track?.artists, album: current_track?.album });
         });
 
         player.connect();
-
-        setPlayer(player);
       };
     }
+    setStarted(true);
+  }
+
+  async function runJukebox(deviceId) {
+    await playNextTrack(deviceId);
+    addNextTrackToPlayerQueue();
+  }
+
+  async function playNextTrack(deviceId) {
+    const { data: track } = await customFetch.get(`${getNextTrackPath}${name}`);
+    if (track) {
+      try {
+        var data = {
+          uris: [track.uri],
+        };
+        var options = {
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        };
+        await customFetch.put(`https://api.spotify.com/v1/me/player/play/?device_id=${deviceId}`, data, options);
+        return track;
+      } catch (error) {
+        console.log('error playing next track');
+        console.log(error);
+      }
+    }
+  }
+
+  async function addNextTrackToPlayerQueue() {
+    const { data: track } = await customFetch.get(`${getNextTrackPath}${name}`);
+    if (track) {
+      try {
+        var options = {
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        };
+        customFetch.post(`https://api.spotify.com/v1/me/player/queue?uri=${track.uri}`, null, options);
+      } catch (error) {
+        console.log('error adding next track');
+        console.log(error);
+      }
+    }
+    return track;
   }
 
   return (
@@ -79,7 +113,7 @@ const Player = () => {
             </div>
           )}
         </div>
-        <div>{!isStarted && <button onClick={() => startJukebox()}>{!isStarted && 'START'}</button>}</div>
+        <div>{!isStarted && <button onClick={() => initJukebox()}>{!isStarted && 'START'}</button>}</div>
       </div>
     </Wrapper>
   );

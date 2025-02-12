@@ -10,6 +10,7 @@ export const jukeboxPath = `${basePath}jukebox/`;
 // jukebox
 export const jukeboxPrivatePath = `${basePath}jukebox-priv/`;
 export const startJukeboxPath = `${jukeboxPath}start/`;
+export const getNextTrackPath = `${jukeboxPath}get-next-track/`;
 export const playedTracksPath = `${jukeboxPath}played-tracks/`;
 export const jukeboxExistsPath = `${jukeboxPath}jukebox-exists/`;
 export const jukeboxCreatePath = `${jukeboxPath}create/`;

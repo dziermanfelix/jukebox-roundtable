@@ -9,4 +9,5 @@ const SubmitBtn = () => {
     </button>
   );
 };
+
 export default SubmitBtn;

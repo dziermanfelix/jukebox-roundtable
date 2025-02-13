@@ -9,4 +9,5 @@ const HomeLogoLink = () => {
     </Link>
   );
 };
+
 export default HomeLogoLink;

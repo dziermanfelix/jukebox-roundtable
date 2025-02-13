@@ -57,4 +57,5 @@ const Search = () => {
     </Wrapper>
   );
 };
+
 export default Search;

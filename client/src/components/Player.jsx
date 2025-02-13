@@ -1,6 +1,6 @@
 import Wrapper from '../wrappers/Player';
-import { accessTokenPath, getNextTrackPath } from '../../../common/paths';
-import { useRef, useEffect, useState } from 'react';
+import { accessTokenPath, playNextTrackPath, queueNextTrackPath } from '../../../common/paths';
+import { useEffect, useState } from 'react';
 import customFetch from '../../../common/customFetch';
 import { toast } from 'react-toastify';
 import { useJukeboxContext } from '../pages/Jukebox';
@@ -42,70 +42,58 @@ const Player = () => {
         });
 
         player.addListener('ready', ({ device_id }) => {
-          setPlayer(player);
-          runJukebox(device_id);
+          customFetch.post(`${playNextTrackPath}${name}`, { deviceId: device_id });
         });
 
         player.addListener('playback_error', (error) => {
           console.error('playback error:', error.message);
         });
 
-        player.addListener('player_state_changed', ({ position, duration, track_window: { current_track } }) => {
-          console.log('player state changed, current track: ', current_track);
-          setTrack({ name: current_track?.name, artists: current_track?.artists, album: current_track?.album });
+        player.addListener('player_state_changed', (state) => {
+          const currentTrack = state.track_window.current_track;
+          setTrack(currentTrack);
         });
 
+        let readyToQueue = true;
+        let noProgressCount = 0;
+        const intervalId = setInterval(() => {
+          player.getCurrentState().then((state) => {
+            if (state) {
+              const position = state.position;
+              const duration = state.duration;
+              const progressPercentage = (position / duration) * 100;
+              const remaining = (duration - position) / 1000;
+              if (progressPercentage === 0) {
+                noProgressCount += 1;
+                if (noProgressCount >= 4) {
+                  setStarted(false);
+                  clearInterval(intervalId);
+                }
+              }
+              console.log(`${progressPercentage}\%, ${remaining}s`);
+              if (position / 1000 <= 2) {
+                readyToQueue = true;
+              }
+              if (remaining <= 31 && readyToQueue) {
+                customFetch.post(`${queueNextTrackPath}${name}`);
+                readyToQueue = false;
+              }
+            }
+          });
+        }, 1000);
+
         player.connect();
+        setPlayer(player);
       };
     }
     setStarted(true);
-  }
-
-  async function runJukebox(deviceId) {
-    await playNextTrack(deviceId);
-    addNextTrackToPlayerQueue();
-  }
-
-  async function playNextTrack(deviceId) {
-    const { data: track } = await customFetch.get(`${getNextTrackPath}${name}`);
-    if (track) {
-      try {
-        var data = {
-          uris: [track.uri],
-        };
-        var options = {
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        };
-        await customFetch.put(`https://api.spotify.com/v1/me/player/play/?device_id=${deviceId}`, data, options);
-        return track;
-      } catch (error) {
-        console.log('error playing next track');
-        console.log(error);
-      }
-    }
-  }
-
-  async function addNextTrackToPlayerQueue() {
-    const { data: track } = await customFetch.get(`${getNextTrackPath}${name}`);
-    if (track) {
-      try {
-        var options = {
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        };
-        customFetch.post(`https://api.spotify.com/v1/me/player/queue?uri=${track.uri}`, null, options);
-      } catch (error) {
-        console.log('error adding next track');
-        console.log(error);
-      }
-    }
-    return track;
   }
 
   return (
     <Wrapper>
       <div>
         <div>
-          {track && (
+          {track && isStarted && (
             <div>
               <div>{track?.name}</div>
               <div>{track?.artists[0]?.name}</div>

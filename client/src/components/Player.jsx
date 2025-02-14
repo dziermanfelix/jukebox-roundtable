@@ -56,7 +56,7 @@ const Player = () => {
         });
 
         let readyToQueue = true;
-        let noProgressCount = 0;
+        let notPlayingCount = 0;
         const intervalId = setInterval(() => {
           player.getCurrentState().then((state) => {
             if (state) {
@@ -65,11 +65,8 @@ const Player = () => {
               const progressPercentage = (position / duration) * 100;
               const remaining = (duration - position) / 1000;
               if (progressPercentage === 0) {
-                noProgressCount += 1;
-                if (noProgressCount >= 4) {
-                  setStarted(false);
-                  clearInterval(intervalId);
-                }
+                notPlayingCount += 1;
+                checkNotPlaying(notPlayingCount, intervalId);
               }
               console.log(`${progressPercentage}\%, ${remaining}s`);
               if (position / 1000 <= 2) {
@@ -79,6 +76,9 @@ const Player = () => {
                 customFetch.post(`${queueNextTrackPath}${name}`);
                 readyToQueue = false;
               }
+            } else {
+              notPlayingCount += 1;
+              checkNotPlaying(notPlayingCount, intervalId);
             }
           });
         }, 1000);
@@ -88,6 +88,13 @@ const Player = () => {
       };
     }
     setStarted(true);
+  }
+
+  function checkNotPlaying(notPlayingCount, intervalId) {
+    if (notPlayingCount >= 4) {
+      setStarted(false);
+      clearInterval(intervalId);
+    }
   }
 
   return (

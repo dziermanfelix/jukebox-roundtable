@@ -34,7 +34,7 @@ export async function playNextTrackHttp(req, res) {
       console.log(error);
     }
   }
-  return res.status(StatusCodes.OK).json({ msg: `${track.name} added to player` });
+  return res.status(StatusCodes.OK).json({ msg: `${track?.name} added to player` });
 }
 
 export async function queueNextTrack(req, res) {

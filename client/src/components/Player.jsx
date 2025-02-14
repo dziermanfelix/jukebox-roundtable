@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import customFetch from '../../../common/customFetch';
 import { toast } from 'react-toastify';
 import { useJukeboxContext } from '../pages/Jukebox';
-import StayAwake from './StayAwake';
+import { KeepAwake } from '.';
 
 const Player = () => {
   const { name } = useJukeboxContext();
@@ -96,7 +96,7 @@ const Player = () => {
         <div>
           {track && isStarted && (
             <div>
-              <StayAwake />
+              <KeepAwake />
               <div>{track?.name}</div>
               <div>{track?.artists[0]?.name}</div>
               <div>{track?.album?.name}</div>

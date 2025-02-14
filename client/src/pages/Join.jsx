@@ -1,9 +1,10 @@
 import { Form, useLoaderData, redirect } from 'react-router-dom';
 import { FormRow, SubmitButton } from '../components';
-import { spotifyLoginPath, jukeboxPath, loginPath, jukeboxCreatePath, jukeboxExistsPath } from '../../../common/paths';
+import { spotifyLoginPath, jukeboxPath, loginPath } from '../../../common/paths';
 import { toast } from 'react-toastify';
 import customFetch from '../../../common/customFetch';
 import { Role } from '../../../utils/roles';
+import Wrapper from '../wrappers/Join';
 
 export const loader = async ({ params }) => {
   try {
@@ -40,14 +41,14 @@ export const action = async ({ request }) => {
 const Join = () => {
   const name = useLoaderData();
   return (
-    <div>
+    <Wrapper>
       {name ? <h1>join jukebox {name}</h1> : <h1>Jukebox Roundtable</h1>}
-      <Form method='post'>
-        <FormRow type='text' name='name' defaultValue={name && name} isRequired />
+      <Form className='form' method='post'>
+        <FormRow type='text' name='name' labelText='jukebox' defaultValue={name && name} isRequired />
         <FormRow type='password' name='code' isRequired />
-        <SubmitButton />
+        <SubmitButton display={'login'} submittingDisplay={'logging in...'} />
       </Form>
-    </div>
+    </Wrapper>
   );
 };
 

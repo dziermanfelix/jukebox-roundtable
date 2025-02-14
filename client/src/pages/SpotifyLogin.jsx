@@ -2,6 +2,7 @@ import { redirect, useLoaderData, useNavigate } from 'react-router-dom';
 import { spotifyLoginUrlPath, basePath, jukeboxPrivatePath } from '../../../common/paths';
 import customFetch from '../../../common/customFetch';
 import { toast } from 'react-toastify';
+import Wrapper from '../wrappers/Join';
 
 export const loader = async () => {
   try {
@@ -24,12 +25,12 @@ const SpotifyLogin = () => {
   }
 
   return (
-    <div>
+    <Wrapper>
       <p>You are starting a new jukebox</p>
       <p>You must log in to spotify to continue.</p>
       <button onClick={() => (window.location.href = loginUrl)}>Spotify Login</button>
       <button onClick={() => cancelLogin()}>Cancel</button>
-    </div>
+    </Wrapper>
   );
 };
 

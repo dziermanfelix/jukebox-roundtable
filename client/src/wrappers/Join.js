@@ -7,10 +7,16 @@ const Wrapper = styled.section`
   left: 50%;
   -ms-transform: translate(-50%, -30%);
   transform: translate(-50%, -30%);
+  text-align: center;
+
+  h1 {
+    text-transform: capitalize;
+  }
 
   button {
     margin: 0.5em 0.5em;
   }
+
   .form {
     padding: 0.2rem 0.2rem;
     margin: 0.2rem auto;

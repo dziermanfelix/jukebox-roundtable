@@ -2,7 +2,7 @@ import { redirect, useLoaderData, useNavigate } from 'react-router-dom';
 import { spotifyLoginUrlPath, basePath, jukeboxPrivatePath } from '../../../common/paths';
 import customFetch from '../../../common/customFetch';
 import { toast } from 'react-toastify';
-import Wrapper from '../wrappers/Join';
+import Wrapper from '../wrappers/SpotifyLogin';
 
 export const loader = async () => {
   try {

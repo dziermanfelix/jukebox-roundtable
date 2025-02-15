@@ -17,9 +17,9 @@ const Albums = ({ albums, setPayloadType, setPayload }) => {
     <Wrapper>
       {albums.map((album, index) => (
         <div key={index} className='payload'>
-          <button className='album-btn' onClick={() => openAlbum(album)}>
-            <img src={album?.images[2]?.url} alt='' />
-            <p>{album?.name}</p>
+          <button className='album-only' onClick={() => openAlbum(album)}>
+            <img className='album-image' src={album?.images[2]?.url} alt='' />
+            <p className='info'>{album?.name}</p>
           </button>
         </div>
       ))}

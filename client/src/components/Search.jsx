@@ -49,11 +49,16 @@ const Search = () => {
 
   return (
     <Wrapper>
-      <label htmlFor='search'> search </label>
-      <DebouncingText initialValue={searchValue} updater={setSearchValue} keepEditing />
-      <button onClick={searchRequest}>refresh</button>
-      {isSearching && <div>searching...</div>}
-      <div className='search-results'>{displayPayload()}</div>
+      <div className='search-bar'>
+        <label className='search-label' htmlFor='search'>
+          {' '}
+          search{' '}
+        </label>
+        <DebouncingText initialValue={searchValue} updater={setSearchValue} keepEditing />
+        <button onClick={searchRequest}>refresh search</button>
+      </div>
+      {isSearching && <div>Searching...</div>}
+      {!isSearching && <div className='search-results'>{displayPayload()}</div>}
     </Wrapper>
   );
 };

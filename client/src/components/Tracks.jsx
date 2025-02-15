@@ -7,6 +7,7 @@ import { SEARCH_TYPE } from '../utils/constants';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { convertMsToDisplayTime } from '../../../utils/time';
+import { MdOutlineAddCircleOutline } from 'react-icons/md';
 
 const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
   const { name, queue, updateQueue } = useJukeboxContext();
@@ -53,21 +54,19 @@ const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
         <div key={index} className='payload'>
           {!albumDisplay && (
             <button className='album-btn'>
-              <img className='album-img' onClick={() => openAlbum(track)} src={track?.album?.images[2]?.url} alt='' />
+              <img className='album-image' onClick={() => openAlbum(track)} src={track?.album?.images[2]?.url} alt='' />
             </button>
           )}
           <div className='info'>
             <p>
               {albumDisplay && `${index + 1}.`} {track?.name} |{' '}
-              <Link onClick={() => openArtist(track)}>{track?.artists[0]?.name}</Link>
+              <Link onClick={() => openArtist(track)}>{track?.artists[0]?.name}</Link> |{' '}
+              {convertMsToDisplayTime(track?.duration_ms)}
             </p>
-          </div>
-          <div>
-            <p>{convertMsToDisplayTime(track?.duration_ms)}</p>
           </div>
           {addButton(track) && (
             <button className='add-to-queue' onClick={() => addToQueue(track)}>
-              add
+              <MdOutlineAddCircleOutline />
             </button>
           )}
         </div>

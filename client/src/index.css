@@ -56,3 +56,7 @@ button {
   will-change: filter;
   transition: filter 300ms;
 }
+
+.album-image {
+    overflow: hidden;
+  }

@@ -99,19 +99,21 @@ const Player = () => {
 
   return (
     <Wrapper>
-      <div>
-        <div>
-          {track && isStarted && (
-            <div>
-              <KeepAwake />
-              <div>{track?.name}</div>
-              <div>{track?.artists[0]?.name}</div>
-              <div>{track?.album?.name}</div>
-            </div>
-          )}
+      {track && isStarted && (
+        <div className='playing'>
+          <KeepAwake />
+          <div className='info'>
+            <div>{track?.name}</div>
+            <div>{track?.artists[0]?.name}</div>
+            <div>{track?.album?.name}</div>
+            <div>progress bar</div>
+          </div>
+          <div className='album-cover'>
+            <img className='album-image' src={track?.album?.images[2]?.url} alt='' />
+          </div>
         </div>
-        <div>{!isStarted && <button onClick={() => initJukebox()}>{!isStarted && 'START'}</button>}</div>
-      </div>
+      )}
+      {!isStarted && <button onClick={() => initJukebox()}>START</button>}
     </Wrapper>
   );
 };

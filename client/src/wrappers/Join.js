@@ -1,40 +1,49 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.section`
-  margin: 0;
-  position: absolute;
-  top: 30%;
-  left: 50%;
-  -ms-transform: translate(-50%, -30%);
-  transform: translate(-50%, -30%);
-  text-align: center;
+  min-height: 100vh;
+  display: grid;
+  align-items: center;
 
   h1 {
     text-transform: capitalize;
   }
 
   button {
-    margin: 0.5em 0.5em;
+    margin-top: 0.2rem;
   }
 
   .form {
-    padding: 0.2rem 0.2rem;
+    background-color: gray;
+    max-width: 500px;
+    width: 90vw;
+    padding: 0.5rem 0.5rem;
     margin: 0.2rem auto;
+    display: flex;
+    flex-direction: column;
   }
 
   .form-row {
-    margin-bottom: 0.1rem;
+    margin: 0;
+    width: 100%;
+    text-align: left;
   }
 
   .form-label {
-    margin-bottom: 0.75rem;
-    margin-right: 0.2rem;
+    display: block;
+    margin-bottom: 0;
     text-transform: capitalize;
     line-height: 1.5;
   }
 
   .form-input {
-    padding: 0.375rem 0.75rem;
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 20px;
   }
 `;
 

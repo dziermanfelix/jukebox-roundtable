@@ -42,8 +42,8 @@ const Join = () => {
   const name = useLoaderData();
   return (
     <Wrapper>
-      {name ? <h1>join jukebox {name}</h1> : <h1>Jukebox Roundtable</h1>}
       <Form className='form' method='post'>
+        {name ? <h1>join jukebox {name}</h1> : <h1>Jukebox Roundtable</h1>}
         <FormRow type='text' name='name' labelText='jukebox' defaultValue={name && name} isRequired />
         <FormRow type='password' name='code' isRequired />
         <SubmitButton display={'login'} submittingDisplay={'logging in...'} />

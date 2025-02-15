@@ -1,6 +1,9 @@
 import Wrapper from '../wrappers/Queue';
 import { useJukeboxContext } from '../pages/Jukebox';
 import { Reorder } from 'framer-motion';
+import { MdDeleteForever } from 'react-icons/md';
+import { FaRegArrowAltCircleUp } from 'react-icons/fa';
+import { convertMsToDisplayTime } from '../../../utils/time';
 
 const Queue = () => {
   const { queue, updateQueue, reorderQueue } = useJukeboxContext();
@@ -14,17 +17,27 @@ const Queue = () => {
     updateQueue(tracks);
   };
 
+  const pushToTopOfQueue = (track) => {
+    let tracks = [track, ...queue.filter((item) => item !== track)];
+    updateQueue(tracks);
+  };
+
   return (
     <Wrapper>
-      <div>
-        <h3>Queue</h3>
+      <h3>Queue</h3>
+      <div className='queue'>
         <Reorder.Group axis='y' values={queue} onReorder={reorderQueue}>
           {queue.map((track) => (
-            <Reorder.Item key={track.id} value={track} className='list-item'>
-              {track?.name}
-              <button className='remove-btn' onClick={() => removeFromQueue(track)}>
-                x
-              </button>
+            <Reorder.Item className='list-item' key={track.id} value={track}>
+              {track?.artists[0]?.name} | {track?.name} | {convertMsToDisplayTime(track?.duration_ms)}
+              <div className='queue-tools'>
+                <button onClick={() => removeFromQueue(track)}>
+                  <MdDeleteForever />
+                </button>
+                <button onClick={() => pushToTopOfQueue(track)}>
+                  <FaRegArrowAltCircleUp />
+                </button>
+              </div>
             </Reorder.Item>
           ))}
         </Reorder.Group>

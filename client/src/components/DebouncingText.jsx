@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import Wrapper from '../wrappers/DebouncingText';
+import { CiCircleRemove } from 'react-icons/ci';
 
 const DebouncingText = ({ initialValue, updater, keepEditing }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -38,8 +39,17 @@ const DebouncingText = ({ initialValue, updater, keepEditing }) => {
     if (isEditing || keepEditing) {
       return (
         <div>
-          <input ref={inputRef} type='text' value={value} onChange={onChange} onKeyDown={onKeyDown} />
-          <button onClick={clearValue}>&times;</button>
+          <input
+            className='debounce-input'
+            ref={inputRef}
+            type='text'
+            value={value}
+            onChange={onChange}
+            onKeyDown={onKeyDown}
+          />
+          <button className='debounce-button' onClick={clearValue}>
+            <CiCircleRemove />
+          </button>
         </div>
       );
     } else {

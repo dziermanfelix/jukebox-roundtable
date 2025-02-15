@@ -4,35 +4,47 @@ const Wrapper = styled.section`
   width: 100%;
   height: 100%;
   overflow: scroll;
+
   .payload {
-    font-size: 0.75rem;
+    margin: 0.1rem 0.8rem 0.1rem 0.8rem;
+    font-size: 20px;
     display: flex;
     flex-direction: row;
+    align-items: center;
   }
+
   .info {
     flex-grow: 1;
   }
-  .info:hover {
-    background: silver;
-    color: black;
-  }
+
   .add-to-queue {
     font-size: 0.8rem;
   }
+
   .add-to-queue:hover {
     background: silver;
     color: black;
   }
+
   .album-btn {
     overflow: hidden;
-    display: grid;
   }
+
   .album-btn:hover {
     border-color: silver;
     border-style: solid;
   }
-  .album-img {
+
+  .album-only {
     overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .album-image {
+    height: 3rem;
+    width: 3rem;
   }
 `;
 

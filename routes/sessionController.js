@@ -2,6 +2,7 @@ import Session from '../models/SessionModel.js';
 import { StatusCodes } from 'http-status-codes';
 import { addToQueueOrder } from './queueOrderController.js';
 import { getWebTokenFromRequest } from '../utils/tokenUtils.js';
+import { noSessionWithWebTokenError } from '../common/responseMessages.js';
 
 export const createSession = async (jukebox, webToken, role) => {
   if (await Session.exists({ webToken: webToken })) return null;
@@ -14,7 +15,7 @@ export const getSession = async (req, res) => {
   const webToken = getWebTokenFromRequest(req, req.params.id);
   const session = await getSessionFromWebToken(webToken);
   if (!session) {
-    return res.status(404).json({ msg: `no session with webToken ${webToken}` });
+    return res.status(StatusCodes.NOT_FOUND).json(noSessionWithWebTokenError(webToken));
   }
   return res.status(StatusCodes.OK).json({ session: session });
 };
@@ -29,14 +30,10 @@ export async function getSessionFromId(sessionId) {
   return session;
 }
 
-export async function getSessionFromWebTokenAndJukebox(webToken, jukebox) {
-  return await Session.findOne({ webToken: webToken, jukebox: jukebox });
-}
-
 export const updateSession = async (req, res) => {
   const newSession = { ...req.body };
-  const updatedSession = await Session.findByIdAndUpdate(req.body._id, newSession, { new: true });
-  return res.status(StatusCodes.OK).json({ msg: 'session updated', session: updatedSession });
+  const updatedSession = await Session.findByIdAndUpdate(newSession._id, newSession, { new: true });
+  return res.status(StatusCodes.OK).json({ session: updatedSession });
 };
 
 export const deleteSession = async (req, res) => {
@@ -47,11 +44,6 @@ export const deleteSession = async (req, res) => {
   }
   return res.status(StatusCodes.OK).json({ msg: 'user logged out and session deleted', session: session });
 };
-
-export async function deleteSessionFromWebToken(webToken) {
-  const deletedSession = await Session.findOneAndDelete({ webToken: webToken });
-  return deletedSession;
-}
 
 export async function deleteSessionFromId(sessionId) {
   const deletedSession = await Session.findByIdAndDelete(sessionId);
@@ -66,15 +58,6 @@ export async function webTokenMatchesJukebox(webToken, jukebox) {
   return false;
 }
 
-export async function cleanupOldSessionFromWebToken(webToken) {
-  const { _id: sessionId } = await getSessionFromWebToken(webToken);
-  await cleanupSessionFromId(sessionId);
-}
-
 export async function deleteSessionsFromJukebox(jukebox) {
   await Session.deleteMany({ jukebox: jukebox });
-}
-
-export async function getSessionsFromJukebox(jukebox) {
-  return await Session.find({ jukebox: jukebox });
 }

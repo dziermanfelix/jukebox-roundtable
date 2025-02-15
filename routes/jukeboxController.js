@@ -19,14 +19,6 @@ export async function createJukeboxDb(jukeboxName, code, role) {
   return await Jukebox.create({ name: jukeboxName, code: code, role: role });
 }
 
-export const jukeboxExistsHttp = async (req, res) => {
-  const name = req.params.id;
-  if (await jukeboxExistsByName(name)) {
-    return res.status(StatusCodes.OK).json({ jukebox: { name: name } });
-  }
-  return res.status(StatusCodes.OK).json({});
-};
-
 export async function jukeboxExistsByName(name) {
   return await Jukebox.exists({ name: name });
 }

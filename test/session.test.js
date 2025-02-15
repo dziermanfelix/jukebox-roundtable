@@ -1,5 +1,12 @@
-import { jukeboxCreatePath, loginPath, jukeboxPrivatePath, setQueuePath, getQueuePath } from '../common/paths';
-import { deleteJukeboxSuccess } from '../common/responseMessages';
+import {
+  jukeboxCreatePath,
+  loginPath,
+  jukeboxPrivatePath,
+  setQueuePath,
+  getQueuePath,
+  sessionPath,
+} from '../common/paths';
+import { deleteJukeboxSuccess, noSessionWithWebTokenError } from '../common/responseMessages';
 import { StatusCodes } from 'http-status-codes';
 import { getWebTokenFromResponse, getWebTokenKey } from '../utils/tokenUtils';
 import { createSession, getSessionFromWebToken } from '../routes/sessionController';
@@ -34,6 +41,85 @@ describe('session', () => {
     expect(session.queue).toEqual([]);
   });
 
+  it('get session http', async () => {
+    const jukebox = makeMockJukebox();
+    const loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox);
+    expect(loginResponse.status).toBe(StatusCodes.OK);
+    expect(loginResponse.statusCode).toBe(StatusCodes.OK);
+    expect(loginResponse.body.jukebox.name).toEqual(jukebox.name);
+    expect(loginResponse.body.jukebox.queueOrder).toEqual([]);
+    expect(loginResponse.body.jukebox.playedTracks).toEqual([]);
+    expect(loginResponse.body.role).toEqual(Role.STARTER);
+
+    const webToken = getWebTokenFromResponse(loginResponse);
+    expect(webToken).not.toEqual(undefined);
+
+    const {
+      body: { session },
+    } = await request(app)
+      .get(`${makeUrl(sessionPath)}/${jukebox.name}`)
+      .set('Cookie', `${getWebTokenKey(jukebox.name)}=${webToken}`);
+    const jukeboxDb = await getJukeboxByName(jukebox.name);
+
+    expect(session).not.toBe(null);
+    expect(session.webToken).toEqual(webToken);
+    expect(JSON.stringify(session.jukebox)).toEqual(JSON.stringify(jukeboxDb._id));
+    expect(session.role).toEqual('starter');
+    expect(session.displayName).toEqual('player1');
+    expect(session.queue).toEqual([]);
+  });
+
+  it('get session http error no session', async () => {
+    const jukebox = makeMockJukebox();
+    const loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox);
+    expect(loginResponse.status).toBe(StatusCodes.OK);
+    expect(loginResponse.statusCode).toBe(StatusCodes.OK);
+    expect(loginResponse.body.jukebox.name).toEqual(jukebox.name);
+    expect(loginResponse.body.jukebox.queueOrder).toEqual([]);
+    expect(loginResponse.body.jukebox.playedTracks).toEqual([]);
+    expect(loginResponse.body.role).toEqual(Role.STARTER);
+
+    const webToken = getWebTokenFromResponse(loginResponse);
+    expect(webToken).not.toEqual(undefined);
+
+    const fakeWebToken = 'fakewebtoken';
+    const response = await request(app)
+      .get(`${makeUrl(sessionPath)}/${jukebox.name}`)
+      .set('Cookie', `${getWebTokenKey(jukebox.name)}=${fakeWebToken}`);
+
+    expect(response.status).toBe(StatusCodes.NOT_FOUND);
+    expect(response.statusCode).toBe(StatusCodes.NOT_FOUND);
+    expect(response.error.text).toBe(JSON.stringify(noSessionWithWebTokenError(fakeWebToken)));
+  });
+
+  it('update session http', async () => {
+    const jukebox = makeMockJukebox();
+    const loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox);
+    expect(loginResponse.status).toBe(StatusCodes.OK);
+    expect(loginResponse.statusCode).toBe(StatusCodes.OK);
+    expect(loginResponse.body.jukebox.name).toEqual(jukebox.name);
+    expect(loginResponse.body.jukebox.queueOrder).toEqual([]);
+    expect(loginResponse.body.jukebox.playedTracks).toEqual([]);
+    expect(loginResponse.body.role).toEqual(Role.STARTER);
+
+    const webToken = getWebTokenFromResponse(loginResponse);
+    expect(webToken).not.toEqual(undefined);
+
+    const sessionDb = await getSessionFromWebToken(webToken);
+
+    const newDisplayName = 'test';
+    const newSession = { _id: sessionDb._id, displayName: newDisplayName };
+
+    const updateSessionResponse = await request(app).patch(makeUrl(sessionPath)).send(newSession);
+    expect(updateSessionResponse.status).toBe(StatusCodes.OK);
+    expect(updateSessionResponse.statusCode).toBe(StatusCodes.OK);
+    const updatedSessionFromResponse = updateSessionResponse.body.session;
+    expect(updatedSessionFromResponse).not.toBe(null);
+    expect(JSON.stringify(updatedSessionFromResponse._id)).toBe(JSON.stringify(sessionDb._id));
+    expect(JSON.stringify(updatedSessionFromResponse.webToken)).toBe(JSON.stringify(sessionDb.webToken));
+    expect(updatedSessionFromResponse.displayName).toBe(newSession.displayName);
+  });
+
   it('create duplicate session attempt', async () => {
     const jukebox = makeMockJukebox();
     const loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox);
@@ -44,21 +130,21 @@ describe('session', () => {
     expect(loginResponse.body.jukebox.playedTracks).toEqual([]);
     expect(loginResponse.body.role).toEqual(Role.STARTER);
 
-    const webToken1 = getWebTokenFromResponse(loginResponse);
-    expect(webToken1).not.toEqual(undefined);
+    const webToken = getWebTokenFromResponse(loginResponse);
+    expect(webToken).not.toEqual(undefined);
 
-    const session = await getSessionFromWebToken(webToken1);
+    const session = await getSessionFromWebToken(webToken);
     const jukeboxDb = await getJukeboxByName(jukebox.name);
 
     expect(session).not.toBe(null);
-    expect(session.webToken).toEqual(webToken1);
+    expect(session.webToken).toEqual(webToken);
     expect(session.jukebox).toEqual(jukeboxDb._id);
     expect(session.role).toEqual('starter');
     expect(session.displayName).toEqual('player1');
     expect(session.queue).toEqual([]);
     expect(JSON.stringify(jukeboxDb.queueOrder)).toEqual(JSON.stringify([session._id]));
 
-    const createSessionAttempt = await createSession(jukeboxDb, webToken1, session.role);
+    const createSessionAttempt = await createSession(jukeboxDb, webToken, session.role);
     expect(createSessionAttempt).toBe(null);
   });
 

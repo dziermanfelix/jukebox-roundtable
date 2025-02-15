@@ -14,7 +14,11 @@ export const jukeboxSuccessfulLogout = (jukeboxName, sessionId) => {
   return { msg: `user logged out of jukebox ${jukeboxName} with session id ${sessionId}` };
 };
 
-export const noToken = (jukbox) => {
+export const noSessionWithWebTokenError = (webToken) => {
+  return { msg: `no session with webToken ${webToken}` };
+};
+
+export const noToken = () => {
   return { msg: `no token` };
 };
 

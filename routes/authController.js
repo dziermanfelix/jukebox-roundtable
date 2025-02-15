@@ -7,7 +7,7 @@ import { jukeboxBadCredentialsError, jukeboxSuccessfulLogout, sessionExistsError
 import { generateRandomString } from '../common/string.js';
 import { removeFromQueueOrder } from './queueOrderController.js';
 import { Role } from '../utils/roles.js';
-import { createJukeboxDb, deleteJukebox, deleteJukeboxFromName } from './jukeboxController.js';
+import { createJukeboxDb, deleteJukeboxFromName } from './jukeboxController.js';
 
 export const login = async (req, res) => {
   let jukebox = await Jukebox.findOne({ name: req.body.name });

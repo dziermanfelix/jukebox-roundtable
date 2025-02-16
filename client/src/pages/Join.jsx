@@ -21,16 +21,16 @@ export const loader = async ({ params }) => {
 export const action = async ({ request }) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
-  const name = data.name;
-  localStorage.setItem('jukeboxName', name);
+  data.name = data.name.toLowerCase();
+  localStorage.setItem('jukeboxName', data.name);
   try {
     const {
       data: { role },
     } = await customFetch.post(loginPath, data);
     if (role === Role.STARTER) {
-      return redirect(`${spotifyLoginPath}${name}`);
+      return redirect(`${spotifyLoginPath}${data.name}`);
     } else if (role === Role.JOINER) {
-      return redirect(`${jukeboxPath}${name}`);
+      return redirect(`${jukeboxPath}${data.name}`);
     }
   } catch (error) {
     toast.error(error?.response?.data?.msg);

@@ -10,21 +10,21 @@ const Wrapper = styled.section`
     display: flex;
     flex-direction: column;
     margin: 0.3rem 0.4rem 0.3rem 0.4rem;
-    padding-bottom: 1rem;
+    padding-bottom: 1px;
   }
 
   .search-label {
     display: block;
     text-transform: capitalize;
     line-height: 1.5;
-    margin: 0.5rem;
+    margin: 0.2rem;
   }
 
   .debounce-input {
     width: 50%;
     padding: 5px;
-    margin-right: .2rem;
-    margin-bottom: .4rem;
+    margin-right: 0.2rem;
+    margin-bottom: 0.4rem;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
@@ -40,10 +40,9 @@ const Wrapper = styled.section`
   }
 
   .search-results {
-    margin: 0.1em;
+    margin: 0.5rem;
     overflow: scroll;
     width: 100%;
-    height: 60%;
   }
 `;
 

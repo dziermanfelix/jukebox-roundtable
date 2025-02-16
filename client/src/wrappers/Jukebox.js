@@ -1,8 +1,15 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.section`
-  height: 100vh;
-  width: 98vw;
+  height: 95vh;
+  width: 99vw;
+
+  .tool-bar {
+    margin-right: .5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+  }
 
   .jukebox {
     display: flex;
@@ -26,11 +33,24 @@ const Wrapper = styled.section`
     height: 100%;
   }
 
-  .tools {
-    margin-right: 3rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: right;
+  @media (max-width: 800px) {
+    unset width;
+    unset height;
+
+    .jukebox {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .left-panel {
+      width: 95%;
+      height: 50%;
+    }
+
+    .right-panel {
+      width: 95%;
+      height: 50%;
+    }
   }
 `;
 

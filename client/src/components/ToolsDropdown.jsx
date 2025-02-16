@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { IoIosArrowDropdown } from 'react-icons/io';
 import Wrapper from '../wrappers/ToolsDropdown';
 import { useJukeboxContext } from '../pages/Jukebox';
+import { CiCircleChevDown, CiCircleChevUp } from 'react-icons/ci';
 
 const ToolsDropdown = () => {
   const { session, logoutSession } = useJukeboxContext();
@@ -28,11 +28,11 @@ const ToolsDropdown = () => {
           setShowOptions(!showOptions);
         }}
       >
-        <IoIosArrowDropdown />
+        {showOptions ? <CiCircleChevUp /> : <CiCircleChevDown />}
       </button>
       <div className={showOptions ? 'dropdown show-dropdown' : 'dropdown'}>
-        <p>{session.role}</p>
-        <button type='button' className='logout-button' onClick={logoutSession}>
+        <div className='menu-item'>{session.displayName}</div>
+        <button type='button' className='menu-item' onClick={logoutSession}>
           logout
         </button>
       </div>

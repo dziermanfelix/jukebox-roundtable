@@ -100,14 +100,14 @@ const Jukebox = () => {
   return (
     <Wrapper>
       <JukeboxContext.Provider value={{ name, session, queue, reorderQueue, updateQueue, logoutSession }}>
+        <div className='tool-bar'>
+          <ToolsDropdown />
+        </div>
         <div className='jukebox'>
           <div className='left-panel'>
             <Search />
           </div>
           <div className='right-panel'>
-            <div className='tools'>
-              <ToolsDropdown />
-            </div>
             <Queue />
             {session.role === Role.STARTER && <Player />}
           </div>

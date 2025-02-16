@@ -51,8 +51,7 @@ const Search = () => {
     <Wrapper>
       <div className='search-bar'>
         <label className='search-label' htmlFor='search'>
-          {' '}
-          search{' '}
+          search
         </label>
         <DebouncingText initialValue={searchValue} updater={setSearchValue} keepEditing />
         <button onClick={searchRequest}>refresh search</button>

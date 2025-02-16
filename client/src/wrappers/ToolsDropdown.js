@@ -3,19 +3,7 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   position: relative;
 
-  .dropdown {
-    position: absolute;
-    width: 100%;
-    text-align: center;
-    visibility: hidden;
-  }
-
-  .show-dropdown {
-    visibility: visible;
-  }
-
   .dropdown-button {
-    padding: 0.5rem;
     background: transparent;
     border-color: transparent;
     cursor: pointer;
@@ -23,10 +11,27 @@ const Wrapper = styled.div`
     height: 100%;
   }
 
-  .logout-button {
+  .dropdown {
+    position: absolute;
+    width: 100%;
+    text-align: left;
+    visibility: hidden;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
+  }
+
+  .show-dropdown {
+    visibility: visible;
+  }
+
+  .menu-item {
+    border-radius: 0;
+    height: 0.5rem;
+    width: 100%;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    padding: 0;
   }
 `;
 

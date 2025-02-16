@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.section`
-  height: 20%;
+  height: 30%;
+  min-height: 90px;
   width: 100%;
   margin: 0.4rem;
   border-style: solid;
@@ -23,8 +24,8 @@ const Wrapper = styled.section`
   }
 
   .album-image {
-    width: 7rem;
-    height: 7rem;
+    width: 75px;
+    height: 75px;
   }
 `;
 

@@ -2,7 +2,8 @@ import styled from 'styled-components';
 
 const Wrapper = styled.section`
   overflow: scroll;
-  display: block;
+  display: flex;
+  flex-direction: column;
   width: 100%;
 
   .search-bar {

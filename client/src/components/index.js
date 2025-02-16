@@ -8,3 +8,4 @@ export { default as Queue } from './Queue';
 export { default as Search } from './Search';
 export { default as DebouncingText } from './DebouncingText';
 export { default as KeepAwake } from './KeepAwake';
+export { default as ToolsDropdown } from './ToolsDropdown';

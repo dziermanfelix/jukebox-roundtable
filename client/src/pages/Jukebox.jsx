@@ -1,4 +1,4 @@
-import { Player, Search, Queue } from '../components';
+import { Player, Search, Queue, ToolsDropdown } from '../components';
 import {
   joinPath,
   getQueuePath,
@@ -99,16 +99,15 @@ const Jukebox = () => {
 
   return (
     <Wrapper>
-      <JukeboxContext.Provider value={{ name, session, queue, reorderQueue, updateQueue }}>
+      <JukeboxContext.Provider value={{ name, session, queue, reorderQueue, updateQueue, logoutSession }}>
         <div className='jukebox'>
           <div className='left-panel'>
             <Search />
           </div>
           <div className='right-panel'>
-            <button onClick={() => logoutSession()}>logout</button>
-            <p>
-              {session.role} {session.displayName}
-            </p>
+            <div className='tools'>
+              <ToolsDropdown />
+            </div>
             <Queue />
             {session.role === Role.STARTER && <Player />}
           </div>

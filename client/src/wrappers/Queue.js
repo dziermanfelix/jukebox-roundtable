@@ -3,19 +3,22 @@ import styled from 'styled-components';
 const Wrapper = styled.section`
   width: 100%;
   height: 75%;
-  margin: 0.1rem;
-  overflow-x: hidden;
-  overflow-y: scroll;
   text-align: left;
+  display: flex;
+  flex-direction: column;
   border-style: solid;
   border-radius: 10px;
+  overflow-x: hidden;
+  overflow-y: scroll;
 
   .queue {
     margin: 0.8rem 0.5rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
   }
 
   .list-item {
-    width: 100%;
+    width: 99%;
     padding: 0.5rem;
     margin: 0.2rem;
     cursor: grab;

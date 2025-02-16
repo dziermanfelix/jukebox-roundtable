@@ -33,7 +33,7 @@ const Wrapper = styled.section`
     height: 100%;
   }
 
-  @media (max-width: 800px) {
+  @media (max-width: 950px) {
     unset width;
     unset height;
 

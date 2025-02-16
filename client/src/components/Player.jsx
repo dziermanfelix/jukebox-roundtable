@@ -105,7 +105,6 @@ const Player = () => {
           <div className='info'>
             <div>{track?.name}</div>
             <div>{track?.artists[0]?.name}</div>
-            <div>{track?.album?.name}</div>
             <div>progress bar</div>
           </div>
           <div className='album-cover'>

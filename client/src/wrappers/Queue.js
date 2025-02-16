@@ -2,13 +2,13 @@ import styled from 'styled-components';
 
 const Wrapper = styled.section`
   width: 100%;
-  height: 70%;
+  height: 75%;
+  margin: 0.1rem;
   overflow-x: hidden;
   overflow-y: scroll;
   text-align: left;
-  margin: 0.1rem;
   border-style: solid;
-  border-radius: 25px;
+  border-radius: 10px;
 
   .queue {
     margin: 0.8rem 0.5rem;
@@ -21,7 +21,7 @@ const Wrapper = styled.section`
     cursor: grab;
     border-color: black;
     border-style: solid;
-    border-radius: 25px;
+    border-radius: 10px;
     border: 1px solidrgb(11, 18, 2);
     align-items: center;
     display: flex;

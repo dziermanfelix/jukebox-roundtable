@@ -5,6 +5,7 @@ import customFetch from '../../../common/customFetch';
 import { toast } from 'react-toastify';
 import { useJukeboxContext } from '../pages/Jukebox';
 import { KeepAwake } from '.';
+import { convertMsToDisplayTime } from '../../../utils/time';
 
 const Player = () => {
   const { name } = useJukeboxContext();
@@ -12,6 +13,9 @@ const Player = () => {
   const [player, setPlayer] = useState(null);
   const [isStarted, setStarted] = useState(false);
   const [track, setTrack] = useState(null);
+
+  const [duration, setDuration] = useState(0);
+  const [position, setPosition] = useState(0);
 
   useEffect(() => {
     const getAccessToken = async () => {
@@ -62,13 +66,14 @@ const Player = () => {
             if (state) {
               const position = state.position;
               const duration = state.duration;
+              setDuration(duration);
+              setPosition(position);
               const progressPercentage = (position / duration) * 100;
               const remaining = (duration - position) / 1000;
               if (progressPercentage === 0) {
                 notPlayingCount += 1;
                 checkNotPlaying(notPlayingCount, intervalId);
               }
-              console.log(`${progressPercentage}\%, ${remaining}s`);
               if (position / 1000 <= 2) {
                 readyToQueue = true;
               }
@@ -105,7 +110,9 @@ const Player = () => {
           <div className='info'>
             <div>{track?.name}</div>
             <div>{track?.artists[0]?.name}</div>
-            <div>progress bar</div>
+            <div>
+              {convertMsToDisplayTime(position)} / {convertMsToDisplayTime(duration)}
+            </div>
           </div>
           <div className='album-cover'>
             <img className='album-image' src={track?.album?.images[2]?.url} alt='' />

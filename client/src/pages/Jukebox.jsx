@@ -69,7 +69,6 @@ const Jukebox = () => {
     });
 
     socket.on(updateQueueEvent, (tracks) => {
-      console.log(`socket on update queue`);
       updateQueue(tracks);
     });
 

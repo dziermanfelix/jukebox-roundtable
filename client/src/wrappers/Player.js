@@ -11,7 +11,6 @@ const Wrapper = styled.section`
   .playing {
     width: 100%;
     height: 100%;
-    /* margin: .8rem; */
     display: flex;
     flex-direction: row;
   }
@@ -24,22 +23,16 @@ const Wrapper = styled.section`
   }
 
   .album-cover {
-    margin: .7rem;
+    margin: 0.7rem;
     display: grid;
     justify-content: center;
     align-items: center;
   }
 
   .album-image {
-    width: 150px;
-    height: 150px;
-  }
-
-  @media (max-width: 950px) {
-    .album-image {
-      width: 75px;
-      height: 75px;
-    }
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 `;
 

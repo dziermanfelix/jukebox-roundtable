@@ -14,18 +14,18 @@ export const serverSocket = new Server(server, {
   },
 });
 
-function getRelevantDataFromSocketHandshake(handshake) {
+function jukeboxAndSessionFromSocket(handshake) {
   const parsedUrl = parse(handshake.url, true);
   return { jukeboxName: parsedUrl.query.jukeboxName, sessionId: parsedUrl.query.sessionId };
 }
 
 export let connectedUsers = {};
 serverSocket.on('connection', (socket) => {
-  const relevant = getRelevantDataFromSocketHandshake(socket.handshake);
+  const socketInfo = jukeboxAndSessionFromSocket(socket.handshake);
   console.log('socket connected:', socket.id);
-  console.log(`relevant ${JSON.stringify(relevant)}`);
+  console.log(`socketInfo ${JSON.stringify(socketInfo)}`);
   console.log(`${serverSocket.engine.clientsCount} clients connected`);
-  connectedUsers[relevant.sessionId] = socket.id;
+  connectedUsers[socketInfo.sessionId] = socket.id;
   console.log(`connectedUsers=${JSON.stringify(connectedUsers)}`);
   socket.on('disconnect', () => {
     console.log('socket disconnected:', socket.id);

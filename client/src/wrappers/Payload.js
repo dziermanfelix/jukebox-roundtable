@@ -11,10 +11,12 @@ const Wrapper = styled.section`
     display: flex;
     flex-direction: row;
     align-items: center;
+    white-space: nowrap;
   }
 
   .info {
     flex-grow: 1;
+    overflow: hidden;
   }
 
   .add-to-queue {

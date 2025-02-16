@@ -16,9 +16,6 @@ const Wrapper = styled.section`
 
   .list-item {
     width: 100%;
-    font-size: 16px;
-    display: flex;
-    flex-direction: row;
     padding: 0.5rem;
     margin: 0.2rem;
     cursor: grab;
@@ -27,6 +24,15 @@ const Wrapper = styled.section`
     border-radius: 25px;
     border: 1px solidrgb(11, 18, 2);
     align-items: center;
+    display: flex;
+    flex-direction: row;
+    white-space: nowrap;
+  }
+
+  .info {
+    width: 100%;
+    overflow: hidden;
+    font-size: 16px;
   }
 
   .queue-tools {
@@ -36,6 +42,17 @@ const Wrapper = styled.section`
 
   .queue-tools:hover {
     opacity: 1;
+  }
+
+  .tool-button {
+    width: '50px';
+    height: '50px';
+    padding: 0;
+    margin-left: 0.2rem;
+    display: 'flex';
+    justify-content: 'center';
+    align-items: 'center';
+    font-size: '16px';
   }
 
   h3 {

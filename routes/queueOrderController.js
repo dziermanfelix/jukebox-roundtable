@@ -43,7 +43,10 @@ export async function getOrderDb(jukeboxName) {
 
 export async function setOrderDb(jukeboxName, sessions) {
   const jukebox = await getJukeboxByName(jukeboxName);
-  jukebox.queueOrder = sessions;
-  await Jukebox.updateOne({ name: jukeboxName }, jukebox, { new: true });
-  return jukebox.queueOrder;
+  if (jukebox) {
+    jukebox.queueOrder = sessions;
+    await Jukebox.updateOne({ name: jukeboxName }, jukebox, { new: true });
+    return jukebox.queueOrder;
+  }
+  return [];
 }

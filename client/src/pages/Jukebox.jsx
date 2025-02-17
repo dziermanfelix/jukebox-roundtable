@@ -92,8 +92,8 @@ const Jukebox = () => {
     // if (window.Spotify && window.Spotify.Player) {
     //   window.Spotify.Player.disconnect();
     // }
-    await customFetch.post(logoutPath, { name: name, sessionId: session._id });
     navigate(basePath);
+    await customFetch.post(logoutPath, { name: name, sessionId: session._id });
   }
 
   return (

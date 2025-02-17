@@ -12,13 +12,12 @@ const Wrapper = styled.section`
   overflow-y: scroll;
 
   .queue {
-    margin: 0.8rem 0.5rem;
+    margin: 0.2rem;
     overflow-y: scroll;
     overflow-x: hidden;
   }
 
   .list-item {
-    width: 99%;
     padding: 0.5rem;
     margin: 0.2rem;
     cursor: grab;
@@ -33,13 +32,13 @@ const Wrapper = styled.section`
   }
 
   .info {
-    width: 100%;
     overflow: hidden;
     font-size: 16px;
   }
 
   .queue-tools {
     margin-left: auto;
+    margin-right: 0.5rem;
     opacity: 0;
   }
 
@@ -60,6 +59,16 @@ const Wrapper = styled.section`
 
   h3 {
     text-align: center;
+  }
+
+  @media (max-width: 500px) {
+    .list-item {
+      overflow-x: scroll;
+      margin-right: 2rem;
+    }
+    .queue-tools {
+      opacity: 1;
+    }
   }
 `;
 

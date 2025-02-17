@@ -2,19 +2,17 @@ import styled from 'styled-components';
 
 const Wrapper = styled.section`
   width: 100%;
-  height: 75%;
+  height: 100%;
   text-align: left;
   display: flex;
   flex-direction: column;
   border-style: solid;
   border-radius: 10px;
-  overflow-x: hidden;
-  overflow-y: scroll;
+  overflow: scroll;
 
   .queue {
     margin: 0.2rem;
-    overflow-y: scroll;
-    overflow-x: hidden;
+    overflow: scroll;
   }
 
   .list-item {
@@ -32,7 +30,7 @@ const Wrapper = styled.section`
   }
 
   .info {
-    overflow: hidden;
+    overflow: scroll;
     font-size: 16px;
   }
 

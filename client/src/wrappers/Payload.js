@@ -16,7 +16,7 @@ const Wrapper = styled.section`
 
   .info {
     flex-grow: 1;
-    overflow: hidden;
+    overflow: scroll;
   }
 
   .add-to-queue {

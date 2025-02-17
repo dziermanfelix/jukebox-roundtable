@@ -67,3 +67,17 @@ export async function updateJukeboxPlayedTracks(jukeboxName, track) {
   );
   return updatedJukebox;
 }
+
+export async function getPreviousSession(jukeboxName) {
+  const jukebox = await getJukeboxByName(jukeboxName);
+  return jukebox.previousSession;
+}
+
+export async function setPreviousSession(jukeboxName, previousSession) {
+  const updatedJukebox = Jukebox.findOneAndUpdate(
+    { name: jukeboxName },
+    { previousSession: previousSession },
+    { new: true }
+  );
+  return updatedJukebox;
+}

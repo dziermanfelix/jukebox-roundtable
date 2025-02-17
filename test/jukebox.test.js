@@ -26,6 +26,7 @@ describe('jukebox', () => {
     expect(jukeboxDb.accessToken).not.toBe(null);
     expect(jukeboxDb.playedTracks).toEqual([]);
     expect(jukeboxDb.queueOrder).toEqual([]);
+    expect(jukeboxDb.previousSession).toEqual('');
   });
 
   it('jukebox create error duplicate', async () => {
@@ -44,6 +45,7 @@ describe('jukebox', () => {
     expect(response.statusCode).toBe(StatusCodes.OK);
     expect(response.body.jukebox.name).toEqual(jukebox.name);
     expect(response.body.jukebox.queueOrder).toEqual([]);
+    expect(response.body.jukebox.previousSession).toEqual('');
     expect(response.body.jukebox.playedTracks).toEqual([]);
     expect(response.body.role).toEqual(Role.STARTER);
     const webToken = getWebTokenFromResponse(response);
@@ -73,6 +75,7 @@ describe('jukebox', () => {
     expect(response.statusCode).toBe(StatusCodes.OK);
     expect(response.body.jukebox.name).toEqual(jukebox.name);
     expect(response.body.jukebox.queueOrder).toEqual([]);
+    expect(response.body.jukebox.previousSession).toEqual('');
     expect(response.body.jukebox.playedTracks).toEqual([]);
     expect(response.body.role).toEqual(Role.STARTER);
     const webToken = getWebTokenFromResponse(response);
@@ -101,6 +104,7 @@ describe('jukebox', () => {
     expect(loginResponse1.statusCode).toBe(StatusCodes.OK);
     expect(loginResponse1.body.jukebox.name).toEqual(jukebox1.name);
     expect(loginResponse1.body.jukebox.queueOrder).toEqual([]);
+    expect(loginResponse1.body.jukebox.previousSession).toEqual('');
     expect(loginResponse1.body.jukebox.playedTracks).toEqual([]);
     expect(loginResponse1.body.role).toEqual(Role.JOINER);
 
@@ -112,6 +116,7 @@ describe('jukebox', () => {
     expect(loginResponse2.statusCode).toBe(StatusCodes.OK);
     expect(loginResponse2.body.jukebox.name).toEqual(jukebox2.name);
     expect(loginResponse2.body.jukebox.queueOrder).toEqual([]);
+    expect(loginResponse2.body.jukebox.previousSession).toEqual('');
     expect(loginResponse2.body.jukebox.playedTracks).toEqual([]);
     expect(loginResponse2.body.role).toEqual(Role.JOINER);
 
@@ -158,6 +163,7 @@ describe('jukebox', () => {
     expect(loginResponse1.statusCode).toBe(StatusCodes.OK);
     expect(loginResponse1.body.jukebox.name).toEqual(jukebox1.name);
     expect(loginResponse1.body.jukebox.queueOrder).toEqual([]);
+    expect(loginResponse1.body.jukebox.previousSession).toEqual('');
     expect(loginResponse1.body.jukebox.playedTracks).toEqual([]);
     expect(loginResponse1.body.role).toEqual(Role.JOINER);
 
@@ -169,6 +175,7 @@ describe('jukebox', () => {
     expect(loginResponse2.statusCode).toBe(StatusCodes.OK);
     expect(loginResponse2.body.jukebox.name).toEqual(jukebox2.name);
     expect(loginResponse2.body.jukebox.queueOrder).toEqual([]);
+    expect(loginResponse2.body.jukebox.previousSession).toEqual('');
     expect(loginResponse2.body.jukebox.playedTracks).toEqual([]);
     expect(loginResponse2.body.role).toEqual(Role.JOINER);
 

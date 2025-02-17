@@ -3,11 +3,9 @@ import { updateQueueEvent } from '../utils/socketEvents.js';
 import { getAccessToken } from './accessTokenController.js';
 import axios from 'axios';
 import { getQueueFromSessionId, setQueueForSessionId } from './queueController.js';
-import { updateJukeboxPlayedTracks } from './jukeboxController.js';
+import { getPreviousSession, setPreviousSession, updateJukeboxPlayedTracks } from './jukeboxController.js';
 import { getOrderDb } from './queueOrderController.js';
 import { StatusCodes } from 'http-status-codes';
-
-let previous = undefined;
 
 function emitter(sessionId, event, data) {
   const socketId = connectedUsers[sessionId];
@@ -84,12 +82,13 @@ export const getNextTrack = async (jukeboxName) => {
 
 export const getNextSessionId = async (jukeboxName) => {
   const order = await getOrderDb(jukeboxName);
+  const previousSession = await getPreviousSession(jukeboxName);
   let prevIndex = -1;
-  if (previous) {
-    prevIndex = order.indexOf(previous);
+  if (previousSession) {
+    prevIndex = order.indexOf(previousSession);
   }
   const nextIndex = (prevIndex + 1) % order.length;
   const sessionId = order.at(nextIndex);
-  previous = sessionId;
+  await setPreviousSession(jukeboxName, sessionId);
   return sessionId;
 };

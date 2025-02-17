@@ -35,6 +35,7 @@ const JukeboxSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    previousSession: { type: String, default: '' },
   },
   { timestamps: true }
 );

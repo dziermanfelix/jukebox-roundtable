@@ -165,7 +165,6 @@ describe('player', () => {
       if (expectation.remainingQ.length > 0) {
         let nextExpectedTrack = expectation.remainingQ.shift();
         let nextTrack = await getNextTrack(jukebox.name);
-        console.log(`expected ${nextExpectedTrack?.name} actual ${nextTrack?.name}`);
         expect(nextTrack.id).toEqual(nextExpectedTrack.id);
         const webToken = expectation.webToken;
         const session = await getSessionFromWebToken(webToken);

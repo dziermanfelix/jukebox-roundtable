@@ -77,7 +77,7 @@ const Player = () => {
               if (position / 1000 <= 2) {
                 readyToQueue = true;
               }
-              if (remaining <= 31 && readyToQueue) {
+              if (remaining <= 11 && readyToQueue) {
                 customFetch.post(`${queueNextTrackPath}${name}`);
                 readyToQueue = false;
               }

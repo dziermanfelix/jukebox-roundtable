@@ -41,9 +41,10 @@ const Jukebox = () => {
   const [queue, setQueue] = useState([]);
   const [displayName, setDisplayName] = useState(session.displayName);
   const navigate = useNavigate();
+  const [loggedOut, setLoggedOut] = useState(false);
 
   useEffect(() => {
-    const fetch = async () => {
+    const getQueue = async () => {
       try {
         const { data } = await customFetch.get(`${getQueuePath}${session._id}`);
         setQueue(data.queue);
@@ -52,31 +53,27 @@ const Jukebox = () => {
         toast.error(error?.response?.data?.msg);
       }
     };
-    fetch();
-  }, []);
+    getQueue();
 
-  useEffect(() => {
-    const socket = createSocketConnection(jukebox.name, session._id);
-
-    socket.on('connect_error', (err) => {
-      console.log(`socket connect error: ${err}`);
-    });
-
-    socket.on('connect', (data) => {
-      console.log(`socket connected`);
-    });
-
-    socket.on('disconnect', (data) => {
-      console.log(`socket disconnected`);
-    });
-
-    socket.on(updateQueueEvent, (tracks) => {
+    const handleQueueUpdate = (tracks) => {
       updateQueue(tracks);
+    };
+
+    const socket = createSocketConnection(jukebox.name, session._id);
+    socket.on('connect', () => console.log('socket connected'));
+    socket.on('connect_error', (err) => console.log(`Socket connect error: ${err}`));
+    socket.on('disconnect', () => console.log('socket disconnected'));
+    socket.on('reconnect', () => {
+      console.log('reconnect called');
+      getQueue();
     });
-
-    socket.connect();
-
+    socket.on(updateQueueEvent, handleQueueUpdate);
     return () => {
+      socket.off('connect');
+      socket.off('connect_error');
+      socket.off('disconnect');
+      socket.off('reconnect');
+      socket.off(updateQueueEvent, handleQueueUpdate);
       socket.disconnect();
     };
   }, []);
@@ -98,9 +95,7 @@ const Jukebox = () => {
   };
 
   async function logoutSession() {
-    // if (window.Spotify && window.Spotify.Player) {
-    //   window.Spotify.Player.disconnect();
-    // }
+    setLoggedOut(true);
     navigate(basePath);
     await customFetch.post(logoutPath, { name: name, sessionId: session._id });
   }
@@ -123,7 +118,7 @@ const Jukebox = () => {
           </div>
           <div className='right-panel'>
             <Queue />
-            {session.role === Role.STARTER && <Player />}
+            {session.role === Role.STARTER && <Player loggedOut={loggedOut} />}
           </div>
         </div>
       </JukeboxContext.Provider>

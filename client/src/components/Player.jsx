@@ -7,7 +7,7 @@ import { useJukeboxContext } from '../pages/Jukebox';
 import { KeepAwake } from '.';
 import { convertMsToDisplayTime } from '../../../utils/time';
 
-const Player = () => {
+const Player = ({ loggedOut }) => {
   const { name } = useJukeboxContext();
   const [token, setToken] = useState(null);
   const [player, setPlayer] = useState(null);
@@ -29,6 +29,14 @@ const Player = () => {
     };
     getAccessToken();
   }, []);
+
+  useEffect(() => {
+    if (loggedOut) {
+      if (player) {
+        player.disconnect();
+      }
+    }
+  }, [loggedOut]);
 
   async function initJukebox() {
     const script = document.createElement('script');

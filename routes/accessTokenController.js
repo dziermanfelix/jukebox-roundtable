@@ -31,8 +31,6 @@ export const requestAccessToken = async (jukeboxName, spotifyCode) => {
     client_id: spotifyClientId,
     client_secret: spotifyClientSecret,
     redirect_uri: spotifyRedirectUri,
-    scope:
-      'streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state user-library-read user-library-modify',
   };
   var options = {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

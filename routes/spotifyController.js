@@ -7,7 +7,7 @@ import { spotifyAuthorizeUrl } from '../utils/spotifyEndpoints.js';
 
 export const getSpotifyLoginUrl = (req, res) => {
   const scope =
-    'streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state user-library-read user-library-modify';
+    'streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state user-library-read user-library-modify user-read-currently-playing';
   const url = `${spotifyAuthorizeUrl}?client_id=${spotifyClientId}&response_type=code&redirect_uri=${spotifyRedirectUri}&scope=${scope}`;
   return res.status(StatusCodes.OK).json({ url: url });
 };

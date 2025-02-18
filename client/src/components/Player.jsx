@@ -55,7 +55,13 @@ const Player = ({ loggedOut }) => {
         });
 
         player.addListener('ready', ({ device_id }) => {
-          customFetch.post(`${playNextTrackPath}${name}`, { deviceId: device_id });
+          (async () => {
+            await customFetch.post(`${playNextTrackPath}${name}`, { deviceId: device_id });
+          })();
+        });
+
+        player.addListener('not_ready', ({ device_id }) => {
+          console.log('Device has gone offline:', device_id);
         });
 
         player.addListener('playback_error', (error) => {
@@ -65,6 +71,22 @@ const Player = ({ loggedOut }) => {
         player.addListener('player_state_changed', (state) => {
           const currentTrack = state.track_window.current_track;
           setTrack(currentTrack);
+        });
+
+        player.addListener('initialization_error', ({ message }) => {
+          console.log('Web SDK initialization error:', message);
+        });
+
+        player.addListener('authentication_error', ({ message }) => {
+          console.log('auth error:', message);
+        });
+
+        player.addListener('account_error', ({ message }) => {
+          console.log('account error:', message);
+        });
+
+        player.addListener('playback_error', ({ message }) => {
+          console.log('playback error:', message);
         });
 
         let readyToQueue = true;
@@ -96,7 +118,13 @@ const Player = ({ loggedOut }) => {
           });
         }, 1000);
 
-        player.connect();
+        player.connect().then((success) => {
+          if (success) {
+            console.log('Player connected successfully!');
+          } else {
+            console.log('Player failed to connect.');
+          }
+        });
         setPlayer(player);
       };
     }
@@ -104,7 +132,7 @@ const Player = ({ loggedOut }) => {
   }
 
   function checkNotPlaying(notPlayingCount, intervalId) {
-    if (notPlayingCount >= 4) {
+    if (notPlayingCount >= 10) {
       setStarted(false);
       clearInterval(intervalId);
     }

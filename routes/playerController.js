@@ -6,6 +6,7 @@ import { getQueueFromSessionId, setQueueForSessionId } from './queueController.j
 import { getPreviousSession, setPreviousSession, updateJukeboxPlayedTracks } from './jukeboxController.js';
 import { getOrderDb } from './queueOrderController.js';
 import { StatusCodes } from 'http-status-codes';
+import { delay } from '../utils/time.js';
 
 function emitter(sessionId, event, data) {
   const socketId = connectedUsers[sessionId];
@@ -19,13 +20,14 @@ export async function playNextTrackHttp(req, res) {
   if (track) {
     const token = await getAccessToken(jukeboxName);
     try {
-      var data = {
-        uris: [track.uri],
-      };
-      var options = {
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      };
-      await axios.put(`https://api.spotify.com/v1/me/player/play/?device_id=${deviceId}`, data, options);
+      await delay(1000);
+      await axios.put(
+        `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`,
+        {
+          uris: [track.uri],
+        },
+        { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } }
+      );
       return track;
     } catch (error) {
       console.log('error playing next track');

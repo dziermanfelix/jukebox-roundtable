@@ -38,6 +38,8 @@ const Wrapper = styled.section`
     margin-left: auto;
     margin-right: 0.5rem;
     opacity: 0;
+    display: flex;
+    flex-direction: row;
   }
 
   .queue-tools:hover {
@@ -45,14 +47,10 @@ const Wrapper = styled.section`
   }
 
   .tool-button {
-    width: '50px';
-    height: '50px';
+    width: 25px;
+    height: 25px;
     padding: 0;
     margin-left: 0.2rem;
-    display: 'flex';
-    justify-content: 'center';
-    align-items: 'center';
-    font-size: '16px';
   }
 
   h3 {

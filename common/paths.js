@@ -27,6 +27,7 @@ export const logoutPath = `${authPath}logout/`;
 
 // session
 export const sessionPath = `${basePath}session/`;
+export const sessionUpdateDisplayNamePath = `${sessionPath}update-display-name/`;
 export const starterSessionPath = `${sessionPath}starter/`;
 export const joinerSessionPath = `${sessionPath}joiner/`;
 export const getQueuePath = `${sessionPath}get-queue/`;

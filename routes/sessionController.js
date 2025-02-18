@@ -61,3 +61,10 @@ export async function webTokenMatchesJukebox(webToken, jukebox) {
 export async function deleteSessionsFromJukebox(jukebox) {
   await Session.deleteMany({ jukebox: jukebox });
 }
+
+export async function updateDisplayName(req, res) {
+  const session = await Session.findOne({ _id: req.params.id });
+  session.displayName = req.body.displayName;
+  const updatedSession = await Session.findByIdAndUpdate(session._id, session, { new: true });
+  return res.status(StatusCodes.OK).json({ session: updatedSession });
+}

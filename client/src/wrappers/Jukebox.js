@@ -5,10 +5,27 @@ const Wrapper = styled.section`
   width: 99vw;
 
   .tool-bar {
-    margin-right: .5rem;
+    margin-right: 0.5rem;
     display: flex;
     flex-direction: row;
-    justify-content: right;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .center-tool {
+    text-transform: capitalize;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-weight: bold;
+  }
+
+  .right-tool {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
   }
 
   .jukebox {
@@ -22,14 +39,14 @@ const Wrapper = styled.section`
   .left-panel {
     display: flex;
     flex-direction: column;
-    width: 55%;
+    width: 50%;
     height: 100%;
   }
 
   .right-panel {
     display: flex;
     flex-direction: column;
-    width: 45%;
+    width: 50%;
     height: 100%;
   }
 

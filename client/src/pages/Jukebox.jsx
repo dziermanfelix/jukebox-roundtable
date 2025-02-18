@@ -1,4 +1,4 @@
-import { Player, Search, Queue, ToolsDropdown } from '../components';
+import { Player, Search, Queue, DropdownMenu } from '../components';
 import {
   joinPath,
   getQueuePath,
@@ -7,6 +7,7 @@ import {
   logoutPath,
   basePath,
   jukeboxPrivatePath,
+  sessionUpdateDisplayNamePath,
 } from '../../../common/paths';
 import { toast } from 'react-toastify';
 import { useLoaderData, redirect, useNavigate } from 'react-router-dom';
@@ -38,6 +39,7 @@ const Jukebox = () => {
   const { jukebox, session } = useLoaderData();
   const { name } = jukebox;
   const [queue, setQueue] = useState([]);
+  const [displayName, setDisplayName] = useState(session.displayName);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -88,6 +90,13 @@ const Jukebox = () => {
     setQueue(tracks);
   };
 
+  const updateDisplayName = async (newDisplayName) => {
+    await customFetch.post(`${sessionUpdateDisplayNamePath}${session._id}`, {
+      displayName: newDisplayName,
+    });
+    setDisplayName(newDisplayName);
+  };
+
   async function logoutSession() {
     // if (window.Spotify && window.Spotify.Player) {
     //   window.Spotify.Player.disconnect();
@@ -98,9 +107,15 @@ const Jukebox = () => {
 
   return (
     <Wrapper>
-      <JukeboxContext.Provider value={{ name, session, queue, reorderQueue, updateQueue, logoutSession }}>
+      <JukeboxContext.Provider
+        value={{ name, session, queue, reorderQueue, updateQueue, logoutSession, displayName, updateDisplayName }}
+      >
         <div className='tool-bar'>
-          <ToolsDropdown />
+          <p className='center-tool'> Jukebox {name} </p>
+          <div className='right-tool'>
+            <p> hello, {displayName} </p>
+            <DropdownMenu />
+          </div>
         </div>
         <div className='jukebox'>
           <div className='left-panel'>

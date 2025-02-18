@@ -5,6 +5,7 @@ import {
   setQueuePath,
   getQueuePath,
   sessionPath,
+  sessionUpdateDisplayNamePath,
 } from '../common/paths';
 import { deleteJukeboxSuccess, noSessionWithWebTokenError } from '../common/responseMessages';
 import { StatusCodes } from 'http-status-codes';
@@ -118,6 +119,34 @@ describe('session', () => {
     expect(JSON.stringify(updatedSessionFromResponse._id)).toBe(JSON.stringify(sessionDb._id));
     expect(JSON.stringify(updatedSessionFromResponse.webToken)).toBe(JSON.stringify(sessionDb.webToken));
     expect(updatedSessionFromResponse.displayName).toBe(newSession.displayName);
+  });
+
+  it('update session display name', async () => {
+    const jukebox = makeMockJukebox();
+    const loginResponse = await request(app).post(makeUrl(loginPath)).send(jukebox);
+    expect(loginResponse.status).toBe(StatusCodes.OK);
+    expect(loginResponse.statusCode).toBe(StatusCodes.OK);
+    expect(loginResponse.body.jukebox.name).toEqual(jukebox.name);
+    expect(loginResponse.body.jukebox.queueOrder).toEqual([]);
+    expect(loginResponse.body.jukebox.playedTracks).toEqual([]);
+    expect(loginResponse.body.role).toEqual(Role.STARTER);
+
+    const webToken = getWebTokenFromResponse(loginResponse);
+    expect(webToken).not.toEqual(undefined);
+
+    const sessionDb = await getSessionFromWebToken(webToken);
+    const newDisplayName = 'test';
+
+    const updateDisplayNameResponse = await request(app)
+      .post(makeUrl(`${sessionUpdateDisplayNamePath}${sessionDb._id}`))
+      .send({ displayName: newDisplayName });
+    expect(updateDisplayNameResponse.status).toBe(StatusCodes.OK);
+    expect(updateDisplayNameResponse.statusCode).toBe(StatusCodes.OK);
+    const updatedSessionFromResponse = updateDisplayNameResponse.body.session;
+    expect(updatedSessionFromResponse).not.toBe(null);
+    expect(JSON.stringify(updatedSessionFromResponse._id)).toBe(JSON.stringify(sessionDb._id));
+    expect(JSON.stringify(updatedSessionFromResponse.webToken)).toBe(JSON.stringify(sessionDb.webToken));
+    expect(updatedSessionFromResponse.displayName).toBe(newDisplayName);
   });
 
   it('create duplicate session attempt', async () => {

@@ -61,12 +61,18 @@ const Wrapper = styled.section`
 
     .left-panel {
       width: 95%;
-      height: 50%;
+      height: fit-content;
+      max-height: 55%;
+
+      display: flex;
+      flex-direction: column; /* Ensures content stacks at the top */
+      align-items: flex-start;
     }
 
     .right-panel {
       width: 95%;
       height: 50%;
+      flex-grow: 1
     }
   }
 `;

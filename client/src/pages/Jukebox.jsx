@@ -43,21 +43,19 @@ const Jukebox = () => {
   const navigate = useNavigate();
   const [loggedOut, setLoggedOut] = useState(false);
 
-  useEffect(() => {
-    const getQueue = async () => {
-      try {
-        const { data } = await customFetch.get(`${getQueuePath}${session._id}`);
-        setQueue(data.queue);
-      } catch (error) {
-        console.log(error);
-        toast.error(error?.response?.data?.msg);
-      }
-    };
-    getQueue();
+  const getQueue = async () => {
+    console.log('get queue called');
+    try {
+      const { data } = await customFetch.get(`${getQueuePath}${session._id}`);
+      setQueue(data.queue);
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.response?.data?.msg);
+    }
+  };
 
-    const handleQueueUpdate = (tracks) => {
-      updateQueue(tracks);
-    };
+  useEffect(() => {
+    getQueue();
 
     const socket = createSocketConnection(jukebox.name, session._id);
     socket.on('connect', () => console.log('socket connected'));
@@ -67,6 +65,9 @@ const Jukebox = () => {
       console.log('reconnect called');
       getQueue();
     });
+    const handleQueueUpdate = (tracks) => {
+      updateQueue(tracks);
+    };
     socket.on(updateQueueEvent, handleQueueUpdate);
     return () => {
       socket.off('connect');
@@ -76,6 +77,16 @@ const Jukebox = () => {
       socket.off(updateQueueEvent, handleQueueUpdate);
       socket.disconnect();
     };
+  }, []);
+
+  useEffect(() => {
+    function handleVisibilityChange() {
+      if (!document.hidden) {
+        getQueue();
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
 
   const reorderQueue = async (tracks) => {

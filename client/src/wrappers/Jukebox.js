@@ -4,28 +4,35 @@ const Wrapper = styled.section`
   height: 95vh;
   width: 99vw;
 
-  .tool-bar {
-    margin-right: 0.5rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
+    .tool-bar {
+      margin-right: 0.5rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      position: relative;
   }
 
-  .center-tool {
-    text-transform: capitalize;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    font-weight: bold;
+  .left-tool,
+  .right-tool {
+      flex: 1;
+      max-width: 50%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
   }
 
   .right-tool {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+  }
+
+  .fixed-tool {
+      flex-shrink: 0;
+      margin-left: 1rem;
+      white-space: nowrap;
   }
 
   .jukebox {
@@ -63,9 +70,8 @@ const Wrapper = styled.section`
       width: 95%;
       height: fit-content;
       max-height: 55%;
-
       display: flex;
-      flex-direction: column; /* Ensures content stacks at the top */
+      flex-direction: column;
       align-items: flex-start;
     }
 

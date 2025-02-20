@@ -117,9 +117,11 @@ const Jukebox = () => {
         value={{ name, session, queue, reorderQueue, updateQueue, logoutSession, displayName, updateDisplayName }}
       >
         <div className='tool-bar'>
-          <p className='center-tool'> Jukebox {name} </p>
+          <p className='left-tool'> Jukebox {name} </p>
           <div className='right-tool'>
             <p> hello, {displayName} </p>
+          </div>
+          <div className='fixed-tool'>
             <DropdownMenu />
           </div>
         </div>

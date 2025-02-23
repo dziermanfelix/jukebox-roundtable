@@ -12,10 +12,12 @@ const Wrapper = styled.section`
       align-items: center;
       width: 100%;
       position: relative;
+      font-size: 14px;
   }
 
   .left-tool,
   .right-tool {
+      display: flex;
       flex: 1;
       max-width: 50%;
       white-space: nowrap;
@@ -23,15 +25,19 @@ const Wrapper = styled.section`
       text-overflow: ellipsis;
   }
 
+  .left-tool {
+    margin-left: .4rem;
+    justify-content: flex-start;
+    color: grey;
+  }
+
   .right-tool {
-      display: flex;
       justify-content: flex-end;
-      gap: 1rem;
+      margin-right: .4rem;
   }
 
   .fixed-tool {
       flex-shrink: 0;
-      margin-left: 1rem;
       white-space: nowrap;
   }
 

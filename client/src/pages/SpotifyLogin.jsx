@@ -28,7 +28,7 @@ const SpotifyLogin = () => {
     <Wrapper>
       <p>You are starting a new jukebox</p>
       <p>You must log in to spotify to continue.</p>
-      <button onClick={() => (window.location.href = loginUrl)}>Spotify Login</button>
+      <button onClick={() => (window.location.href = loginUrl)}>Go To Spotify Login</button>
       <button onClick={() => cancelLogin()}>Cancel</button>
     </Wrapper>
   );

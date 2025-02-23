@@ -60,7 +60,7 @@ const Wrapper = styled.div`
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
-  input: {
+  input {
     width: 100%;
     padding: 8px 12px;
     margin-bottom: 15px;
@@ -68,23 +68,23 @@ const Wrapper = styled.div`
     font-size: 16px;
   }
 
-  .button-container: {
+  .button-container {
     display: flex;
+    gap: 0.4rem;
     justify-content: flex-end;
-    gap: 10px;
   }
 
-  .dialog-button: {
+  .dialog-button {
     padding: 8px 16px;
     border-radius: 4px;
-    border: none;
     cursor: pointer;
     font-size: 14px;
     transition: background-color 0.2s;
   }
 
   .dropdown-button:hover,
-  .menu-item:hover {
+  .menu-item:hover,
+  .dialog-button:hover {
     filter: brightness(1.2);
   }
 `;

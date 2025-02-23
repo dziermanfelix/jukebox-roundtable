@@ -118,13 +118,7 @@ const Player = ({ loggedOut }) => {
           });
         }, 1000);
 
-        player.connect().then((success) => {
-          if (success) {
-            console.log('Player connected successfully!');
-          } else {
-            console.log('Player failed to connect.');
-          }
-        });
+        player.connect();
         setPlayer(player);
       };
     }
@@ -132,7 +126,7 @@ const Player = ({ loggedOut }) => {
   }
 
   function checkNotPlaying(notPlayingCount, intervalId) {
-    if (notPlayingCount >= 10) {
+    if (notPlayingCount >= 7) {
       setStarted(false);
       clearInterval(intervalId);
     }

@@ -44,7 +44,6 @@ const Jukebox = () => {
   const [loggedOut, setLoggedOut] = useState(false);
 
   const getQueue = async () => {
-    console.log('get queue called');
     try {
       const { data } = await customFetch.get(`${getQueuePath}${session._id}`);
       setQueue(data.queue);
@@ -59,10 +58,9 @@ const Jukebox = () => {
 
     const socket = createSocketConnection(jukebox.name, session._id);
     socket.on('connect', () => console.log('socket connected'));
-    socket.on('connect_error', (err) => console.log(`Socket connect error: ${err}`));
+    socket.on('connect_error', (err) => console.log(`socket connect error: ${err}`));
     socket.on('disconnect', () => console.log('socket disconnected'));
     socket.on('reconnect', () => {
-      console.log('reconnect called');
       getQueue();
     });
     const handleQueueUpdate = (tracks) => {
@@ -117,7 +115,7 @@ const Jukebox = () => {
         value={{ name, session, queue, reorderQueue, updateQueue, logoutSession, displayName, updateDisplayName }}
       >
         <div className='tool-bar'>
-          <p className='left-tool'> Jukebox {name} </p>
+          <p className='left-tool'> jukebox {name} </p>
           <div className='right-tool'>
             <p> hello, {displayName} </p>
           </div>

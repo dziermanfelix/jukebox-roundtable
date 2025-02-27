@@ -4,6 +4,8 @@ Tired of wrestling over the aux cord? What about hearing that awful sound when y
 
 Jukebox Roundtable is a collaborative music listening app that simplifies group playback. One central Spotify player connects to a source, and users join the jukebox to queue their songs. The backend ensures fair track rotation, playing each user's next track when it's their turn—no skips, no interruptions. Yes, that means everyone has to endure Uncle Ricky’s terrible song choices. But don’t worry—your turn is coming soon.
 
+🚀 **Try it out:** [Jukebox Roundtable](https://jukebox-roundtable.onrender.com/)
+
 ## How To Play
 1. **Start a Jukebox** – Create a new jukebox session to host a group listening experience.
 2. **Log In with Spotify** – Authenticate your Spotify account to enable search and playback.

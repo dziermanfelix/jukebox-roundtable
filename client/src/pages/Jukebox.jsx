@@ -123,11 +123,11 @@ const Jukebox = () => {
             <DropdownMenu />
           </div>
         </div>
-        <div className='jukebox'>
-          <div className='left-panel'>
+        <div className='flex h-screen w-screen justify-center'>
+          <div className='flex-col w-1/2 p-2'>
             <Search />
           </div>
-          <div className='right-panel'>
+          <div className='flex-col w-1/2 p-2'>
             <Queue />
             {session.role === Role.STARTER && <Player loggedOut={loggedOut} />}
           </div>

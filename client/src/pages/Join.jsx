@@ -4,7 +4,6 @@ import { spotifyLoginPath, jukeboxPath, loginPath } from '../../../common/paths'
 import { toast } from 'react-toastify';
 import customFetch from '../../../common/customFetch';
 import { Role } from '../../../utils/roles';
-import Wrapper from '../wrappers/Join';
 
 export const loader = async ({ params }) => {
   try {
@@ -41,14 +40,14 @@ export const action = async ({ request }) => {
 const Join = () => {
   const name = useLoaderData();
   return (
-    <Wrapper>
-      <Form className='form' method='post'>
-        {name ? <h1>join jukebox {name}</h1> : <h1>Jukebox Roundtable</h1>}
+    <div className='grid items-center justify-center min-h-screen'>
+      <Form className='m-2 p-4 flex flex-col' method='post'>
+        <h1 className='mb-6'> {name ? `join jukebox ${name}` : `Jukebox Roundtable`}</h1>
         <FormRow type='text' name='name' labelText='jukebox' defaultValue={name && name} isRequired />
         <FormRow type='password' name='code' isRequired />
-        <SubmitButton display={'login'} submittingDisplay={'logging in...'} />
+        <SubmitButton display={'join'} submittingDisplay={'joining...'} />
       </Form>
-    </Wrapper>
+    </div>
   );
 };
 

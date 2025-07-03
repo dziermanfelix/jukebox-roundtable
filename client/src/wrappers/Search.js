@@ -22,7 +22,6 @@ const Wrapper = styled.section`
   }
 
   .debounce-input {
-    width: 50%;
     padding: 5px;
     margin-right: 0.2rem;
     margin-bottom: 0.4rem;

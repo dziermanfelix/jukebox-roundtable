@@ -49,11 +49,8 @@ const Search = () => {
 
   return (
     <Wrapper>
-      <div className='search-bar'>
-        <label className='search-label' htmlFor='search'>
-          search
-        </label>
-        <DebouncingText initialValue={searchValue} updater={setSearchValue} keepEditing />
+      <div className='w-full flex-col'>
+        <DebouncingText initialValue={searchValue} updater={setSearchValue} placeholder={'Search'} keepEditing />
         <button onClick={searchRequest}>refresh search</button>
       </div>
       {isSearching && <div>Searching...</div>}

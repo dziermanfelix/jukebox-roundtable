@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import Wrapper from '../wrappers/DebouncingText';
 import { CiCircleRemove } from 'react-icons/ci';
 
 const DebouncingText = ({ initialValue, updater, keepEditing, placeholder }) => {
@@ -40,7 +39,7 @@ const DebouncingText = ({ initialValue, updater, keepEditing, placeholder }) => 
       return (
         <div className='relative w-full'>
           <input
-            className='w-full p-2 pr-10 rounded border'
+            className='w-full p-2 pr-10 rounded border hover:border-blue-500 border-gray-300'
             ref={inputRef}
             type='text'
             value={value}
@@ -64,7 +63,7 @@ const DebouncingText = ({ initialValue, updater, keepEditing, placeholder }) => 
     }
   };
 
-  return <Wrapper>{getRender()}</Wrapper>;
+  return getRender();
 };
 
 export default DebouncingText;

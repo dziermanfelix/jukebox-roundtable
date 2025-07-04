@@ -124,7 +124,7 @@ const Jukebox = () => {
           </div>
         </div>
         <div className='flex h-screen w-screen justify-center'>
-          <div className='flex-col w-1/2 p-2'>
+          <div className='flex-col w-1/2 h-full p-2'>
             <Search />
           </div>
           <div className='flex-col w-1/2 p-2'>

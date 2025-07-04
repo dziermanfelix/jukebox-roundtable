@@ -1,13 +1,13 @@
 const FormRow = ({ type, name, labelText, defaultValue, isRequired, hide }) => {
   return (
-    <div className='form-row'>
+    <div className='m-0 w-full text-left'>
       {!hide && (
-        <label className='form-label' htmlFor={name}>
+        <label className='m-0 capitalize' htmlFor={name}>
           {labelText || name}
         </label>
       )}
       <input
-        className='form-input'
+        className='w-full p-2 mb-2 border-1 rounded'
         type={type}
         id={name}
         name={name}

@@ -3,7 +3,6 @@ import { searchPath } from '../../../common/paths';
 import customFetch from '../../../common/customFetch';
 import { toast } from 'react-toastify';
 import { SEARCH_TYPE } from '../utils/constants';
-import Wrapper from '../wrappers/Search';
 import { Tracks, Albums } from '../components';
 import { useJukeboxContext } from '../pages/Jukebox';
 import { DebouncingText } from '../components';
@@ -48,14 +47,13 @@ const Search = () => {
   };
 
   return (
-    <Wrapper>
-      <div className='w-full flex-col'>
+    <div className='w-full h-full p-4 flex flex-col'>
+      <div className='w-full'>
         <DebouncingText initialValue={searchValue} updater={setSearchValue} placeholder={'Search'} keepEditing />
-        <button onClick={searchRequest}>refresh search</button>
+        {/* <button onClick={searchRequest}>refresh search</button> */}
       </div>
-      {isSearching && <div>Searching...</div>}
-      {!isSearching && <div className='search-results'>{displayPayload()}</div>}
-    </Wrapper>
+      <div className='flex-1 p-2 overflow-y-auto'>{isSearching ? 'Searching...' : displayPayload()}</div>
+    </div>
   );
 };
 

@@ -12,7 +12,6 @@ import {
 import { toast } from 'react-toastify';
 import { useLoaderData, redirect, useNavigate } from 'react-router-dom';
 import customFetch from '../../../common/customFetch';
-import Wrapper from '../wrappers/Jukebox';
 import { useState, useContext, createContext, useEffect } from 'react';
 import { Role } from '../../../utils/roles';
 import { createSocketConnection } from '../utils/socket';
@@ -110,30 +109,22 @@ const Jukebox = () => {
   }
 
   return (
-    <Wrapper>
-      <JukeboxContext.Provider
-        value={{ name, session, queue, reorderQueue, updateQueue, logoutSession, displayName, updateDisplayName }}
-      >
-        <div className='tool-bar'>
-          <p className='left-tool'> jukebox {name} </p>
-          <div className='right-tool'>
-            <p> hello, {displayName} </p>
-          </div>
-          <div className='fixed-tool'>
-            <DropdownMenu />
-          </div>
+    <JukeboxContext.Provider
+      value={{ name, session, queue, reorderQueue, updateQueue, logoutSession, displayName, updateDisplayName }}
+    >
+      <div className='flex p-0.5 justify-end bg-gray-500'>
+        <DropdownMenu />
+      </div>
+      <div className='flex h-full w-full justify-center'>
+        <div className='flex-col w-1/2 h-full p-2'>
+          <Search />
         </div>
-        <div className='flex h-screen w-screen justify-center'>
-          <div className='flex-col w-1/2 h-full p-2'>
-            <Search />
-          </div>
-          <div className='flex-col w-1/2 p-2'>
-            <Queue />
-            {session.role === Role.STARTER && <Player loggedOut={loggedOut} />}
-          </div>
+        <div className='flex-col w-1/2 h-full p-2 bg-gray-200'>
+          <Queue />
+          {session.role === Role.STARTER && <Player loggedOut={loggedOut} />}
         </div>
-      </JukeboxContext.Provider>
-    </Wrapper>
+      </div>
+    </JukeboxContext.Provider>
   );
 };
 

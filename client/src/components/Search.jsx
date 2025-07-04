@@ -52,7 +52,7 @@ const Search = () => {
         <DebouncingText initialValue={searchValue} updater={setSearchValue} placeholder={'Search'} keepEditing />
         {/* <button onClick={searchRequest}>refresh search</button> */}
       </div>
-      <div className='flex-1 p-2 overflow-y-auto'>{isSearching ? 'Searching...' : displayPayload()}</div>
+      <div className='mt-2 overflow-y-auto bg-gray-100'>{isSearching ? 'Searching...' : displayPayload()}</div>
     </div>
   );
 };

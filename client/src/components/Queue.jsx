@@ -5,7 +5,7 @@ import { MdDeleteForever } from 'react-icons/md';
 import { FaRegArrowAltCircleUp } from 'react-icons/fa';
 
 const Queue = () => {
-  const { queue, updateQueue, reorderQueue } = useJukeboxContext();
+  const { queue, updateQueue, reorderQueue, displayName } = useJukeboxContext();
 
   const removeFromQueue = (track) => {
     const tracks = [...queue];
@@ -27,7 +27,7 @@ const Queue = () => {
 
   return (
     <Wrapper>
-      <h3>Queue</h3>
+      <h3 className='capitalize'>{displayName}'s queue</h3>
       <div className='queue'>
         <Reorder.Group axis='y' values={queue} onReorder={reorderQueue}>
           {queue.map((track) => (

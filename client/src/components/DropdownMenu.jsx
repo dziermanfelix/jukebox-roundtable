@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import Wrapper from '../wrappers/DropdownMenu';
 import { useJukeboxContext } from '../pages/Jukebox';
 import { IoSettingsOutline } from 'react-icons/io5';
 
@@ -62,10 +61,9 @@ const DropDownMenu = () => {
   }
 
   return (
-    <Wrapper ref={dropDownRef}>
+    <div ref={dropDownRef} className='relative inline-block'>
       <button
-        type='button'
-        className='dropdown-button'
+        className='hover:bg-gray-400'
         onClick={() => {
           setIsMenuOpen(!isMenuOpen);
         }}
@@ -74,10 +72,9 @@ const DropDownMenu = () => {
       </button>
 
       {isMenuOpen && (
-        <div className='dropdown'>
+        <div className='absolute right-0 mt-1 w-40 shadow-lg rounded border z-50'>
           <button
-            type='button'
-            className='menu-item'
+            className='w-full text-left px-4 py-2 hover:bg-gray-100'
             onClick={() => {
               setIsDialogOpen(true);
               setIsMenuOpen(false);
@@ -85,29 +82,35 @@ const DropDownMenu = () => {
           >
             Edit Name
           </button>
-          <button type='button' className='menu-item' onClick={logoutSession}>
+          <button className='w-full text-left px-4 py-2 hover:bg-gray-100' onClick={logoutSession}>
             Logout
           </button>
         </div>
       )}
 
       {isDialogOpen && (
-        <div className='dialog-overlay' onClick={() => setIsDialogOpen(false)}>
-          <div className='dialog-content' ref={dialogRef} onClick={(e) => e.stopPropagation()}>
-            <h2 style={{ marginTop: 0, marginBottom: '15px' }}>Edit Name</h2>
-            <input ref={inputRef} type='text' defaultValue={displayName} />
-            <div className='button-container'>
-              <button className='dialog-button' onClick={() => setIsDialogOpen(false)}>
-                Cancel
-              </button>
-              <button className='dialog-button' onClick={onSave}>
+        <div
+          className='fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50'
+          onClick={() => setIsDialogOpen(false)}
+        >
+          <div className='text-white bg-gray-500 p-50' ref={dialogRef} onClick={(e) => e.stopPropagation()}>
+            <h2 className='text-3xl bold mb-3'>Edit Name</h2>
+            <input ref={inputRef} className='border rounded' type='text' defaultValue={displayName} />
+            <div className='flex mt-4 w-full space-x-2'>
+              <button className='border rounded p-1 bg-gray-400 hover:bg-gray-200' onClick={onSave}>
                 Save
+              </button>
+              <button
+                className='border rounded p-1 bg-gray-400 hover:bg-gray-200'
+                onClick={() => setIsDialogOpen(false)}
+              >
+                Cancel
               </button>
             </div>
           </div>
         </div>
       )}
-    </Wrapper>
+    </div>
   );
 };
 

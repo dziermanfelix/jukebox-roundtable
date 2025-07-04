@@ -16,15 +16,19 @@ h1 {
   @apply text-5xl leading-tight capitalize;
 }
 
-.submit-button {
-  @apply border-1 rounded cursor-pointer w-full capitalize p-2 mt-2 bg-blue-600 text-white;
-}
-
 button {
-  @apply border-1 rounded cursor-pointer capitalize p-2 mt-2 bg-blue-600 text-white;
+  @apply border-1 rounded capitalize p-2 mt-2 bg-blue-600 text-white;
 }
 
 button:hover {
+  @apply cursor-pointer;
+}
+
+button.submit-btn {
+  @apply border-1 rounded w-full capitalize p-2 mt-2 bg-blue-600 text-white;
+}
+
+button.submit-btn:hover {
   @apply bg-blue-500;
 }
 

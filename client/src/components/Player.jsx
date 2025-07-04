@@ -1,4 +1,3 @@
-import Wrapper from '../wrappers/Player';
 import { accessTokenPath, playNextTrackPath, queueNextTrackPath } from '../../../common/paths';
 import { useEffect, useState } from 'react';
 import customFetch from '../../../common/customFetch';
@@ -133,24 +132,30 @@ const Player = ({ loggedOut }) => {
   }
 
   return (
-    <Wrapper>
+    <div className='w-full h-full border rounded'>
+      {!isStarted && (
+        <button className='w-full p-4 border rounded text-white bg-black' onClick={() => initJukebox()}>
+          START
+        </button>
+      )}
       {track && isStarted && (
-        <div className='playing'>
+        <div className='flex justify-between items-center p-2'>
           <KeepAwake />
-          <div className='info'>
+
+          <div className='p-2 flex-1 flex flex-col items-center justify-center text-center'>
             <div>{track?.name}</div>
             <div>{track?.artists[0]?.name}</div>
             <div>
               {convertMsToDisplayTime(position)} / {convertMsToDisplayTime(duration)}
             </div>
           </div>
-          <div className='album-cover'>
-            <img className='album-image' src={track?.album?.images[2]?.url} alt='' />
+
+          <div className='aspect-square h-full max-h-40 flex-shrink-0'>
+            <img className='w-full h-full object-contain' src={track?.album?.images[2]?.url} alt='' />
           </div>
         </div>
       )}
-      {!isStarted && <button onClick={() => initJukebox()}>START</button>}
-    </Wrapper>
+    </div>
   );
 };
 

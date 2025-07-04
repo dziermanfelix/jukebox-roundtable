@@ -41,6 +41,7 @@ const Jukebox = () => {
   const [displayName, setDisplayName] = useState(session.displayName);
   const navigate = useNavigate();
   const [loggedOut, setLoggedOut] = useState(false);
+  const isStarter = session.role === Role.STARTER;
 
   const getQueue = async () => {
     try {
@@ -112,16 +113,24 @@ const Jukebox = () => {
     <JukeboxContext.Provider
       value={{ name, session, queue, reorderQueue, updateQueue, logoutSession, displayName, updateDisplayName }}
     >
-      <div className='flex p-0.5 justify-end bg-gray-500'>
-        <DropdownMenu />
-      </div>
-      <div className='flex h-full w-full justify-center'>
-        <div className='flex-col w-1/2 h-full p-2'>
-          <Search />
+      <div className='h-screen w-screen flex flex-col'>
+        <div className='flex p-0.5 justify-end bg-gray-100'>
+          <DropdownMenu />
         </div>
-        <div className='flex-col w-1/2 h-full p-2 bg-gray-200'>
-          <Queue />
-          {session.role === Role.STARTER && <Player loggedOut={loggedOut} />}
+        <div className='flex h-full w-full justify-center'>
+          <div className='flex-col w-1/2 h-full p-2'>
+            <Search />
+          </div>
+          <div className='flex flex-col w-1/2 h-full p-2'>
+            <div className={`${isStarter ? 'h-3/4' : 'h-full'} overflow-auto rounded bg-gray-200`}>
+              <Queue />
+            </div>
+            {isStarter && (
+              <div className='h-1/4 overflow-auto rounded'>
+                <Player loggedOut={loggedOut} />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </JukeboxContext.Provider>

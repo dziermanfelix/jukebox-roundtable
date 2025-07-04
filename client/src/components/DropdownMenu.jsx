@@ -61,7 +61,7 @@ const DropDownMenu = () => {
   }
 
   return (
-    <div ref={dropDownRef} className='relative inline-block'>
+    <div ref={dropDownRef} className='relative inline-block mr-1'>
       <button
         className='hover:bg-gray-400'
         onClick={() => {

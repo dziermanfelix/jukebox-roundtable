@@ -37,10 +37,10 @@ const SpotifyLogin = () => {
         <p>You must log in to spotify to continue.</p>
       </div>
       <div className='flex space-x-4'>
-        <button type='submit' disabled={isLoggingIn} onClick={handleLogin} className=''>
+        <button type='submit' disabled={isLoggingIn} onClick={handleLogin} className='rounded border p-2 hover:bg-gray-100'>
           {isLoggingIn ? 'Logging in...' : 'Spotify Login'}
         </button>
-        <button onClick={() => cancelLogin()} className=''>
+        <button onClick={() => cancelLogin()} className='rounded border p-2 hover:bg-gray-100'>
           Cancel
         </button>
       </div>

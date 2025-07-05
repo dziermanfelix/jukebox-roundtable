@@ -31,12 +31,12 @@ const Queue = () => {
         <Reorder.Group axis='y' values={queue} onReorder={reorderQueue}>
           {queue.map((track) => (
             <Reorder.Item
-              className='flex justify-between cursor-grab border rounded-2xl p-2'
+              className='flex justify-between cursor-grab border rounded-2xl p-2 mb-1'
               key={track.id}
               value={track}
             >
               <div>{displayInfo(track?.artists[0]?.name, track?.name)}</div>
-              <div className='p-0.5 space-x-1 rounded opacity-0 hover:opacity-100'>
+              <div className='p-0.5 mr-1 space-x-1 rounded opacity-0 hover:opacity-100'>
                 <button className='p-0.5 rounded hover:bg-gray-300' onClick={() => removeFromQueue(track)}>
                   <FiMinus />
                 </button>

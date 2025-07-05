@@ -134,7 +134,7 @@ const Player = ({ loggedOut }) => {
   return (
     <div className='w-full h-full border rounded'>
       {!isStarted && (
-        <button className='w-full p-4 border rounded text-white bg-black' onClick={() => initJukebox()}>
+        <button className='w-full p-4 border rounded text-white bg-black hover:bg-gray-900' onClick={() => initJukebox()}>
           START
         </button>
       )}

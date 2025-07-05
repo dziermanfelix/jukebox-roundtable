@@ -51,9 +51,9 @@ const DebouncingText = ({ initialValue, updater, keepEditing, placeholder }) => 
             <button
               type='button'
               onClick={clearValue}
-              className='absolute right-2 inset-y-1 text-gray-500 hover:text-red-500'
+              className='absolute right-2 inset-y-1 text-gray-500 hover:text-red-700'
             >
-              <CiCircleRemove size={11} />
+              <CiCircleRemove size={25} />
             </button>
           )}
         </div>

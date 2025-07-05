@@ -72,9 +72,9 @@ const DropDownMenu = () => {
       </button>
 
       {isMenuOpen && (
-        <div className='absolute right-0 mt-1 w-40 shadow-lg rounded border z-50'>
+        <div className='absolute right-0 mt-1 w-40 shadow-lg rounded bg-black text-white border z-50'>
           <button
-            className='w-full text-left px-4 py-2 hover:bg-gray-100'
+            className='w-full text-left px-4 py-2 hover:bg-gray-900'
             onClick={() => {
               setIsDialogOpen(true);
               setIsMenuOpen(false);
@@ -82,7 +82,7 @@ const DropDownMenu = () => {
           >
             Edit Name
           </button>
-          <button className='w-full text-left px-4 py-2 hover:bg-gray-100' onClick={logoutSession}>
+          <button className='w-full text-left px-4 py-2 hover:bg-gray-900' onClick={logoutSession}>
             Logout
           </button>
         </div>
@@ -94,14 +94,14 @@ const DropDownMenu = () => {
           onClick={() => setIsDialogOpen(false)}
         >
           <div className='text-white bg-gray-500 p-50' ref={dialogRef} onClick={(e) => e.stopPropagation()}>
-            <h2 className='text-3xl bold mb-3'>Edit Name</h2>
+            <h2 className='text-2xl bold mb-3'>Edit Name</h2>
             <input ref={inputRef} className='border rounded' type='text' defaultValue={displayName} />
             <div className='flex mt-4 w-full space-x-2'>
-              <button className='border rounded p-1 bg-gray-400 hover:bg-gray-200' onClick={onSave}>
+              <button className='rounded p-1 bg-black hover:bg-gray-900' onClick={onSave}>
                 Save
               </button>
               <button
-                className='border rounded p-1 bg-gray-400 hover:bg-gray-200'
+                className='rounded p-1 bg-black hover:bg-gray-900'
                 onClick={() => setIsDialogOpen(false)}
               >
                 Cancel

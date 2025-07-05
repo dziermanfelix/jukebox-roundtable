@@ -6,7 +6,7 @@ import { SEARCH_TYPE } from '../utils/constants';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { convertMsToDisplayTime } from '../../../utils/time';
-import { MdOutlineAddCircleOutline } from 'react-icons/md';
+import { IoMdAdd } from 'react-icons/io';
 
 const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
   const { name, queue, updateQueue } = useJukeboxContext();
@@ -76,10 +76,10 @@ const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
           <div className='w-20'>
             {addButton(track) && (
               <button
-                className='w-full h-full flex items-center justify-center hover:border-2 hover:border-black text-2xl hover:text-3xl rounded'
+                className='w-full h-full flex items-center justify-center text-2xl hover:text-3xl rounded'
                 onClick={() => addToQueue(track)}
               >
-                <MdOutlineAddCircleOutline className='' />
+                <IoMdAdd />
               </button>
             )}
           </div>

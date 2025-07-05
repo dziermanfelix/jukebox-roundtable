@@ -4,21 +4,9 @@ html {
   @apply font-sans;
 }
 
-a {
-  @apply bg-blue-700;
-}
-
-a:hover {
-  @apply bg-blue-900;
-}
-
 h1 {
   @apply text-5xl leading-tight capitalize;
 }
-
-/* button {
-  @apply border-1 rounded capitalize p-2 mt-2 bg-blue-600 text-white;
-} */
 
 button:hover {
   @apply cursor-pointer;
@@ -30,15 +18,4 @@ button.submit-btn {
 
 button.submit-btn:hover {
   @apply bg-blue-500;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-
-.album-image {
-  overflow: hidden;
 }

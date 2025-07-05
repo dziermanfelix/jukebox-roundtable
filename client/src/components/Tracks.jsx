@@ -1,4 +1,3 @@
-import Wrapper from '../wrappers/Payload';
 import { useJukeboxContext } from '../pages/Jukebox';
 import customFetch from '../../../common/customFetch';
 import { albumPath, artistPath, playedTracksPath } from '../../../common/paths';
@@ -49,29 +48,44 @@ const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
   };
 
   return (
-    <Wrapper>
+    <div className='border rounded'>
       {tracks.map((track, index) => (
-        <div key={index} className='payload'>
+        <div key={index} className='p-2 m-2 flex items-stretch gap-2 rounded border-2 border-black'>
           {!albumDisplay && (
-            <button className='album-btn'>
-              <img className='album-image' onClick={() => openAlbum(track)} src={track?.album?.images[2]?.url} alt='' />
+            <button className='w-20 h-20 flex-shrink-0 hover:border-2 hover:border-black rounded'>
+              <img
+                className='aspect-square h-full max-h-40 flex-shrink-0'
+                onClick={() => openAlbum(track)}
+                src={track?.album?.images[2]?.url}
+                alt=''
+              />
             </button>
           )}
-          <div className='info'>
+          <div className='overflow-x-scroll w-full flex items-center justify-center'>
             <p>
               {albumDisplay && `${index + 1}.`} {track?.name} |{' '}
-              <Link onClick={() => openArtist(track)}>{track?.artists[0]?.name}</Link> |{' '}
-              {convertMsToDisplayTime(track?.duration_ms)}
+              <Link
+                className='text-blue-400 hover:bg-gray-200 hover:border-3 hover:border-black hover:text-xl rounded'
+                onClick={() => openArtist(track)}
+              >
+                {track?.artists[0]?.name}
+              </Link>{' '}
+              | {convertMsToDisplayTime(track?.duration_ms)}
             </p>
           </div>
-          {addButton(track) && (
-            <button className='add-to-queue' onClick={() => addToQueue(track)}>
-              <MdOutlineAddCircleOutline />
-            </button>
-          )}
+          <div className='w-20'>
+            {addButton(track) && (
+              <button
+                className='w-full h-full flex items-center justify-center hover:border-2 hover:border-black text-2xl hover:text-3xl rounded'
+                onClick={() => addToQueue(track)}
+              >
+                <MdOutlineAddCircleOutline className='' />
+              </button>
+            )}
+          </div>
         </div>
       ))}
-    </Wrapper>
+    </div>
   );
 };
 

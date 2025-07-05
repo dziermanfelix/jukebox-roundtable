@@ -1,5 +1,4 @@
 import { albumPath } from '../../../common/paths';
-import Wrapper from '../wrappers/Payload';
 import customFetch from '../../../common/customFetch';
 import { SEARCH_TYPE } from '../utils/constants';
 import { useJukeboxContext } from '../pages/Jukebox';
@@ -14,16 +13,22 @@ const Albums = ({ albums, setPayloadType, setPayload }) => {
   };
 
   return (
-    <Wrapper>
+    <div className='border rounded p-2'>
       {albums.map((album, index) => (
-        <div key={index} className='payload'>
-          <button className='album-only' onClick={() => openAlbum(album)}>
-            <img className='album-image' src={album?.images[2]?.url} alt='' />
-            <p className='info'>{album?.name}</p>
-          </button>
-        </div>
+        <button
+          key={index}
+          className='p-2 mb-2 w-full flex items-stretch gap-2 rounded border-2 border-black hover:border-3'
+          onClick={() => openAlbum(album)}
+        >
+          <div className='w-full flex items-stretch gap-2'>
+            <img className='aspect-square h-full max-h-40 flex-shrink-0' src={album?.images[2]?.url} alt='' />
+            <div className='flex items-center justify-center'>
+              <p>{album?.name}</p>
+            </div>
+          </div>
+        </button>
       ))}
-    </Wrapper>
+    </div>
   );
 };
 

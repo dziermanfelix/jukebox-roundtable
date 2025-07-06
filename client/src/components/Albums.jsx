@@ -13,7 +13,7 @@ const Albums = ({ albums, setPayloadType, setPayload }) => {
   };
 
   return (
-    <div className='border rounded p-2'>
+    <div className='rounded p-2'>
       {albums.map((album, index) => (
         <button
           key={index}

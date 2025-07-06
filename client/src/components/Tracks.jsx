@@ -48,7 +48,7 @@ const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
   };
 
   return (
-    <div className='border rounded'>
+    <div className='h-full rounded'>
       {tracks.map((track, index) => (
         <div key={index} className='p-2 m-2 flex items-stretch gap-2 rounded border-2 border-black'>
           {!albumDisplay && (

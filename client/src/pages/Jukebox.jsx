@@ -16,6 +16,7 @@ import { useState, useContext, createContext, useEffect } from 'react';
 import { Role } from '../../../utils/roles';
 import { createSocketConnection } from '../utils/socket';
 import { updateQueueEvent } from '../../../utils/socketEvents';
+import { useIsMobile } from '../contexts/MobileContext';
 
 export const loader = async ({ params }) => {
   try {
@@ -42,6 +43,7 @@ const Jukebox = () => {
   const navigate = useNavigate();
   const [loggedOut, setLoggedOut] = useState(false);
   const isStarter = session.role === Role.STARTER;
+  const isMobile = useIsMobile();
 
   const getQueue = async () => {
     try {
@@ -117,11 +119,11 @@ const Jukebox = () => {
         <div className='flex p-0.5 justify-end bg-gray-100'>
           <DropdownMenu />
         </div>
-        <div className='flex h-full w-full justify-center'>
-          <div className='flex-col w-1/2 h-full p-2'>
+        <div className={`${isMobile && 'flex-col'} flex h-full w-full justify-center`}>
+          <div className={`flex-col ${isMobile ? 'w-full h-1/2' : 'w-1/2 h-full'} p-2`}>
             <Search />
           </div>
-          <div className='flex flex-col w-1/2 h-full p-2'>
+          <div className={`flex flex-col ${isMobile ? 'w-full h-1/2' : 'w-1/2 h-full'} p-2`}>
             <div className={`${isStarter ? 'h-3/4' : 'h-full'} overflow-auto rounded bg-gray-200`}>
               <Queue />
             </div>

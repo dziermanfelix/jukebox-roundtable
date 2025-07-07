@@ -1,7 +1,7 @@
-import { albumPath } from '../../../common/paths';
-import customFetch from '../../../common/customFetch';
-import { SEARCH_TYPE } from '../utils/constants';
-import { useJukeboxContext } from '../pages/Jukebox';
+import { albumPath } from '@common/paths';
+import customFetch from '@common/customFetch';
+import { SEARCH_TYPE } from '@/utils/constants';
+import { useJukeboxContext } from '@/pages/Jukebox';
 
 const Albums = ({ albums, setPayloadType, setPayload }) => {
   const { name } = useJukeboxContext();

@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { serverUrl, serverPort, socketEnv } from '../utils/frontEndEnv';
+import { serverUrl, serverPort, socketEnv } from './frontEndEnv';
 
 export function createSocketConnection(jukeboxName, sessionId) {
   let connString = `${serverUrl}/?jukeboxName=${jukeboxName}&&sessionId=${sessionId}`;

@@ -1,9 +1,9 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { Jukebox, SpotifyLogin, Error, Join, HomeLayout, Callback } from './pages';
-import { loader as spotifyLoginLoader } from './pages/SpotifyLogin';
-import { loader as jukeboxLoader } from './pages/Jukebox';
-import { loader as joinLoader, action as joinAction } from './pages/Join';
-import { loader as callbackLoader } from './pages/Callback';
+import { Jukebox, SpotifyLogin, Error, Join, HomeLayout, Callback } from '@/pages';
+import { loader as spotifyLoginLoader } from '@/pages/SpotifyLogin';
+import { loader as jukeboxLoader } from '@/pages/Jukebox';
+import { loader as joinLoader, action as joinAction } from '@/pages/Join';
+import { loader as callbackLoader } from '@/pages/Callback';
 
 const router = createBrowserRouter([
   {

@@ -1,9 +1,9 @@
 import { Form, useLoaderData, redirect } from 'react-router-dom';
-import { FormRow, SubmitButton } from '../components';
-import { spotifyLoginPath, jukeboxPath, loginPath } from '../../../common/paths';
+import { FormRow, SubmitButton } from '@/components';
+import { spotifyLoginPath, jukeboxPath, loginPath } from '@common/paths';
 import { toast } from 'react-toastify';
-import customFetch from '../../../common/customFetch';
-import { Role } from '../../../utils/roles';
+import customFetch from '@common/customFetch';
+import { Role } from '@utils/roles';
 
 export const loader = async ({ params }) => {
   try {

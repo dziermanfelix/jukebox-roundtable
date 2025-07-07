@@ -11,6 +11,13 @@ export default ({ mode }) => {
     define: {
       'process.env': env,
     },
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'src'),
+        '@common': path.resolve(__dirname, '../common'),
+        '@utils': path.resolve(__dirname, '../utils'),
+      },
+    },
     server: {
       proxy: {
         '/api': {

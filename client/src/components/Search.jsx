@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { searchPath } from '../../../common/paths';
-import customFetch from '../../../common/customFetch';
+import { searchPath } from '@common/paths';
+import customFetch from '@common/customFetch';
 import { toast } from 'react-toastify';
-import { SEARCH_TYPE } from '../utils/constants';
-import { Tracks, Albums } from '../components';
-import { useJukeboxContext } from '../pages/Jukebox';
-import { DebouncingText } from '../components';
+import { SEARCH_TYPE } from '@/utils/constants';
+import { Tracks, Albums } from '@/components';
+import { useJukeboxContext } from '@/pages/Jukebox';
+import { DebouncingText } from '@/components';
 
 const Search = () => {
   const { name } = useJukeboxContext();

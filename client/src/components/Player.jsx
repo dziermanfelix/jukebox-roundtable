@@ -1,11 +1,11 @@
-import { accessTokenPath, playNextTrackPath, queueNextTrackPath } from '../../../common/paths';
+import { accessTokenPath, playNextTrackPath, queueNextTrackPath } from '@common/paths';
 import { useEffect, useState } from 'react';
-import customFetch from '../../../common/customFetch';
+import customFetch from '@common/customFetch';
 import { toast } from 'react-toastify';
-import { useJukeboxContext } from '../pages/Jukebox';
+import { useJukeboxContext } from '@/pages/Jukebox';
 import { KeepAwake } from '.';
-import { convertMsToDisplayTime } from '../../../utils/time';
-import { useIsMobile } from '../contexts/MobileContext';
+import { convertMsToDisplayTime } from '@utils/time';
+import { useIsMobile } from '@/contexts/MobileContext';
 
 const Player = ({ loggedOut }) => {
   const { name } = useJukeboxContext();

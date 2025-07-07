@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { redirect, useLoaderData, useNavigate } from 'react-router-dom';
-import { spotifyLoginUrlPath, basePath, jukeboxPrivatePath } from '../../../common/paths';
-import customFetch from '../../../common/customFetch';
+import { spotifyLoginUrlPath, basePath, jukeboxPrivatePath } from '@common/paths';
+import customFetch from '@common/customFetch';
 import { toast } from 'react-toastify';
 
 export const loader = async () => {
@@ -37,7 +37,12 @@ const SpotifyLogin = () => {
         <p>You must log in to spotify to continue.</p>
       </div>
       <div className='flex space-x-4'>
-        <button type='submit' disabled={isLoggingIn} onClick={handleLogin} className='rounded border p-2 hover:bg-gray-100'>
+        <button
+          type='submit'
+          disabled={isLoggingIn}
+          onClick={handleLogin}
+          className='rounded border p-2 hover:bg-gray-100'
+        >
           {isLoggingIn ? 'Logging in...' : 'Spotify Login'}
         </button>
         <button onClick={() => cancelLogin()} className='rounded border p-2 hover:bg-gray-100'>

@@ -1,6 +1,6 @@
 import { redirect } from 'react-router-dom';
-import { jukeboxPath, initAccessTokenPath, basePath } from '../../../common/paths';
-import customFetch from '../../../common/customFetch';
+import { jukeboxPath, initAccessTokenPath, basePath } from '@common/paths';
+import customFetch from '@common/customFetch';
 
 export const loader = async ({ request }) => {
   const params = Object.fromEntries([...new URL(request.url).searchParams.entries()]);

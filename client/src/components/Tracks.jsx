@@ -1,11 +1,11 @@
-import { useJukeboxContext } from '../pages/Jukebox';
-import customFetch from '../../../common/customFetch';
-import { albumPath, artistPath, playedTracksPath } from '../../../common/paths';
+import { useJukeboxContext } from '@/pages/Jukebox';
+import customFetch from '@common/customFetch';
+import { albumPath, artistPath, playedTracksPath } from '@common/paths';
 import { Link } from 'react-router-dom';
 import { SEARCH_TYPE } from '../utils/constants';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { convertMsToDisplayTime } from '../../../utils/time';
+import { convertMsToDisplayTime } from '@utils/time';
 import { IoMdAdd } from 'react-icons/io';
 
 const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {

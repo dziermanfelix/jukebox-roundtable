@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useJukeboxContext } from '../pages/Jukebox';
+import { useJukeboxContext } from '@/pages/Jukebox';
 import { IoSettingsOutline } from 'react-icons/io5';
 
 const DropDownMenu = () => {

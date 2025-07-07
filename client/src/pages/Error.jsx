@@ -1,5 +1,5 @@
 import { useRouteError } from 'react-router-dom';
-import { HomeLogoLink } from '../components';
+import { HomeLogoLink } from '@/components';
 
 const Error = () => {
   const error = useRouteError();

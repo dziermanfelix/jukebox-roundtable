@@ -2,7 +2,7 @@ import { useJukeboxContext } from '../pages/Jukebox';
 import { Reorder } from 'framer-motion';
 import { FiMinus } from 'react-icons/fi';
 import { FaArrowUp } from 'react-icons/fa';
-import { useIsMobile } from '../contexts/MobileContext';
+import { useIsMobile } from '@/contexts/MobileContext';
 
 const Queue = () => {
   const { queue, updateQueue, reorderQueue, displayName } = useJukeboxContext();

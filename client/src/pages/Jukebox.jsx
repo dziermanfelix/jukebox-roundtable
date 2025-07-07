@@ -1,4 +1,4 @@
-import { Player, Search, Queue, DropdownMenu } from '../components';
+import { Player, Search, Queue, DropdownMenu } from '@/components';
 import {
   joinPath,
   getQueuePath,
@@ -8,15 +8,15 @@ import {
   basePath,
   jukeboxPrivatePath,
   sessionUpdateDisplayNamePath,
-} from '../../../common/paths';
+} from '@common/paths';
 import { toast } from 'react-toastify';
 import { useLoaderData, redirect, useNavigate } from 'react-router-dom';
-import customFetch from '../../../common/customFetch';
+import customFetch from '@common/customFetch';
 import { useState, useContext, createContext, useEffect } from 'react';
-import { Role } from '../../../utils/roles';
-import { createSocketConnection } from '../utils/socket';
-import { updateQueueEvent } from '../../../utils/socketEvents';
-import { useIsMobile } from '../contexts/MobileContext';
+import { Role } from '@utils/roles';
+import { createSocketConnection } from '@/utils/socket';
+import { updateQueueEvent } from '@utils/socketEvents';
+import { useIsMobile } from '@/contexts/MobileContext';
 
 export const loader = async ({ params }) => {
   try {

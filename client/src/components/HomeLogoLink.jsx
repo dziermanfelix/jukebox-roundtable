@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { basePath } from '../../../common/paths';
+import { basePath } from '@common/paths';
 import img from '/favicon.ico';
 
 const HomeLogoLink = () => {

@@ -47,12 +47,13 @@ const Search = () => {
   };
 
   return (
-    <div className='w-full h-full p-4 flex flex-col'>
-      <div className='w-full'>
+    <div className='w-full h-full p-2 flex flex-col rounded'>
+      <div className='w-full flex-shrink-0'>
         <DebouncingText initialValue={searchValue} updater={setSearchValue} placeholder={'Search'} keepEditing />
-        {/* <button onClick={searchRequest}>refresh search</button> */}
       </div>
-      <div className='mt-2 overflow-y-auto bg-gray-100'>{isSearching ? 'Searching...' : displayPayload()}</div>
+      <div className={`mt-2 flex-1 min-h-0 ${isSearching && 'p-2'} overflow-y-scroll bg-gray-100`}>
+        {isSearching ? 'Searching...' : displayPayload()}
+      </div>
     </div>
   );
 };

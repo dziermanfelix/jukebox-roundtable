@@ -2,9 +2,11 @@ import { useJukeboxContext } from '../pages/Jukebox';
 import { Reorder } from 'framer-motion';
 import { FiMinus } from 'react-icons/fi';
 import { FaArrowUp } from 'react-icons/fa';
+import { useIsMobile } from '../contexts/MobileContext';
 
 const Queue = () => {
   const { queue, updateQueue, reorderQueue, displayName } = useJukeboxContext();
+  const isMobile = useIsMobile();
 
   const removeFromQueue = (track) => {
     const tracks = [...queue];
@@ -25,7 +27,7 @@ const Queue = () => {
   }
 
   return (
-    <div className='flex flex-col p-2'>
+    <div className='w-full h-full p-2 flex flex-col rounded overflow-auto'>
       <h3 className='text-center'>{`${displayName.charAt(0).toUpperCase()}${displayName.slice(1)}'s Queue`}</h3>
       <div className='mt-2'>
         <Reorder.Group axis='y' values={queue} onReorder={reorderQueue}>
@@ -36,7 +38,7 @@ const Queue = () => {
               value={track}
             >
               <div>{displayInfo(track?.artists[0]?.name, track?.name)}</div>
-              <div className='p-0.5 mr-1 space-x-1 rounded opacity-0 hover:opacity-100'>
+              <div className={`p-0.5 mr-1 space-x-1 rounded ${!isMobile && 'opacity-0 hover:opacity-100'}`}>
                 <button className='p-0.5 rounded hover:bg-gray-300' onClick={() => removeFromQueue(track)}>
                   <FiMinus />
                 </button>

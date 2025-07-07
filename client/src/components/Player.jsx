@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useJukeboxContext } from '../pages/Jukebox';
 import { KeepAwake } from '.';
 import { convertMsToDisplayTime } from '../../../utils/time';
+import { useIsMobile } from '../contexts/MobileContext';
 
 const Player = ({ loggedOut }) => {
   const { name } = useJukeboxContext();
@@ -12,6 +13,7 @@ const Player = ({ loggedOut }) => {
   const [player, setPlayer] = useState(null);
   const [isStarted, setStarted] = useState(false);
   const [track, setTrack] = useState(null);
+  const isMobile = useIsMobile();
 
   const [duration, setDuration] = useState(0);
   const [position, setPosition] = useState(0);
@@ -132,14 +134,17 @@ const Player = ({ loggedOut }) => {
   }
 
   return (
-    <div className='w-full h-full border rounded'>
+    <div className='w-full h-full border rounded overflow-hidden'>
       {!isStarted && (
-        <button className='w-full p-4 border rounded text-white bg-black hover:bg-gray-900' onClick={() => initJukebox()}>
+        <button
+          className='w-full h-full p-4 border rounded text-white bg-black hover:bg-gray-900'
+          onClick={() => initJukebox()}
+        >
           START
         </button>
       )}
       {track && isStarted && (
-        <div className='flex justify-between items-center p-2'>
+        <div className='w-full h-full flex justify-between items-center p-2'>
           <KeepAwake />
 
           <div className='p-2 flex-1 flex flex-col items-center justify-center text-center'>

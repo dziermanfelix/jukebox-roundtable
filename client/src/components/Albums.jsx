@@ -13,7 +13,7 @@ const Albums = ({ albums, setPayloadType, setPayload }) => {
   };
 
   return (
-    <div className='rounded p-2'>
+    <div className='h-full p-4 rounded overflow-y-scroll'>
       {albums.map((album, index) => (
         <button
           key={index}

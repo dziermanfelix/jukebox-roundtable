@@ -48,9 +48,9 @@ const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
   };
 
   return (
-    <div className='h-full rounded'>
+    <div className='h-full w-full rounded overflow-y-auto'>
       {tracks.map((track, index) => (
-        <div key={index} className='p-2 m-2 flex items-stretch gap-2 rounded border-2 border-black'>
+        <div key={index} className='p-2 m-1 flex items-stretch gap-2 rounded border-2 border-black'>
           {!albumDisplay && (
             <button className='w-20 h-20 flex-shrink-0 hover:border-2 hover:border-black rounded'>
               <img

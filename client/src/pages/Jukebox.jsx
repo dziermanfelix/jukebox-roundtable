@@ -119,12 +119,16 @@ const Jukebox = () => {
         <div className='flex p-0.5 justify-end bg-gray-100'>
           <DropdownMenu />
         </div>
-        <div className={`${isMobile && 'flex-col'} flex h-full w-full justify-center`}>
-          <div className={`flex-col ${isMobile ? 'w-full h-1/2' : 'w-1/2 h-full'} p-2`}>
+        <div className={`${isMobile && 'flex-col'} flex flex-1 min-h-0 w-full justify-center`}>
+          <div className={`flex flex-col ${isMobile ? 'w-full h-1/2' : 'w-1/2 h-full'}`}>
             <Search />
           </div>
-          <div className={`flex flex-col ${isMobile ? 'w-full h-1/2' : 'w-1/2 h-full'} p-2`}>
-            <div className={`${isStarter ? 'h-3/4' : 'h-full'} overflow-auto rounded bg-gray-200`}>
+          <div className={`flex flex-col ${isMobile ? 'w-full h-1/2' : 'w-1/2 h-full'}`}>
+            <div
+              className={` ${
+                isStarter ? 'h-3/4' : 'h-full'
+              } flex flex-col overflow-auto rounded bg-gray-200 border border-white`}
+            >
               <Queue />
             </div>
             {isStarter && (

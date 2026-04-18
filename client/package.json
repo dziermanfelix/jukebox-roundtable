@@ -1,10 +1,10 @@
 {
-  "name": "jukebox-roundtable--",
+  "name": "jukebox-roundtable",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --port=8181",
+    "dev": "vite --port=5173",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

@@ -1,10 +1,9 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["client/src/*"],
-      "@common/*": ["common/*"],
-      "@utils/*": ["utils/*"],
+      "@/*": ["./client/src/*"],
+      "@common/*": ["./common/*"],
+      "@utils/*": ["./utils/*"]
     }
   }
 }

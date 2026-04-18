@@ -1,5 +1,5 @@
 import { useJukeboxContext } from '@/pages/Jukebox';
-import customFetch from '@common/customFetch';
+import client from '@common/customFetch';
 import { albumPath, artistPath, playedTracksPath } from '@common/paths';
 import { Link } from 'react-router-dom';
 import { SEARCH_TYPE } from '../utils/constants';
@@ -15,7 +15,7 @@ const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const { data } = await customFetch.get(`${playedTracksPath}${name}`);
+        const { data } = await client.get(`${playedTracksPath}${name}`);
         setPlayedTracks(data.playedTracks);
       } catch (error) {
         console.log(error);
@@ -36,13 +36,13 @@ const Tracks = ({ tracks, setPayloadType, setPayload, albumDisplay }) => {
   };
 
   const openAlbum = async (track) => {
-    const response = await customFetch.post(albumPath, { jukebox: name, id: track?.album?.id });
+    const response = await client.post(albumPath, { jukebox: name, id: track?.album?.id });
     setPayloadType(SEARCH_TYPE.ALBUM);
     setPayload(response.data.data.items);
   };
 
   const openArtist = async (track) => {
-    const response = await customFetch.post(artistPath, { jukebox: name, id: track?.artists[0]?.id });
+    const response = await client.post(artistPath, { jukebox: name, id: track?.artists[0]?.id });
     setPayloadType(SEARCH_TYPE.ARTIST);
     setPayload(response.data.data.items);
   };

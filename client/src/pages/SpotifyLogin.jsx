@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { redirect, useLoaderData, useNavigate } from 'react-router-dom';
 import { spotifyLoginUrlPath, basePath, jukeboxPrivatePath } from '@common/paths';
-import customFetch from '@common/customFetch';
+import client from '@common/customFetch';
 import { toast } from 'react-toastify';
 
 export const loader = async () => {
   try {
-    const { data } = await customFetch.get(spotifyLoginUrlPath);
+    const { data } = await client.get(spotifyLoginUrlPath);
     return data;
   } catch (error) {
     toast.error(error?.response?.data?.msg);
@@ -21,7 +21,7 @@ const SpotifyLogin = () => {
 
   async function cancelLogin() {
     const jukeboxName = localStorage.getItem('jukeboxName');
-    await customFetch.delete(`${jukeboxPrivatePath}${jukeboxName}`);
+    await client.delete(`${jukeboxPrivatePath}${jukeboxName}`);
     navigate(basePath);
   }
 

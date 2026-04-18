@@ -1,6 +1,6 @@
 import { accessTokenPath, playNextTrackPath, queueNextTrackPath } from '@common/paths';
 import { useEffect, useState } from 'react';
-import customFetch from '@common/customFetch';
+import client from '@common/customFetch';
 import { toast } from 'react-toastify';
 import { useJukeboxContext } from '@/pages/Jukebox';
 import { KeepAwake } from '.';
@@ -21,7 +21,7 @@ const Player = ({ loggedOut }) => {
   useEffect(() => {
     const getAccessToken = async () => {
       try {
-        const { data } = await customFetch.post(accessTokenPath, { jukebox: name });
+        const { data } = await client.post(accessTokenPath, { jukebox: name });
         setToken(data.accessToken);
       } catch (error) {
         console.log(error);
@@ -57,7 +57,7 @@ const Player = ({ loggedOut }) => {
 
         player.addListener('ready', ({ device_id }) => {
           (async () => {
-            await customFetch.post(`${playNextTrackPath}${name}`, { deviceId: device_id });
+            await client.post(`${playNextTrackPath}${name}`, { deviceId: device_id });
           })();
         });
 
@@ -109,7 +109,7 @@ const Player = ({ loggedOut }) => {
                 readyToQueue = true;
               }
               if (remaining <= 11 && readyToQueue) {
-                customFetch.post(`${queueNextTrackPath}${name}`);
+                client.post(`${queueNextTrackPath}${name}`);
                 readyToQueue = false;
               }
             } else {

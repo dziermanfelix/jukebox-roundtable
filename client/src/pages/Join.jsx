@@ -2,7 +2,7 @@ import { Form, useLoaderData, redirect } from 'react-router-dom';
 import { FormRow, SubmitButton } from '@/components';
 import { spotifyLoginPath, jukeboxPath, loginPath } from '@common/paths';
 import { toast } from 'react-toastify';
-import customFetch from '@common/customFetch';
+import client from '@common/customFetch';
 import { Role } from '@utils/roles';
 
 export const loader = async ({ params }) => {
@@ -25,7 +25,7 @@ export const action = async ({ request }) => {
   try {
     const {
       data: { role },
-    } = await customFetch.post(loginPath, data);
+    } = await client.post(loginPath, data);
     if (role === Role.STARTER) {
       return redirect(`${spotifyLoginPath}${data.name}`);
     } else if (role === Role.JOINER) {

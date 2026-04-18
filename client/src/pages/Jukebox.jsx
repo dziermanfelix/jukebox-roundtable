@@ -11,7 +11,7 @@ import {
 } from '@common/paths';
 import { toast } from 'react-toastify';
 import { useLoaderData, redirect, useNavigate } from 'react-router-dom';
-import customFetch from '@common/customFetch';
+import client from '@common/customFetch';
 import { useState, useContext, createContext, useEffect } from 'react';
 import { Role } from '@utils/roles';
 import { createSocketConnection } from '@/utils/socket';
@@ -22,10 +22,10 @@ export const loader = async ({ params }) => {
   try {
     const {
       data: { jukebox },
-    } = await customFetch.get(`${jukeboxPrivatePath}${params.id}`);
+    } = await client.get(`${jukeboxPrivatePath}${params.id}`);
     const {
       data: { session },
-    } = await customFetch.get(`${sessionPath}${params.id}`);
+    } = await client.get(`${sessionPath}${params.id}`);
     return { jukebox: jukebox, session: session };
   } catch (error) {
     toast.error(error?.response?.data?.msg);
@@ -47,7 +47,7 @@ const Jukebox = () => {
 
   const getQueue = async () => {
     try {
-      const { data } = await customFetch.get(`${getQueuePath}${session._id}`);
+      const { data } = await client.get(`${getQueuePath}${session._id}`);
       setQueue(data.queue);
     } catch (error) {
       console.log(error);
@@ -94,12 +94,12 @@ const Jukebox = () => {
   };
 
   const updateQueue = async (tracks) => {
-    await customFetch.post(`${setQueuePath}${session._id}`, { queue: tracks });
+    await client.post(`${setQueuePath}${session._id}`, { queue: tracks });
     setQueue(tracks);
   };
 
   const updateDisplayName = async (newDisplayName) => {
-    await customFetch.post(`${sessionUpdateDisplayNamePath}${session._id}`, {
+    await client.post(`${sessionUpdateDisplayNamePath}${session._id}`, {
       displayName: newDisplayName,
     });
     setDisplayName(newDisplayName);
@@ -108,7 +108,7 @@ const Jukebox = () => {
   async function logoutSession() {
     setLoggedOut(true);
     navigate(basePath);
-    await customFetch.post(logoutPath, { name: name, sessionId: session._id });
+    await client.post(logoutPath, { name: name, sessionId: session._id });
   }
 
   return (

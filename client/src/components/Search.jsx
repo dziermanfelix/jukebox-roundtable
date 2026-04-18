@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { searchPath } from '@common/paths';
-import customFetch from '@common/customFetch';
+import client from '@common/customFetch';
 import { toast } from 'react-toastify';
 import { SEARCH_TYPE } from '@/utils/constants';
 import { Tracks, Albums } from '@/components';
@@ -22,7 +22,7 @@ const Search = () => {
     setIsSearching(true);
     if (searchValue != '') {
       try {
-        const response = await customFetch.post(searchPath, { jukebox: name, search: searchValue });
+        const response = await client.post(searchPath, { jukebox: name, search: searchValue });
         setPayloadType(SEARCH_TYPE.TRACKS);
         setPayload(response.data.tracks.items);
       } catch (error) {

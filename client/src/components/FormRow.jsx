@@ -7,7 +7,7 @@ const FormRow = ({ type, name, labelText, defaultValue, isRequired, hide }) => {
         </label>
       )}
       <input
-        className='w-full p-2 mb-2 border-1 rounded'
+        className='w-full p-2 mb-2 border-1 rounded-xl'
         type={type}
         id={name}
         name={name}

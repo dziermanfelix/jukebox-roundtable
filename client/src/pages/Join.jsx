@@ -41,7 +41,7 @@ const Join = () => {
   const name = useLoaderData();
   return (
     <div className='grid items-center justify-center min-h-screen'>
-      <Form className='m-2 p-4 flex flex-col' method='post'>
+      <Form className='m-2 p-4 flex flex-col bg-gray-200 rounded-xl' method='post'>
         <h1 className='mb-6'> {name ? `join jukebox ${name}` : `Jukebox Roundtable`}</h1>
         <FormRow type='text' name='name' labelText='jukebox' defaultValue={name && name} isRequired />
         <FormRow type='password' name='code' isRequired />

@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 html {
-  @apply font-sans;
+  @apply font-normal;
 }
 
 h1 {
@@ -13,7 +13,7 @@ button:hover {
 }
 
 button.submit-btn {
-  @apply border-1 rounded w-full capitalize p-2 mt-2 bg-blue-600 text-white;
+  @apply border-1 rounded-xl w-full capitalize p-2 mt-2 bg-blue-600 text-white;
 }
 
 button.submit-btn:hover {
